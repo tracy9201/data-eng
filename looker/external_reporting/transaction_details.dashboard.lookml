@@ -10,14 +10,14 @@
       model: external_reporting
       explore: fact_invoice_item
       type: table
-      fields: [fact_invoice_item.invoice, fact_invoice_item.pay_date_date, dim_customer.firstname,
+      fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.pay_date_time, dim_customer.firstname,
       dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, dim_offering.brand,
       dim_offering.product_service, dim_offering.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
       fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
       fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.tax_percentage,
       fact_invoice_item.grand_total]
-      sorts: [fact_invoice_item.invoice]
+      sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
       query_timezone: America/Los_Angeles
       show_view_names: false
@@ -95,7 +95,11 @@
         fact_invoice_item.invoice:
           fg_color: "#684A91"
       header_font_color: "#684A91"
-
+      hidden_fields: [fact_invoice_item.id]
       truncate_column_names: false
       defaults_version: 1
       series_types: {}
+      row: 0
+      col: 0
+      width: 24
+      height: 15

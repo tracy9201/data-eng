@@ -23,8 +23,15 @@ view: dim_customer {
 
   dimension: customer_mobile {
     type: string
-    #sql: ${TABLE}.customer_mobile ;;
-    sql: CASE WHEN ${TABLE}.customer_mobile IS NULL or ${TABLE}.customer_mobile = '' then ${TABLE}.customer_mobile else '(' || substring(${TABLE}.customer_mobile,3,3) || ') ' || substring(${TABLE}.customer_mobile,6,3) || '-' || substring(${TABLE}.customer_mobile,9,4)  END;;
+    sql: ${TABLE}.customer_mobile ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
+
   }
 
   dimension: customer_state {
@@ -34,8 +41,14 @@ view: dim_customer {
 
   dimension: customer_type {
     type: string
-    #sql: ${TABLE}.customer_type ;;
-    sql: CASE WHEN ${TABLE}.user_type = 1 THEN 'Guest' WHEN ${TABLE}.customer_type = 'member'  THEN  'Subscriber' WHEN  ${TABLE}.customer_type = 'non-member' THEN 'Non-Subscriber' ELSE 'Guest' END;;
+    sql: ${TABLE}.customer_type ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
 
   }
 
@@ -47,6 +60,13 @@ view: dim_customer {
   dimension: firstname {
     type: string
     sql: ${TABLE}.firstname ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: gx_customer_id {
@@ -62,6 +82,13 @@ view: dim_customer {
   dimension: lastname {
     type: string
     sql: ${TABLE}.lastname ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: member_cancel_date {

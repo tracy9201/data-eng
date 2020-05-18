@@ -43,6 +43,13 @@ view: fact_invoice_item {
   dimension: invoice {
     type: number
     sql: ${TABLE}.invoice ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: invoice_amount {
@@ -72,8 +79,31 @@ view: fact_invoice_item {
     #EFECF3
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#EFECF3">{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
+    {% else %}
+    <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
+    {% endif %}
+    ;;
+  }
 
+  dimension_group: test {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.pay_date ;;
+    #EFECF3
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#EFECF3">{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
+    {% else %}
+    <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
     {% endif %}
     ;;
   }
@@ -114,6 +144,7 @@ view: fact_invoice_item {
   dimension: tax_percentage {
     type: number
     sql: ${TABLE}.tax_percentage ;;
+    value_format: "#,##0.00"
   }
 
   dimension: total_price {

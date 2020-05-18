@@ -5,13 +5,13 @@ datagroup: external_reporting_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-include: "/views/*.view"
-include: "/*.dashboard.lookml"
+include: "/looker/external_reporting/views/*.view"
+include: "/looker/external_reporting/*.dashboard.lookml"
 persist_with: external_reporting_default_datagroup
 
 
 explore: fact_invoice_item {
-
+  persist_for: "0 seconds"
   label: "Transaction Details"
   join: dim_offering {
     type: left_outer
@@ -33,4 +33,9 @@ explore: fact_invoice_item {
     relationship: many_to_one
     sql_on: ${fact_invoice_item.pay_date_date} = ${dim_date_table.date_date} ;;
   }
+
+  # access_filter: {
+  #   field: dim_provider.k_practice_id
+  #   user_attribute: practice_filter_attribute
+  # }
 }
