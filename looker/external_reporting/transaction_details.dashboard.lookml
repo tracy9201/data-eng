@@ -17,6 +17,13 @@
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
       fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.tax_percentage,
       fact_invoice_item.grand_total]
+
+      # #### ADDED FOR DEMO #######
+      # filters:
+      #   dim_customer.firstname: "-Betty"
+      #   dim_customer.lastname: "-Berry"
+      # #### ABOVE LINES ADDED FOR DEMO ####
+
       sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
       query_timezone: America/Los_Angeles
