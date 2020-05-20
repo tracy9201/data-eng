@@ -2,11 +2,37 @@ view: fact_invoice_item {
   sql_table_name: dwh.fact_invoice_item ;;
   drill_fields: [id]
 
+  dimension: brand {
+    type: string
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' else ${TABLE}.brand END;;
+  }
+
   dimension: id {
     primary_key: yes
     type: string
     sql: ${TABLE}.id ;;
   }
+
+  dimension: count_of_invoice_item {
+    type: number
+    sql: ${TABLE}.count_of_invoice_item ;;
+  }
+
+  dimension: count_distinct_brand {
+    type: number
+    sql: ${TABLE}.count_distinct_brand ;;
+  }
+
+  dimension: count_distinct_product {
+    type: number
+    sql: ${TABLE}.count_distinct_product ;;
+  }
+
+  dimension: count_distinct_sku {
+    type: number
+    sql: ${TABLE}.count_distinct_sku ;;
+  }
+
 
   dimension: discount_reason {
     type: string
@@ -64,6 +90,23 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
   }
 
+  dimension: invoice_level {
+    type: string
+    sql: ${TABLE}.invoice_level ;;
+  }
+
+  dimension: invoice_actual_amount {
+    type: number
+    sql: ${TABLE}.invoice_actual_amount ;;
+    value_format: "$#,##0.00"
+  }
+
+  dimension: invoice_credit {
+    type: number
+    sql: ${TABLE}.invoice_credit ;;
+    value_format: "$#,##0.00"
+  }
+
   dimension_group: pay_date {
     type: time
     timeframes: [
@@ -86,27 +129,12 @@ view: fact_invoice_item {
     ;;
   }
 
-  dimension_group: test {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.pay_date ;;
-    #EFECF3
-    html:
-    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
-    {% else %}
-    <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
-    {% endif %}
-    ;;
+  dimension: product_service {
+    type: string
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_product} > 1 then 'Various' else ${TABLE}.product_service END;;
   }
+
+
 
   dimension: price_unit {
     type: number
@@ -124,6 +152,13 @@ view: fact_invoice_item {
     {% endif %}
     ;;
   }
+
+  dimension: sku {
+    type: string
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_sku} > 1 then 'Various' else ${TABLE}.sku END;;
+  }
+
+
 
   dimension: subscription_cycle {
     type: number

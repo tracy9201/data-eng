@@ -11,22 +11,15 @@
       explore: fact_invoice_item
       type: table
       fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.pay_date_time, dim_customer.firstname,
-      dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, dim_offering.brand,
-      dim_offering.product_service, dim_offering.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
+      dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, fact_invoice_item.brand,
+      fact_invoice_item.product_service, fact_invoice_item.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
       fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
       fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.tax_percentage,
-      fact_invoice_item.grand_total]
-
-      # #### ADDED FOR DEMO #######
-      # filters:
-      #   dim_customer.firstname: "-Betty"
-      #   dim_customer.lastname: "-Berry"
-      # #### ABOVE LINES ADDED FOR DEMO ####
-
+      fact_invoice_item.grand_total,fact_invoice_item.invoice_actual_amount,fact_invoice_item.invoice_credit]
       sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
-      query_timezone: America/Los_Angeles
+      query_timezone: user_timezone
       show_view_names: false
       show_row_numbers: true
       transpose: false
