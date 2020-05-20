@@ -30,4 +30,6 @@ view: dim_offering {
     type: count
     drill_fields: []
   }
+
+
 }

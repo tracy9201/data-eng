@@ -13,11 +13,7 @@ persist_with: external_reporting_default_datagroup
 explore: fact_invoice_item {
   persist_for: "0 seconds"
   label: "Transaction Details"
-  join: dim_offering {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${fact_invoice_item.gx_subscription_id} = ${dim_offering.gx_subscription_id} ;;
-  }
+
   join: dim_customer {
     type: left_outer
     relationship: many_to_one
