@@ -1,5 +1,5 @@
-- dashboard: invoice_item_details
-  title: Invoice Item Details
+- dashboard: invoice_details
+  title: Invoice Details
   layout: newspaper
   tile_size: 100
 
