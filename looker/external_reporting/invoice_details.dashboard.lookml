@@ -6,7 +6,7 @@
   filters:
 
   elements:
-    - name: transaction_details
+    - name: invoice_details
       model: external_reporting
       explore: fact_invoice_item
       type: table
