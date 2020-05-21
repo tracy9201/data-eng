@@ -12,7 +12,7 @@ persist_with: external_reporting_default_datagroup
 
 explore: fact_invoice_item {
   persist_for: "0 seconds"
-  label: "Transaction Details"
+  label: "Invoice Details"
 
   join: dim_customer {
     type: left_outer

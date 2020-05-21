@@ -1,12 +1,12 @@
-- dashboard: transaction_details
-  title: Transaction Details
+- dashboard: invoice_details
+  title: Invoice Details
   layout: newspaper
   tile_size: 100
 
   filters:
 
   elements:
-    - name: transaction_details
+    - name: invoice_details
       model: external_reporting
       explore: fact_invoice_item
       type: table
