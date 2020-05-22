@@ -22,7 +22,7 @@
       fact_invoice_item.product_service, fact_invoice_item.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
       fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
-      fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.taxable_amount,
+      fact_invoice_item.discounted_price, fact_invoice_item.taxable_amount, fact_invoice_item.tax_charged,
       fact_invoice_item.grand_total]
       sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
@@ -53,7 +53,7 @@
         dim_customer.lastname: Last Name
         dim_customer.customer_mobile: Phone
         dim_customer.customer_type: Customer Type
-        dim_offering.product_service: Product/Service
+        fact_invoice_item.product_service: Product/Service
         fact_invoice_item.price_unit: Price/Unit
         fact_invoice_item.recurring_payment: Recurring Pmt
 
