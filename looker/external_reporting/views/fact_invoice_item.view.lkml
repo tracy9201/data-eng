@@ -176,10 +176,10 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
   }
 
-  dimension: tax_percentage {
+  dimension: taxable_amount {
     type: number
-    sql: ${TABLE}.tax_percentage ;;
-    value_format: "#,##0.00"
+    sql: ${TABLE}.taxable_amount ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: total_price {
