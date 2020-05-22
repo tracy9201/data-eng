@@ -26,7 +26,7 @@ view: dim_customer {
     sql: ${TABLE}.customer_mobile ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -44,7 +44,7 @@ view: dim_customer {
     sql: ${TABLE}.customer_type ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -62,7 +62,7 @@ view: dim_customer {
     sql: ${TABLE}.firstname ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -84,7 +84,7 @@ view: dim_customer {
     sql: ${TABLE}.lastname ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}

@@ -71,7 +71,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.invoice ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -123,7 +123,7 @@ view: fact_invoice_item {
     #EFECF3
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
+    <p style="color:#FFFFFF"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
     {% else %}
     <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
     {% endif %}
@@ -139,7 +139,8 @@ view: fact_invoice_item {
 
   dimension: price_unit {
     type: number
-    sql: ${TABLE}.price_unit ;;
+    #sql: ${TABLE}.price_unit ;;
+    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.price_unit END;;
   }
 
   dimension: recurring_payment {
@@ -191,12 +192,14 @@ view: fact_invoice_item {
 
   dimension: unit_type {
     type: string
-    sql: ${TABLE}.unit_type ;;
+    #sql: ${TABLE}.unit_type ;;
+    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.unit_type END;;
   }
 
   dimension: units {
     type: number
-    sql: ${TABLE}.units ;;
+    #sql: ${TABLE}.units ;;
+    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.units END;;
   }
 
   measure: count {
