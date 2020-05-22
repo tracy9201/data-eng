@@ -56,7 +56,7 @@
         dim_offering.product_service: Product/Service
         fact_invoice_item.price_unit: Price/Unit
         fact_invoice_item.recurring_payment: Recurring Pmt
-        fact_invoice_item.tax_percentage: Tax %
+
       series_text_format:
         fact_invoice_item.pay_date_date:
           fg_color: "#684A91"
