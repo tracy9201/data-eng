@@ -16,7 +16,7 @@
       fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
       fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.taxable_amount,
-      fact_invoice_item.grand_total,fact_invoice_item.invoice_actual_amount,fact_invoice_item.invoice_credit]
+      fact_invoice_item.grand_total]
       sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
       query_timezone: user_timezone
