@@ -108,6 +108,7 @@ view: fact_invoice_item {
   }
 
   dimension_group: pay_date {
+    label: "Date"
     type: time
     timeframes: [
       raw,

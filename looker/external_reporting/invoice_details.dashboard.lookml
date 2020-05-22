@@ -4,6 +4,13 @@
   tile_size: 100
 
   filters:
+    - name: Date
+      title: Date
+      type: date_filter
+      #default_value: 1 days
+      default_value: today
+      allow_multiple_values: true
+      required: false
 
   elements:
     - name: invoice_details
@@ -38,6 +45,8 @@
       show_sql_query_menu_options: false
       show_totals: true
       show_row_totals: true
+      listen:
+        Date: dim_date_table.date_date
       series_labels:
         fact_invoice_item.pay_date_date: Date
         dim_customer.firstname: First Name
