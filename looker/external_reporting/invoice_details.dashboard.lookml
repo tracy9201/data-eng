@@ -48,7 +48,7 @@
       listen:
         Date: dim_date_table.date_date
       series_labels:
-        fact_invoice_item.pay_date_date: Date
+        fact_invoice_item.pay_date_time: Date
         dim_customer.firstname: First Name
         dim_customer.lastname: Last Name
         dim_customer.customer_mobile: Phone

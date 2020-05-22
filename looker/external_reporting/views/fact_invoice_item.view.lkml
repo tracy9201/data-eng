@@ -4,7 +4,7 @@ view: fact_invoice_item {
 
   dimension: brand {
     type: string
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' else ${TABLE}.brand END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' WHEN ${TABLE}.brand IS NULL THEN 'Various' else ${TABLE}.brand END;;
   }
 
   dimension: id {
