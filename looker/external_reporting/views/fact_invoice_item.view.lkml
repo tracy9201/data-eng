@@ -120,7 +120,7 @@ view: fact_invoice_item {
       year
     ]
     sql: ${TABLE}.pay_date ;;
-    #EFECF3
+
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#FFFFFF"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
