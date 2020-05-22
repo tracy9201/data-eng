@@ -30,8 +30,8 @@ explore: fact_invoice_item {
     sql_on: ${fact_invoice_item.pay_date_date} = ${dim_date_table.date_date} ;;
   }
 
-  # access_filter: {
-  #   field: dim_provider.k_practice_id
-  #   user_attribute: practice_filter_attribute
-  # }
+  access_filter: {
+    field: dim_provider.k_practice_id
+    user_attribute: practice_filter_attribute
+  }
 }
