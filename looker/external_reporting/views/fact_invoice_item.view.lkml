@@ -11,7 +11,7 @@ view: fact_invoice_item {
     primary_key: yes
     type: string
     sql: ${TABLE}.id ;;
-    value_format: "0"
+
   }
 
   dimension: count_of_invoice_item {
@@ -77,6 +77,7 @@ view: fact_invoice_item {
     <p>{{ rendered_value }}</p>
     {% endif %}
     ;;
+    value_format: "0"
   }
 
   dimension: invoice_amount {
