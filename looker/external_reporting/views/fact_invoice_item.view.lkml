@@ -71,7 +71,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.invoice ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#FFFFFF"><i>{{ rendered_value }}<i></p>
+    <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -123,7 +123,7 @@ view: fact_invoice_item {
 
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#FFFFFF"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
+    <p style="color:#33cc33"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
     {% else %}
     <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
     {% endif %}
