@@ -11,6 +11,7 @@ view: fact_invoice_item {
     primary_key: yes
     type: string
     sql: ${TABLE}.id ;;
+    value_format: "0"
   }
 
   dimension: count_of_invoice_item {
@@ -141,6 +142,7 @@ view: fact_invoice_item {
     type: number
     #sql: ${TABLE}.price_unit ;;
     sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.price_unit END;;
+    value_format: "$#,##0.00"
   }
 
   dimension: recurring_payment {
