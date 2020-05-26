@@ -17,7 +17,7 @@
       model: external_reporting
       explore: fact_invoice_item
       type: table
-      fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.pay_date_time, dim_customer.firstname,
+      fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.invoice_level, fact_invoice_item.pay_date_time, dim_customer.firstname,
       dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, fact_invoice_item.brand,
       fact_invoice_item.product_service, fact_invoice_item.sku,  fact_invoice_item.units,  fact_invoice_item.unit_type,
       fact_invoice_item.price_unit,  fact_invoice_item.total_price, fact_invoice_item.recurring_payment,

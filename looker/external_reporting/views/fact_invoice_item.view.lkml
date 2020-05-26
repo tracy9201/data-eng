@@ -129,6 +129,12 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
   }
 
+  dimension: invoice_level {
+    type: string
+    sql: CASE WHEN ${id} like '%sub%' then 'NO' else 'YES' END ;;
+
+  }
+
   dimension: item_discount {
     type: number
     sql: ${TABLE}.item_discount ;;
@@ -142,10 +148,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
   }
 
-  dimension: invoice_level {
-    type: string
-    sql: ${TABLE}.invoice_level ;;
-  }
+
 
   dimension: invoice_actual_amount {
     type: number
