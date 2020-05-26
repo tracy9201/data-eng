@@ -19,8 +19,8 @@
       type: table
       fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.pay_date_time, dim_customer.firstname,
       dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, fact_invoice_item.brand,
-      fact_invoice_item.product_service, fact_invoice_item.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
-      fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
+      fact_invoice_item.product_service, fact_invoice_item.sku,  fact_invoice_item.units,  fact_invoice_item.unit_type,
+      fact_invoice_item.price_unit,  fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
       fact_invoice_item.discounted_price, fact_invoice_item.taxable_amount, fact_invoice_item.tax_charged,
       fact_invoice_item.grand_total]
@@ -103,7 +103,7 @@
         fact_invoice_item.invoice:
           fg_color: "#684A91"
       header_font_color: "#684A91"
-      hidden_fields: [fact_invoice_item.id]
+      hidden_fields: [fact_invoice_item.id, fact_invoice_item.sku]
       truncate_column_names: false
       defaults_version: 1
       series_types: {}

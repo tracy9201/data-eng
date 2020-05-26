@@ -4,7 +4,8 @@ view: fact_invoice_item {
 
   dimension: brand {
     type: string
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' WHEN ${id} not like '%sub%' and ${TABLE}.brand IS NULL THEN 'Various' else ${TABLE}.brand END;;
+    sql: ${TABLE}.brand ;;
+    #sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' WHEN ${id} not like '%sub%' and ${TABLE}.brand IS NULL THEN 'Various' else ${TABLE}.brand END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
@@ -183,7 +184,7 @@ view: fact_invoice_item {
 
   dimension: product_service {
     type: string
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_product} > 1 then 'Various' else ${TABLE}.product_service END;;
+    sql: ${TABLE}.product_service ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
@@ -198,7 +199,21 @@ view: fact_invoice_item {
   dimension: price_unit {
     type: number
     #sql: ${TABLE}.price_unit ;;
-    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.price_unit END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${TABLE}.price_unit END;;
+    value_format: "$#,##0.00"
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
+  }
+
+  dimension: price_unit_ORIG {
+    type: string
+    #sql: ${TABLE}.price_unit ;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then ' ' else CAST(${TABLE}.price_unit as VARCHAR(20)) END;;
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
@@ -223,7 +238,7 @@ view: fact_invoice_item {
 
   dimension: sku {
     type: string
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_sku} > 1 then 'Various' else ${TABLE}.sku END;;
+    sql: ${TABLE}.sku;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
@@ -323,6 +338,8 @@ view: fact_invoice_item {
     {% endif %}
     ;;
   }
+
+
 
   measure: count {
     type: count
