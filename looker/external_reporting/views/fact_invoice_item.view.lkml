@@ -5,12 +5,26 @@ view: fact_invoice_item {
   dimension: brand {
     type: string
     sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' WHEN ${id} not like '%sub%' and ${TABLE}.brand IS NULL THEN 'Various' else ${TABLE}.brand END;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: id {
     primary_key: yes
     type: string
     sql: ${TABLE}.id ;;
+    html:
+    {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+    <p style="color:#33cc33"><i>{{ rendered_value }}<i></p>
+    {% else %}
+    <p>{{ rendered_value }}</p>
+    {% endif %}
+    ;;
 
   }
 
