@@ -8,7 +8,7 @@ view: fact_invoice_item {
     #sql: CASE WHEN ${id} not like '%sub%' and ${count_distinct_brand} > 1 then 'Various' WHEN ${id} not like '%sub%' and ${TABLE}.brand IS NULL THEN 'Various' else ${TABLE}.brand END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -21,7 +21,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.id ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -55,7 +55,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.discount_reason ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -68,7 +68,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -81,7 +81,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -108,7 +108,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.invoice ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -121,7 +121,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.invoice_amount ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -134,7 +134,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.item_discount ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -175,7 +175,7 @@ view: fact_invoice_item {
 
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
+    <p style="color:#999999"><i>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</i></p>
     {% else %}
     <p>{{ rendered_value | date: "%m/%d/%y %I:%M %p" }}</p>
     {% endif %}
@@ -187,7 +187,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.product_service ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -203,7 +203,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -217,7 +217,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -241,7 +241,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.sku;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -255,7 +255,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.subscription_cycle ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -267,7 +267,7 @@ view: fact_invoice_item {
     sql: ${TABLE}.subscription_id ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -280,7 +280,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -293,7 +293,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -306,7 +306,7 @@ view: fact_invoice_item {
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -319,7 +319,7 @@ view: fact_invoice_item {
     sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.unit_type END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -332,7 +332,7 @@ view: fact_invoice_item {
     sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.units END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#808080"><i>{{ rendered_value }}<i></p>
+    <p style="color:#999999"><i>{{ rendered_value }}<i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
