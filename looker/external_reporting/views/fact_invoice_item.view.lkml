@@ -132,6 +132,11 @@ view: fact_invoice_item {
   dimension: invoice_level {
     type: string
     sql: CASE WHEN ${id} like '%sub%' then 'NO' else 'YES' END ;;
+    html: {% if fact_invoice_item.id._rendered_value contains 'sub' %}
+          <p style="color:#999999"><i>{{ rendered_value }}<i></p>
+          {% else %}
+          <p>{{ rendered_value }}</p>
+          {% endif %} ;;
 
   }
 
