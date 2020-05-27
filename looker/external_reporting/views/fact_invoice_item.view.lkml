@@ -207,7 +207,7 @@ view: fact_invoice_item {
   dimension: price_unit {
     type: number
     #sql: ${TABLE}.price_unit ;;
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${TABLE}.price_unit END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else round(cast(${TABLE}.total_price as numeric) / cast(${TABLE}.units as numeric), 2) END;;
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
@@ -221,7 +221,7 @@ view: fact_invoice_item {
   dimension: price_unit_ORIG {
     type: string
     #sql: ${TABLE}.price_unit ;;
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then ' ' else CAST(${TABLE}.price_unit as VARCHAR(20)) END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then ' ' else CAST(round(cast(${TABLE}.invoice_amount as numeric*100) / cast(${TABLE}.units as numeric*100), 2) as VARCHAR(20)) END;;
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
