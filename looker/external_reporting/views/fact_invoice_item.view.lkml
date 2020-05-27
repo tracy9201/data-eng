@@ -339,7 +339,9 @@ view: fact_invoice_item {
   dimension: units {
     type: number
     #sql: ${TABLE}.units ;;
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${TABLE}.units END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL
+              when ${TABLE}.units  = 0 then null
+              else ${TABLE}.units END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#999999"><i>{{ rendered_value }}<i></p>
