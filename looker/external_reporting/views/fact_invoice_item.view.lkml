@@ -207,7 +207,7 @@ view: fact_invoice_item {
   dimension: price_unit {
     type: number
     #sql: ${TABLE}.price_unit ;;
-    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else round(cast(${TABLE}.total_price as numeric) / cast(${TABLE}.units as numeric), 2) END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${total_price}/${units} END;;
     value_format: "$#,##0.00"
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
