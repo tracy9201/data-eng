@@ -324,7 +324,7 @@ view: fact_invoice_item {
   dimension: unit_type {
     type: string
     #sql: ${TABLE}.unit_type ;;
-    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.unit_type END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${TABLE}.unit_type END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#999999"><i>{{ rendered_value }}<i></p>
@@ -337,7 +337,7 @@ view: fact_invoice_item {
   dimension: units {
     type: number
     #sql: ${TABLE}.units ;;
-    sql: CASE WHEN ${id} not like '%sub%' then NULL else ${TABLE}.units END;;
+    sql: CASE WHEN ${id} not like '%sub%' and ${count_of_invoice_item} > 1 then NULL else ${TABLE}.units END;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
     <p style="color:#999999"><i>{{ rendered_value }}<i></p>
