@@ -236,7 +236,7 @@ view: fact_invoice_item {
 
   dimension: recurring_payment {
     type: string
-    sql: case when ${TABLE}.recurring_payment  > '1' then 'Yes' else 'No' end  ;;
+    sql: case when ${TABLE}.recurring_payment  > '1' then 'Y' else 'N' end  ;;
     html:
     {% if value == 'Yes' %}
     <p style="align:center;height: 5px;width: 5px;background-color: #9478BA;border-radius: 25%;display: inline-block;margin-left:50%;margin-top:4%"></p>
