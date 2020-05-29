@@ -236,15 +236,17 @@ view: fact_invoice_item {
 
   dimension: recurring_payment {
     type: string
-    sql: ${TABLE}.recurring_payment  ;;
+    sql: case when ${TABLE}.recurring_payment  > '1' then 'Yes' else 'No' end  ;;
     html:
-    {% if value > 1 %}
+    {% if value == 'Yes' %}
     <p style="align:center;height: 5px;width: 5px;background-color: #9478BA;border-radius: 25%;display: inline-block;margin-left:50%;margin-top:4%"></p>
     {% else %}
     <p style="text-align:center;margin-top:12%"> </p>
     {% endif %}
     ;;
   }
+
+
 
   dimension: sku {
     type: string
