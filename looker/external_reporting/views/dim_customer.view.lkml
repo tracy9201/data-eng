@@ -23,10 +23,10 @@ view: dim_customer {
 
   dimension: customer_mobile {
     type: string
-    sql: ${TABLE}.customer_mobile ;;
+    sql: CASE WHEN ${fact_invoice_item.id} like '%sub%' and ${TABLE}.customer_mobile IS NULL THEN ' ' ELSE ${TABLE}.customer_mobile END  ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#999999"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -41,10 +41,11 @@ view: dim_customer {
 
   dimension: customer_type {
     type: string
-    sql: ${TABLE}.customer_type ;;
+
+    sql: CASE WHEN ${fact_invoice_item.id} like '%sub%' and ${TABLE}.customer_type IS NULL THEN ' ' ELSE ${TABLE}.customer_type END  ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#999999"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -59,10 +60,11 @@ view: dim_customer {
 
   dimension: firstname {
     type: string
-    sql: ${TABLE}.firstname ;;
+
+    sql: CASE WHEN ${fact_invoice_item.id} like '%sub%' and ${TABLE}.firstname IS NULL THEN ' ' ELSE ${TABLE}.firstname END  ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#999999"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}
@@ -81,10 +83,11 @@ view: dim_customer {
 
   dimension: lastname {
     type: string
-    sql: ${TABLE}.lastname ;;
+
+    sql: CASE WHEN ${fact_invoice_item.id} like '%sub%' and ${TABLE}.lastname IS NULL THEN ' ' ELSE ${TABLE}.lastname END  ;;
     html:
     {% if fact_invoice_item.id._rendered_value contains 'sub' %}
-    <p style="color:#EFECF3">{{ rendered_value }}</p>
+    <p style="color:#999999"><i>{{ rendered_value }}</i></p>
     {% else %}
     <p>{{ rendered_value }}</p>
     {% endif %}

@@ -12,12 +12,8 @@ persist_with: external_reporting_default_datagroup
 
 explore: fact_invoice_item {
   persist_for: "0 seconds"
-  label: "Transaction Details"
-  join: dim_offering {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${fact_invoice_item.gx_subscription_id} = ${dim_offering.gx_subscription_id} ;;
-  }
+  label: "Invoice Details"
+
   join: dim_customer {
     type: left_outer
     relationship: many_to_one
@@ -34,8 +30,8 @@ explore: fact_invoice_item {
     sql_on: ${fact_invoice_item.pay_date_date} = ${dim_date_table.date_date} ;;
   }
 
-  # access_filter: {
-  #   field: dim_provider.k_practice_id
-  #   user_attribute: practice_filter_attribute
-  # }
+  access_filter: {
+    field: dim_provider.k_practice_id
+    user_attribute: practice_filter_attribute
+  }
 }

@@ -1,32 +1,32 @@
-- dashboard: transaction_details
-  title: Transaction Details
+- dashboard: invoice_details
+  title: Invoice Details
   layout: newspaper
   tile_size: 100
 
   filters:
+    - name: Date
+      title: Date
+      type: date_filter
+      #default_value: 1 days
+      default_value: today
+      allow_multiple_values: true
+      required: false
 
   elements:
-    - name: transaction_details
+    - name: invoice_details
       model: external_reporting
       explore: fact_invoice_item
       type: table
-      fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.pay_date_time, dim_customer.firstname,
-      dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, dim_offering.brand,
-      dim_offering.product_service, dim_offering.sku, fact_invoice_item.units, fact_invoice_item.unit_type,
-      fact_invoice_item.price_unit, fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
+      fields: [fact_invoice_item.id,fact_invoice_item.invoice, fact_invoice_item.invoice_level, fact_invoice_item.pay_date_time, dim_customer.firstname,
+      dim_customer.lastname, dim_customer.customer_mobile, dim_customer.customer_type, fact_invoice_item.brand,
+      fact_invoice_item.product_service, fact_invoice_item.sku,  fact_invoice_item.units,  fact_invoice_item.unit_type,
+      fact_invoice_item.price_unit,  fact_invoice_item.total_price, fact_invoice_item.recurring_payment,
       fact_invoice_item.invoice_amount, fact_invoice_item.item_discount, fact_invoice_item.discount_reason,
-      fact_invoice_item.discounted_price, fact_invoice_item.tax_charged, fact_invoice_item.tax_percentage,
+      fact_invoice_item.discounted_price, fact_invoice_item.taxable_amount, fact_invoice_item.tax_charged,
       fact_invoice_item.grand_total]
-
-      # #### ADDED FOR DEMO #######
-      # filters:
-      #   dim_customer.firstname: "-Betty"
-      #   dim_customer.lastname: "-Berry"
-      # #### ABOVE LINES ADDED FOR DEMO ####
-
       sorts: [fact_invoice_item.invoice,fact_invoice_item.id]
       limit: 500
-      query_timezone: America/Los_Angeles
+      query_timezone: user_timezone
       show_view_names: false
       show_row_numbers: true
       transpose: false
@@ -34,7 +34,7 @@
       hide_totals: false
       hide_row_totals: false
       size_to_fit: true
-      table_theme: editable
+      table_theme: unstyled
       limit_displayed_rows: false
       enable_conditional_formatting: false
       header_text_alignment: left
@@ -45,17 +45,18 @@
       show_sql_query_menu_options: false
       show_totals: true
       show_row_totals: true
+      listen:
+        Date: dim_date_table.date_date
       series_labels:
-        fact_invoice_item.pay_date_date: Date
+        fact_invoice_item.pay_date_time: Date
         dim_customer.firstname: First Name
         dim_customer.lastname: Last Name
         dim_customer.customer_mobile: Phone
         dim_customer.customer_type: Customer Type
-        dim_offering.product_service: Product/Service
+        fact_invoice_item.product_service: Product/Service
         fact_invoice_item.price_unit: Price/Unit
         fact_invoice_item.recurring_payment: Recurring Pmt
-        fact_invoice_item.tax_charged: Taxable Amount
-        fact_invoice_item.tax_percentage: Tax %
+
       series_text_format:
         fact_invoice_item.pay_date_date:
           fg_color: "#684A91"
@@ -102,7 +103,7 @@
         fact_invoice_item.invoice:
           fg_color: "#684A91"
       header_font_color: "#684A91"
-      hidden_fields: [fact_invoice_item.id]
+      hidden_fields: [fact_invoice_item.id, fact_invoice_item.sku]
       truncate_column_names: false
       defaults_version: 1
       series_types: {}
