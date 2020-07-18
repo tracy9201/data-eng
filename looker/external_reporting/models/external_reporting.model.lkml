@@ -9,6 +9,7 @@ include: "/looker/external_reporting/views/*.view"
 include: "/looker/external_reporting/*.dashboard.lookml"
 persist_with: external_reporting_default_datagroup
 
+explore: subscription_tax_off {}
 
 explore: fact_invoice_item {
   persist_for: "0 seconds"
