@@ -1,4 +1,4 @@
-- dashboard: daily_batch_details
+- dashboard: qa_daily_batch_details
 
   title: QA Daily Batch Details
   layout: newspaper

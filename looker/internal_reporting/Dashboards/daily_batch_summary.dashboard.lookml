@@ -1,4 +1,4 @@
-- dashboard: daily_batch_summary
+- dashboard: qa_daily_batch_summary
   title: QA Daily Batch Summary
   layout: newspaper
   embed_style:
