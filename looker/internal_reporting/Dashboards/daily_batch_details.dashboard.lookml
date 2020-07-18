@@ -7,7 +7,6 @@
     - name: Date
       title: Date
       type: date_filter
-      #default_value: 1 days
       default_value: today
       allow_multiple_values: true
       required: false
@@ -17,45 +16,36 @@
       default_value: ''
       allow_multiple_values: true
       required: false
-      model: looker_hintmd
+      model: external_reporting_qa
       explore: batch_report_details
       listens_to_filters: []
-      field: device_data.label
+      field: batch_report_details.device_id
     - name: Staff
       title: staff name
       type: field_filter
       default_value: ''
       allow_multiple_values: true
       required: false
-      model: looker_hintmd
+      model: external_reporting_qa
       explore: batch_report_details
       listens_to_filters: []
       field: staff_details.staff_name
   elements:
     - name: Daily Batch Report
       title: Daily Batch Report
-      model: looker_hintmd
+      model: external_reporting_qa
       explore: batch_report_details
-      #type: looker_grid
       type: table
 
       filters: {}
 
-      # fields: [batch_report_details.sales_created_at_time, batch_report_details.sales_type,
-      #   customer2.firstname, customer2.lastname, customer2.customer_mobile, customer2.customer_type,
-      #   batch_report_details.transaction, batch_report_details.payment_method,
-      #   batch_report_details.payment_id, batch_report_details.description,
-      #   staff_details.staff_name,
-      #   batch_report_details.sales_amount, batch_report_details.gratuity_amount,
-      #   device_data.label]
-
       fields: [batch_report_details.sales_created_at_time,
-        customer2.firstname, customer2.lastname, customer2.customer_mobile, customer2.customer_type, batch_report_details.sales_type,
+        customer.firstname, customer.lastname, customer.customer_mobile, customer.customer_type, batch_report_details.sales_type,
         batch_report_details.transaction, batch_report_details.payment_method,
         batch_report_details.payment_id, batch_report_details.description,
         staff_details.staff_name,
         batch_report_details.sum_amount, batch_report_details.sum_tipping_amount,
-        device_data.label]
+        batch_report_details.device_id]
 
       sorts: [batch_report_details.sales_created_at_time desc, batch_report_details.sales_type]
       listen:
@@ -86,30 +76,23 @@
       rows_font_size: 12
       series_labels:
         batch_report_details.sales_created_at_time: Date & Time
-        customer2.customer_type: Customer Type
+        customer.customer_type: Customer Type
         staff_details.staff_name: Staff
-        customer2.customer_mobile: Phone
-        #customer2.subscriber: Member
+        customer.customer_mobile: Phone
         batch_report_details.gratuity_amount: Tip
-        customer2.firstname: First name
-        customer2.lastname: Last name
+        customer.firstname: First name
+        customer.lastname: Last name
         batch_report_details.sum_amount: Amount
         batch_report_details.sum_tipping_amount: Tip
 
       listen:
         Date: date_table.date_date
-        Device: device_data.label
+        Device: batch_report_details.device_id
         Staff: staff_details.staff_name
       conditional_formatting_include_totals: false
       conditional_formatting_include_nulls: false
       defaults_version: 1
       hidden_fields: [batch_report_details.sales_id]
-      # column_order: ["$$$_row_numbers_$$$", batch_report_details.sales_created_at_time,
-      #   batch_report_details.sales_type, customer2.firstname, customer2.lastname, customer2.customer_mobile, customer2.customer_type,
-      #   batch_report_details.transaction, batch_report_details.payment_method,
-      #   batch_report_details.payment_id, batch_report_details.description,
-      #   staff_details.staff_name, device_data.label,  batch_report_details.sales_amount,batch_report_details.gratuity_amount]
-
       column_order: ["$$$_row_numbers_$$$", batch_report_details.sales_created_at_time,
          customer.firstname, customer.lastname, customer.customer_mobile, customer.customer_type, batch_report_details.sales_type,
         batch_report_details.transaction, batch_report_details.payment_method,
@@ -129,17 +112,6 @@
           align: right
         Total:
           align: right
-
-      #   subtotal:
-      #     bold: true
-      #     fg_color: "#EFECF3"
-      # conditional_formatting: [{type: not equal to, value: !!null '', background_color: "#654054",
-      # font_color: !!null '', color_application: {collection_id: 158c6823-0d69-4c97-8dc5-a488504d1fad,
-      #   palette_id: 4edcef28-9514-4b9a-b01b-f7b901be523b}, bold: false, italic: false,
-      # strikethrough: false, fields: [subtotal]}, {type: along a scale..., value: !!null '',
-      # background_color: "#654054", font_color: !!null '', color_application: {collection_id: 158c6823-0d69-4c97-8dc5-a488504d1fad,
-      #   palette_id: 4edcef28-9514-4b9a-b01b-f7b901be523b}, bold: false, italic: false,
-      # strikethrough: false, fields: !!null ''}]
 
       row: 0
       col: 0

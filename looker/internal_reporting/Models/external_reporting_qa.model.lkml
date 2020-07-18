@@ -6,7 +6,7 @@ datagroup: internal_reporting_default_datagroup {
 }
 
 include: "/looker/internal_reporting/Views/*.view"
-# include: "/looker/internal_repoarting/Da/*.dashboard.lookml"
+include: "/looker/internal_reporting/Dashboards/*.dashboard.lookml"
 
 persist_with: internal_reporting_default_datagroup
 
