@@ -24,42 +24,6 @@ view: batch_report_details {
   }
 
 
-  # dimension: sales_type {
-  #   type: string
-  #   label: "Payment Method"
-  #   case: {
-  #     when:  {
-  #       sql: ${TABLE}.sales_type = 'cash' and (${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%') ;;
-  #       label: "CASH"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type = 'check' and (${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%') ;;
-  #       label: "CHECK"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type = 'credit_card' and (${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%') ;;
-  #       label: "CREDIT CARD"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type = 'provider credit' and(${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'refund%');;
-  #       label: "PRACTICE CREDIT"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type in ('reward', 'credit') and ${TABLE}.sales_name = 'BD Payment'
-  #         and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'refund%');;
-  #       label: "BD"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type in ('credit', 'reward') and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'refund%');;
-  #       label: "OTHER"
-  #     }
-  #     when:  {
-  #       sql: ${TABLE}.sales_type ='credit_card' and (${TABLE}.sales_id like 'tran%' ) ;;
-  #       label: "RECURRING PMT"
-  #     }
-  #   }
-  # }
-
 
   dimension: sales_type {
     type: string
@@ -194,15 +158,6 @@ view: batch_report_details {
     primary_key: yes
   }
 
-  # dimension: customer_id {
-  #   type: number
-  #   sql: ${TABLE}.customer_id ;;
-  # }
-
-  # dimension: provider_id {
-  #   type: number
-  #   sql: ${TABLE}.provider_id ;;
-  # }
 
   dimension: sales_name {
     type: string
@@ -226,7 +181,6 @@ view: batch_report_details {
 
   dimension_group: sales_created_at {
     type: time
-    #sql: ${TABLE}.sales_created_at ;;
     sql: case when (${sales_id} like 'void1%' or ${sales_id} like 'void2%')  then ${TABLE}.sales_created_at + INTERVAL '1 DAY' else ${TABLE}."sales_created_at" END ;;
     timeframes: [date, week, month, year, hour12, minute, hour,time,time_of_day,hour_of_day]
     label: "Date & Time"
@@ -234,7 +188,6 @@ view: batch_report_details {
 
   dimension_group: sales_created_at_MM_DD_YYYY {
     type: time
-    #sql: ${TABLE}.sales_created_at ;;
     sql: case when (${sales_id} like 'void1%' or ${sales_id} like 'void2%') then ${TABLE}.sales_created_at + INTERVAL '1 DAY' else ${TABLE}."sales_created_at" END ;;
     timeframes: [date, week, month, year, hour12, minute, hour,time,time_of_day,hour_of_day]
     label: "Sales Date"
@@ -245,7 +198,6 @@ view: batch_report_details {
 
   dimension: sales_created_at_Hr_n_Min {
     type: string
-    #sql: substring(${sales_created_at_minute},12,5) ;;
     sql:  ${sales_created_at_time_of_day} ;;
     label: "Time "
     html: {{ rendered_value | date: "%I:%M %p" }} ;;
@@ -262,16 +214,6 @@ view: batch_report_details {
     type: string
     sql: ${TABLE}.gx_provider_id ;;
   }
-
-  # dimension: external_id {
-  #   type: string
-  #   sql: ${TABLE}.external_id ;;
-  # }
-
-  # dimension: transaction_id {
-  #   type: string
-  #   sql: ${TABLE}.transaction_id ;;
-  # }
 
   dimension: payment_id {
     type: string
@@ -377,7 +319,6 @@ view: batch_report_details {
 
   dimension: Total_subscription_payment_tile {
     type: string
-    #sql: case when ${sales_created_at_date} IS NOT NULL then 'Total Sales' else NULL end ;;
     sql: 'Recurring PMT';;
     html:  <p style="text-align:center;color:black;font-size:155%"> Total Subscription Payments </p>
       <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -385,7 +326,6 @@ view: batch_report_details {
 
   dimension: Total_tip_payment_tile {
     type: string
-    #sql: case when ${sales_created_at_date} IS NOT NULL then 'Total Sales' else NULL end ;;
     sql: 'Tip PMT';;
     html:  <p style="text-align:center;color:black;font-size:155%"> Total Tip Payments </p>
       <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;

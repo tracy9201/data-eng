@@ -10,7 +10,7 @@
   elements:
   - title: Note Tile
     name: Note
-    model: looker_hintmd
+    model: external_reporting_qa
     #explore: payment_summary
     explore: top_product_sales
     type: single_value
@@ -38,7 +38,7 @@
 
   - title: Note Tile Left
     name: Note Left
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: top_product_sales
     type: single_value
     fields: [product_sales.Note_Tile_Left]
@@ -63,7 +63,7 @@
 
   - title: Payment_Methods_Tile
     name: Payment_Methods_Tile
-    model: looker_hintmd
+    model: external_reporting_qa
     #explore: payment_summary
     explore: date_table
     type: single_value
@@ -89,7 +89,7 @@
 
   - title: Transaction Count By Payment Method
     name: Transaction Count By Payment Method
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: looker_pie
     #fields: [payment_summary.sales_type, payment_summary.count]
@@ -122,7 +122,7 @@
 
   - title: Top Product Tile
     name: Top Product Tile
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: top_product_sales
     type: single_value
     fields: [product_sales.top_five_products]
@@ -147,7 +147,7 @@
 
   - title: Top Product Sales
     name: Top Product Sales
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: top_product_sales
     type: looker_bar
     fields: [product_sales.subscription_name, product_sales.total_amount]
@@ -200,7 +200,7 @@
 
   - title: Grand Total
     name: Grand Total
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     #fields: [payment_summary.sum_amount]
@@ -226,7 +226,7 @@
     height: 9
   - title: Total Retail Tile
     name: Total Retail Tile
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_total_retail]
@@ -252,8 +252,7 @@
 
   - title: Total Recurring Payments
     name: Total Recurring Payments
-    model: looker_hintmd
-    #explore: payment_summary
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_subscription_amount]
@@ -278,7 +277,7 @@
 
   - title: Cash
     name: Cash
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_cash]
@@ -303,7 +302,7 @@
     height: 4
   - title: Checks
     name: Checks
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_check]
@@ -329,7 +328,7 @@
 
   - title: Credit Cards
     name: Credit Cards
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_credit_card]
@@ -355,7 +354,7 @@
     height: 4
   - title: BD
     name: BD
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_BD]
@@ -380,7 +379,7 @@
     height: 4
   - title: Practice Credits
     name: Practice Credits
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_practice_credit]
@@ -405,7 +404,7 @@
     height: 4
   - title: OTHER
     name: OTHER
-    model: looker_hintmd
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_other]
@@ -431,8 +430,7 @@
 
   - title: Total Tipping Payment
     name: Total Tipping Payment
-    model: looker_hintmd
-    #explore: payment_summary
+    model: external_reporting_qa
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_tipping_amount]

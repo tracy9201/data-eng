@@ -9,7 +9,6 @@
 
     measure: countTest {
       type: count
-      #drill_fields: [detail*]
       label: " "
       html: <p style="text-align:left;font-weight: bold;color:white;font-size:80%"> {{ rendered_value }} Transactions</p>;;
     }
@@ -19,20 +18,16 @@
       sql: coalesce(${sales_amount}+${gratuity_amount},0);;
       value_format: "$#,##0.00"
       label: "Total"
-      # html:
-      # <div  style="text-align:center;font-size:140%;number-format='$#,##0' ">{{ rendered_value }}</div> ;;
       html: <div  style="text-align:center;font-size:250%;number-format='$#,##0' ">{{ rendered_value }}</div> ;;
     }
 
     measure:sum_total_retail {
       type: sum
       sql: case when ${TABLE}.sales_type in ('cash','check','credit_card','credit','reward','provider credit')
-          and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%')
+          and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%' or ${TABLE}.sales_id like 'void%')
          then (coalesce(${sales_amount},0)+coalesce(${gratuity_amount},0)) end;;
       value_format: "$#,##0.00"
       label: "Total Retail Tile"
-      # html:
-      # <div  style="text-align:center;font-size:140%;number-format='$#,##0' ">{{ rendered_value }}</div> ;;
       html:  <p style="text-align:center;font-weight: bold;color:black;font-size:160%"> TOTAL RETAIL </p>
         <div  style="text-align:center;font-size:260%; number-format='$#,##0' ">{{ rendered_value }}</div> ;;
     }
@@ -40,20 +35,17 @@
     measure: sum_amount_tile {
       type: sum
       sql: case when ${TABLE}.sales_type in ('cash','check','credit_card','credit','reward','provider credit')
-          and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%' or ${TABLE}.sales_id like 'tran%')
+          and (${TABLE}.sales_id like 'credit%' or ${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%' or ${TABLE}.sales_id like 'tran%' or ${TABLE}.sales_id like 'void%')
          then (coalesce(${sales_amount},0)+coalesce(${gratuity_amount},0))
         end;;
-    #sql:  case when ${kronos_subscription.type} = 0 then ${sales_amount} else 0 end ;;
         value_format: "$#,##0.00"
         label: "Total amount Tile"
-        #html: <div style="text-align:center;font-size:250%;number-format='$#,##0' ">{{ rendered_value }}</div> ;;
         html:  <p style="text-align:center;font-weight: bold;color:black;font-size:160%"> GRAND TOTAL </p>
           <div  style="text-align:center;font-size:260%; number-format='$#,##0' ">{{ rendered_value }}</div> ;;
       }
 
       measure: sum_cash {
         type: sum
-        #sql: ${cash}/100 ;;
         sql: case when ${sales_type} = 'CASH' then coalesce(${sales_amount},0) else 0 end ;;
         label: "Total Cash"
         value_format: "$#,##0.00"
@@ -146,7 +138,7 @@
             label: "CHECK"
           }
           when:  {
-            sql: ${TABLE}.sales_type = 'credit_card' and (${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%') ;;
+            sql: ${TABLE}.sales_type = 'credit_card' and (${TABLE}.sales_id like 'payment%' or ${TABLE}.sales_id like 'refund%' or ${TABLE}.sales_id like 'void%') ;;
             label: "CREDIT CARD"
           }
           when:  {
@@ -260,30 +252,10 @@
         primary_key: yes
       }
 
-      # dimension: customer_id {
-      #   type: number
-      #   sql: ${TABLE}.customer_id ;;
-      # }
-
-      # dimension: provider_id {
-      #   type: number
-      #   sql: ${TABLE}.provider_id ;;
-      # }
-
       dimension: sales_name {
         type: string
         sql: ${TABLE}.sales_name ;;
       }
-
-#   dimension: sales_amount {
-#     type: number
-#     #sql: coalesce(${TABLE}.sales_amount/100, 0) ;;
-#     sql: case when ${transaction} = 'REFUND' then coalesce((-1*${TABLE}.sales_amount)/100,0) else coalesce(${TABLE}.sales_amount/100,0) end ;;
-#     label: "Amount"
-#     value_format: "$#,##0.00"
-#   }
-
-
 
       dimension: sales_amount {
         type: number
@@ -302,7 +274,6 @@
 
       dimension_group: sales_created_at {
         type: time
-        #sql: ${TABLE}.sales_created_at ;;
         sql: case when (${sales_id} like 'void1%' or ${sales_id} like 'void2%') then ${TABLE}.sales_created_at + INTERVAL '1 DAY' else ${TABLE}."sales_created_at" END ;;
         timeframes: [date, week, month, year, hour12, minute, hour,time,time_of_day,hour_of_day]
         label: "Date & Time"
@@ -310,7 +281,6 @@
 
       dimension_group: gateway_created_at {
         type: time
-        #sql: ${TABLE}.gateway_created_at ;;
         sql: case when (${sales_id} like 'void1%' or ${sales_id} like 'void2%') then ${TABLE}.gateway_created_at + INTERVAL '1 DAY' else ${TABLE}."gateway_created_at" END ;;
         timeframes: [date, week, month, year, hour12, minute, hour,time,time_of_day,hour_of_day]
         label: "Date & Time"
@@ -318,7 +288,6 @@
 
       dimension_group: sales_created_at_MM_DD_YYYY {
         type: time
-        #sql: ${TABLE}.sales_created_at ;;
         sql: case when (${sales_id} like 'void1%' or ${sales_id} like 'void2%')  then ${TABLE}.sales_created_at + INTERVAL '1 DAY' else ${TABLE}."sales_created_at" END ;;
         timeframes: [date, week, month, year, hour12, minute, hour,time,time_of_day,hour_of_day]
         label: "Sales Date"
@@ -331,7 +300,6 @@
 
       dimension: sales_created_at_Hr_n_Min {
         type: string
-        #sql: substring(${sales_created_at_minute},12,5) ;;
         sql:  ${sales_created_at_time_of_day} ;;
         label: "Time "
         html: {{ rendered_value | date: "%I:%M %p" }} ;;
@@ -347,26 +315,9 @@
         sql: ${TABLE}.gx_provider_id ;;
       }
 
-      # dimension: external_id {
-      #   type: string
-      #   sql: ${TABLE}.external_id ;;
-      # }
-
-      # dimension: transaction_id {
-      #   type: string
-      #   sql: ${TABLE}.transaction_id ;;
-      # }
-
       dimension: payment_id {
         type: string
-        #sql:  ${TABLE}.payment_id ;;
         sql: case when ${sales_type} = 'CREDIT CARD' or ${payment_method} in('OTHER CREDIT CARD','VISA','AMEX','MASTERCARD','DISCOVER') then CONCAT('**** ',cast(${TABLE}.payment_id as VARCHAR)) else ${TABLE}.payment_id end ;;
-        #html: {% if {{ practice_sales.payment_method._value }} == 'CREDIT CARD' %}
-        #<p style="text-align:center;margin-left:20%;margin-top:6%">****<span>{{rendered_value}} </span></p>
-        #{% else %}
-        #<p style="text-align:center;margin-left:20%;margin-top:6%">{{rendered_value}}</p>
-        #{% endif %}
-        #;;
       }
 
       dimension: sales_details {
@@ -378,7 +329,6 @@
 
       dimension: Total_sales_tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Total Sales' else NULL end ;;
         sql: 'Total Sales';;
         html:  <p style="text-align:center;color:black;font-size:155%"> Total Payments </p>
           <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -386,7 +336,6 @@
 
       dimension: Sales_by_payment_method_tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Sales By Payment Method' else NULL end ;;
         sql: 'Sales By Payment Method' ;;
         html:  <p style="text-align:center;color:black;font-size:140%"> Transaction Count by Payment Method </p>
           <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -394,7 +343,6 @@
 
       dimension: Total_subscription_payment_tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Total Sales' else NULL end ;;
         sql: 'Total Subscription Payment';;
         html:  <p style="text-align:center;color:black;font-size:155%"> Total Subscription Payments </p>
           <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -402,7 +350,6 @@
 
       dimension: Total_tip_payment_tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Total Sales' else NULL end ;;
         sql: 'Total Tip Payment';;
         html:  <p style="text-align:center;color:black;font-size:155%"> Total Tip Payments </p>
           <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -410,7 +357,6 @@
 
       dimension: Funding_details_Tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Sales By Payment Method' else NULL end ;;
         sql: 'Fund Details';;
         html:  <p style="text-align:center;color:black;font-size:120%"> Deposit Summary </p>
           <div  style="text-align:center; number-format='$#,##0';color:white;font-size:10% ">{{ rendered_value }}</div> ;;
@@ -418,7 +364,6 @@
 
       dimension: Note_Tile {
         type: string
-        #sql: case when ${sales_created_at_date} IS NOT NULL then 'Sales By Payment Method' else NULL end ;;
         sql: 'Fund Details';;
         html:  <p style="text-align:right;color:#97999B;font-size:35%;margin-top:3%;margin-right:2%"> Note: Data is refreshed hourly. A maximum of 1000 entries are shown. </p>;;
 
