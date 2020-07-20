@@ -1,5 +1,18 @@
 
-  view: batch_report_summary {
+  test: historic_void_is_accurate {
+    explore_source: date_table {
+      column: batch_report_summary.sum_credit_card {
+        field: batch_report_summary.sum_credit_card
+      }
+      filters: [batch_report_summary.sales_created_at_date: "2019-11-14"]
+    }
+    assert: credit_card_is_expected_value {
+      expression: ${batch_report_summary.sum_credit_card} = 350.96 ;;
+    }
+  }
+
+
+ view: batch_report_summary {
     sql_table_name: external_reporting_qa.payment_summary ;;
 
     measure: count {
