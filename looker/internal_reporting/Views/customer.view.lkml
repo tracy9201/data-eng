@@ -82,7 +82,7 @@ view: customer {
       # ;;
       case: {
         when: {
-          sql: ${TABLE}.customer_type = 'member' ;;
+          sql: ${TABLE}.member_type = 'member' ;;
           label: "Member"
         }
         else: "Non-Member"
@@ -151,7 +151,7 @@ view: customer {
       type: string
       #sql: coalesce(${TABLE}.customer_name,' ') ;;
       #sql: coalesce(${TABLE}.customer_type,'non-member') ;;
-      sql: CASE WHEN ${TABLE}.user_type = 1 THEN 'Guest' WHEN ${TABLE}.customer_type = 'member'  THEN  'Subscriber' WHEN  ${TABLE}.customer_type = 'non-member' THEN 'Non-Subscriber' ELSE 'Guest' END;;
+      sql: CASE WHEN ${TABLE}.user_type = 1 THEN 'Guest' WHEN ${TABLE}.member_type = 'member'  THEN  'Subscriber' WHEN  ${TABLE}.member_type = 'non-member' THEN 'Non-Subscriber' ELSE 'Guest' END;;
       #sql:  CASE WHEN ${TABLE}.${customer_type} = 1 THEN 'GUEST Checkout' WHEN ${settlement_funding.settlement_id} like 'adjustment%' THEN 'Not Applicable' WHEN ${TABLE}.customer_type = 0 then ${TABLE}.customer_name ELSE 'Not Available' END;;
       label: "Subscriber Type"
     }
