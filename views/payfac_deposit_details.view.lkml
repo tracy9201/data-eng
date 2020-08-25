@@ -3,17 +3,17 @@ view: payfac_deposit_details {
 
   dimension: adjustments {
     type: number
-    sql: ${TABLE}.adjustments ;;
+    sql: ${TABLE}.adjustments/100.0 ;;
   }
 
   dimension: chargebacks {
     type: number
-    sql: ${TABLE}.chargebacks ;;
+    sql: ${TABLE}.chargebacks/100.0 ;;
   }
 
   dimension: charges {
     type: number
-    sql: ${TABLE}.charges ;;
+    sql: ${TABLE}.charges/100.0 ;;
   }
 
   dimension: merchant_id {
@@ -23,7 +23,7 @@ view: payfac_deposit_details {
 
   dimension: refunds {
     type: number
-    sql: ${TABLE}.refunds ;;
+    sql: ${TABLE}.refunds/100.0 ;;
   }
 
   dimension_group: settlement {
@@ -41,10 +41,6 @@ view: payfac_deposit_details {
     sql: ${TABLE}.settlement_date ;;
   }
 
-  dimension: settlement {
-    type: string
-    sql: ${TABLE}.settlement_month ;;
-  }
 
   dimension: transactions {
     type: number
