@@ -3,7 +3,8 @@ view: payfac_chargeback {
 
   dimension: amount {
     type: number
-    sql: ${TABLE}.amount ;;
+    sql: ${TABLE}.amount;;
+    value_format: "$#,##0.00"
   }
 
   dimension: api_response {

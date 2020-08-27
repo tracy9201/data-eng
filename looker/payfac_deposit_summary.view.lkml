@@ -4,16 +4,19 @@ view: payfac_deposit_summary {
   dimension: adjustments {
     type: number
     sql: ${TABLE}.adjustments/100.0 ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: chargebacks {
     type: number
     sql: ${TABLE}.chargebacks/100.0 ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: charges {
     type: number
     sql: ${TABLE}.charges/100.0 ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: merchant_id {
@@ -44,6 +47,7 @@ view: payfac_deposit_summary {
   dimension: refunds {
     type: number
     sql: ${TABLE}.refunds/100.0 ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: setl_month {

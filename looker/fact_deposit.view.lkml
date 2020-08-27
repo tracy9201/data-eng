@@ -4,6 +4,7 @@ view: fact_deposit {
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: card_brand {
@@ -51,22 +52,27 @@ view: fact_deposit {
   measure: Total_Amount {
     type: sum
     sql: ${TABLE}.amount/100.0 ;;
+    value_format: "$#,##0.00"
   }
   measure: min_Amount {
     type: min
     sql: ${TABLE}.amount/100.0  ;;
+    value_format: "$#,##0.00"
   }
   measure: max_amount {
     type: max
     sql: ${TABLE}.amount/100.0 ;;
+    value_format: "$#,##0.00"
   }
   measure: median_amount {
     type: median
     sql: ${TABLE}.amount/100.0 ;;
+    value_format: "$#,##0.00"
   }
   measure: avg_amount {
     type: average
     sql: ${TABLE}.amount/100.0 ;;
+    value_format: "$#,##0.00"
   }
 
 }
