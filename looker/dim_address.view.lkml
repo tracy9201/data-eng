@@ -55,15 +55,15 @@ view: dim_address {
 
 
   dimension: full_address1{
-    sql: ${TABLE}.street1  ;;
+    sql: ${TABLE}.merchant_name  ;;
     type: string
     html:
     <ul>
-      <li> {{ value }} </li>
+      <li> <b> <h1 style="font-size:3vw"> {{ value }}  </h1> </b> </li>
+      <li> {{ street1._value }} </li>
       <li> {{ street2._value }} </li>
       <li> {{ city._value }} </li>
-      <li> {{ state._value }} </li>
-      <li> {{ zip._value }} </li>
+      <li> {{ state._value }} - {{ zip._value }} </li>
     </ul> ;;
   }
 

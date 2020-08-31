@@ -1,9 +1,14 @@
-view: payfac_chargeback {
-  sql_table_name: public.payfac_chargeback ;;
+view: payfac_adjustment {
+  sql_table_name: public.payfac_adjustment ;;
+
+  dimension: adjustment_id {
+    type: number
+    sql: ${TABLE}.adjustment_id ;;
+  }
 
   measure: amount {
     type: sum
-    sql: ${TABLE}.amount;;
+    sql: ${TABLE}.amount/100 ;;
     value_format: "$#,##0.00"
   }
 
@@ -12,30 +17,23 @@ view: payfac_chargeback {
     sql: ${TABLE}.api_response ;;
   }
 
-  dimension: card_brand {
-    type: string
-    sql: ${TABLE}.card_brand ;;
-  }
-
-  dimension: card_identifier {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.card_identifier ;;
-  }
-
   dimension: case_number {
     type: number
     sql: ${TABLE}.case_number ;;
   }
 
-  dimension: chargeback_id {
-    type: number
-    sql: ${TABLE}.chargeback_id ;;
-  }
-
-  dimension: chargeback_reason_code {
-    type: string
-    sql: ${TABLE}.chargeback_reason_code ;;
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.created_at ;;
   }
 
   dimension: description {
@@ -55,6 +53,20 @@ view: payfac_chargeback {
       year
     ]
     sql: ${TABLE}.exchange_date_added ;;
+  }
+
+  dimension_group: exchange_submit_added {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.exchange_submit_added ;;
   }
 
   dimension: merchant_id {
@@ -86,16 +98,6 @@ view: payfac_chargeback {
     sql: ${TABLE}.reference_id ;;
   }
 
-  dimension: transaction_id {
-    type: string
-    sql: ${TABLE}.transaction_id ;;
-  }
-
-  dimension: transaction_status {
-    type: number
-    sql: ${TABLE}.transaction_status ;;
-  }
-
   dimension_group: transaction {
     type: time
     timeframes: [
@@ -107,12 +109,21 @@ view: payfac_chargeback {
       quarter,
       year
     ]
-    sql: ${TABLE}.transaction_time ;;
+    sql: ${TABLE}.transaction_date ;;
   }
 
-  dimension: transaction_type {
-    type: string
-    sql: ${TABLE}.transaction_type ;;
+  dimension_group: updated {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.updated_at ;;
   }
 
   measure: count {

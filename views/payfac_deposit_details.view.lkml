@@ -19,6 +19,13 @@ view: payfac_deposit_details {
     value_format: "$#,##0.00"
   }
 
+  measure: total_fee {
+    type: sum
+    sql:  ${TABLE}.total_fee;;
+    value_format: "$#,##0.00"
+  }
+
+
 
   dimension: merchant_id {
     type: number
@@ -29,6 +36,22 @@ view: payfac_deposit_details {
     type: sum
     sql: ${TABLE}.refunds/100.0 ;;
     value_format: "$#,##0.00"
+  }
+
+  dimension_group: date {
+    type: time
+    label: "calendar"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.date ;;
   }
 
   dimension_group: settlement {
