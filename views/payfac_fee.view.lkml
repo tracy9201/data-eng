@@ -62,7 +62,11 @@ view: payfac_fee {
     sql: ${TABLE}.description ;;
   }
 
-
+  measure: total_fee {
+    type: sum
+    sql: ${TABLE}.fee_basis_calc * ${payfac_fee_basis.basis} ;;
+    value_format: "$#,##0.00"
+  }
 
   dimension: fixed_rate {
     type: number
