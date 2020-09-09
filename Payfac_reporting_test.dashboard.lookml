@@ -343,7 +343,7 @@
     row: 21
     col: 0
     width: 23
-    height: 4
+    height: 3
   - title: Title Deposit Details
     name: Title Deposit Details
     model: payfac_reporting
@@ -366,7 +366,7 @@
     row: 26
     col: 0
     width: 23
-    height: 4
+    height: 3
   - title: Deposit Summary
     name: Deposit Summary
     model: payfac_reporting
@@ -463,7 +463,7 @@
     row: 49
     col: 0
     width: 23
-    height: 2
+    height: 3
   - title: Title Adjustments
     name: Title Adjustments
     model: payfac_reporting
@@ -486,7 +486,7 @@
     row: 54
     col: 0
     width: 23
-    height: 2
+    height: 3
   - title: Title Fee Detail
     name: Title Fee Detail
     model: payfac_reporting
@@ -536,7 +536,7 @@
     row: 43
     col: 0
     width: 23
-    height: 2
+    height: 3
   - title: Chargebacks
     name: Chargebacks
     model: payfac_reporting
