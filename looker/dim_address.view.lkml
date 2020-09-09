@@ -67,6 +67,16 @@ view: dim_address {
     </ul> ;;
   }
 
+
+  dimension: Hint_Address{
+    sql: ${TABLE}.merchant_name  ;;
+    type: string
+    html:
+    <ul>
+      <li><p style="text-align:left;padding-left:10px;font-size:0.75vw">7901 Stoneridge Dr #150, Pleasanton, CA 94588</p></li
+    </ul> ;;
+  }
+#<li><p style="text-align:left;padding-left:10px">Statement Periord&emsp;&emsp;{{range}}</p></li>
   dimension: live {
     type: yesno
     sql: ${TABLE}.live ;;
