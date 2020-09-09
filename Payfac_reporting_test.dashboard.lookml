@@ -45,7 +45,7 @@
     row: 5
     col: 0
     width: 23
-    height: 3
+    height: 2
   - title: Summary Analytics
     name: Summary Analytics
     model: payfac_reporting
@@ -316,10 +316,10 @@
     rows_font_size: 12
     listen:
       Merchant_id: dim_address.merchant_id
-    row: 63
+    row: 60
     col: 0
     width: 23
-    height: 3
+    height: 2
   - title: Title Deposit Summary
     name: Title Deposit Summary
     model: payfac_reporting
@@ -343,7 +343,7 @@
     row: 21
     col: 0
     width: 23
-    height: 3
+    height: 4
   - title: Title Deposit Details
     name: Title Deposit Details
     model: payfac_reporting
@@ -363,10 +363,10 @@
     conditional_formatting_include_nulls: false
     series_types: {}
     defaults_version: 1
-    row: 28
+    row: 26
     col: 0
     width: 23
-    height: 3
+    height: 4
   - title: Deposit Summary
     name: Deposit Summary
     model: payfac_reporting
@@ -439,50 +439,7 @@
     row: 23
     col: 0
     width: 23
-    height: 5
-  - title: Deposit Details
-    name: Deposit Details
-    model: payfac_reporting
-    explore: payfac_deposit_details
-    type: table
-    fields: [payfac_deposit_details.date_date, payfac_deposit_details.transactions,
-      payfac_deposit_details.charges, payfac_deposit_details.refunds, payfac_deposit_details.chargebacks,
-      payfac_deposit_details.adjustments, payfac_deposit_details.total_fee]
-    fill_fields: [payfac_deposit_details.date_date]
-    sorts: [payfac_deposit_details.date_date]
-    limit: 500
-    total: true
-    dynamic_fields: [{table_calculation: deposits, label: Deposits, expression: "${payfac_deposit_details.charges}\
-          \ - ${payfac_deposit_details.refunds} - ${payfac_deposit_details.chargebacks}\
-          \ - ${payfac_deposit_details.adjustments} -\n${payfac_deposit_details.total_fee}",
-        value_format: !!null '', value_format_name: usd, _kind_hint: measure, _type_hint: number}]
-    show_view_names: false
-    show_row_numbers: false
-    truncate_column_names: false
-    hide_totals: false
-    hide_row_totals: false
-    table_theme: white
-    limit_displayed_rows: false
-    enable_conditional_formatting: false
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
-    series_labels:
-      payfac_deposit_details.date_date: Date
-    conditional_formatting: [{type: along a scale..., value: !!null '', background_color: "#654054",
-        font_color: !!null '', color_application: {collection_id: 158c6823-0d69-4c97-8dc5-a488504d1fad,
-          palette_id: 4c4c1d8a-4d22-4569-816e-9630864f154b, options: {constraints: {
-              min: {type: minimum}, mid: {type: number, value: 0}, max: {type: maximum}},
-            mirror: true, reverse: false, stepped: false}}, bold: false, italic: false,
-        strikethrough: false, fields: !!null ''}]
-    defaults_version: 1
-    title_hidden: true
-    listen:
-      Merchant_id: payfac_deposit_details.merchant_id
-      Month: payfac_deposit_details.date_month
-    row: 30
-    col: 0
-    width: 23
-    height: 15
+    height: 3
   - title: Title Chargebacks
     name: Title Chargebacks
     model: payfac_reporting
@@ -503,10 +460,10 @@
     series_types: {}
     defaults_version: 1
     listen: {}
-    row: 52
+    row: 49
     col: 0
     width: 23
-    height: 3
+    height: 2
   - title: Title Adjustments
     name: Title Adjustments
     model: payfac_reporting
@@ -526,10 +483,10 @@
     conditional_formatting_include_nulls: false
     series_types: {}
     defaults_version: 1
-    row: 57
+    row: 54
     col: 0
     width: 23
-    height: 3
+    height: 2
   - title: Title Fee Detail
     name: Title Fee Detail
     model: payfac_reporting
@@ -576,10 +533,10 @@
     totals_color: "#808080"
     defaults_version: 1
     series_types: {}
-    row: 45
+    row: 43
     col: 0
     width: 23
-    height: 3
+    height: 2
   - title: Chargebacks
     name: Chargebacks
     model: payfac_reporting
@@ -631,7 +588,7 @@
     listen:
       Merchant_id: payfac_chargeback.merchant_id
       Month: payfac_chargeback.transaction_month
-    row: 54
+    row: 51
     col: 0
     width: 23
     height: 3
@@ -681,7 +638,7 @@
     listen:
       Merchant_id: payfac_adjustment.merchant_id
       Month: payfac_adjustment.transaction_month
-    row: 59
+    row: 56
     col: 0
     width: 23
     height: 4
@@ -762,10 +719,65 @@
     hidden_fields: [payfac_fee.fee_basis_calc, payfac_fee_basis.basis]
     title_hidden: true
     listen: {}
-    row: 47
+    row: 45
     col: 0
     width: 23
-    height: 5
+    height: 4
+  - title: Deposit Details
+    name: Deposit Details
+    model: payfac_reporting
+    explore: payfac_deposit_details
+    type: looker_grid
+    fields: [payfac_deposit_details.date_date, payfac_deposit_details.transactions,
+      payfac_deposit_details.charges, payfac_deposit_details.refunds, payfac_deposit_details.chargebacks,
+      payfac_deposit_details.adjustments, payfac_deposit_details.total_fee]
+    fill_fields: [payfac_deposit_details.date_date]
+    sorts: [payfac_deposit_details.date_date]
+    limit: 500
+    total: true
+    dynamic_fields: [{table_calculation: deposits, label: Deposits, expression: "${payfac_deposit_details.charges}\
+          \ - ${payfac_deposit_details.refunds} - ${payfac_deposit_details.chargebacks}\
+          \ - ${payfac_deposit_details.adjustments} -\n${payfac_deposit_details.total_fee}",
+        value_format: !!null '', value_format_name: usd, _kind_hint: measure, _type_hint: number}]
+    show_view_names: false
+    show_row_numbers: false
+    transpose: false
+    truncate_text: true
+    hide_totals: false
+    hide_row_totals: false
+    size_to_fit: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_text_alignment: left
+    header_font_size: '12'
+    rows_font_size: '12'
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    show_sql_query_menu_options: false
+    show_totals: true
+    show_row_totals: true
+    series_labels:
+      payfac_deposit_details.date_date: Date
+    header_font_color: "#EFECF3"
+    header_background_color: "#684A91"
+    conditional_formatting: [{type: along a scale..., value: !!null '', background_color: "#654054",
+        font_color: !!null '', color_application: {collection_id: 158c6823-0d69-4c97-8dc5-a488504d1fad,
+          palette_id: 4c4c1d8a-4d22-4569-816e-9630864f154b, options: {constraints: {
+              min: {type: minimum}, mid: {type: number, value: 0}, max: {type: maximum}},
+            mirror: true, reverse: false, stepped: false}}, bold: false, italic: false,
+        strikethrough: false, fields: !!null ''}]
+    truncate_column_names: false
+    defaults_version: 1
+    series_types: {}
+    title_hidden: true
+    listen:
+      Merchant_id: payfac_deposit_details.merchant_id
+      Month: payfac_deposit_details.date_month
+    row: 28
+    col: 0
+    width: 23
+    height: 15
   filters:
   - name: Merchant_id
     title: Merchant_id
