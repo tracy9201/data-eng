@@ -37,6 +37,13 @@ view: payfac_fee {
     sql: ${TABLE}.end_date ;;
   }
 
+  dimension: Title_Fee_Detail{
+    type: string
+    sql: 'Fee Detail' ;;
+    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Fee Detail </p>;;
+  }
+
+
   dimension: fee_type {
     type: string
     sql: ${TABLE}.fee_type ;;

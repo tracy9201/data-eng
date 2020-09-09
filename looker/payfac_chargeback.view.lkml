@@ -17,6 +17,12 @@ view: payfac_chargeback {
     sql: ${TABLE}.card_brand ;;
   }
 
+  dimension: Title_chargebacks {
+    type: string
+    sql: 'Chargebacks' ;;
+    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Chargebacks </p>;;
+  }
+
   dimension: card_identifier {
     type: number
     value_format_name: id

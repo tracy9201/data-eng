@@ -17,6 +17,12 @@ view: payfac_adjustment {
     sql: ${TABLE}.api_response ;;
   }
 
+  dimension: Title_adjustments {
+    type: string
+    sql: 'Adjustments' ;;
+    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Adjustments </p>;;
+  }
+
   dimension: case_number {
     type: number
     sql: ${TABLE}.case_number ;;
