@@ -8,6 +8,7 @@ datagroup: external_reporting_default_datagroup {
 include: "/looker/*.view"
 include: "/views/*.view"
 include: "/looker/external_reporting/*.dashboard.lookml"
+include: "*.dashboard.lookml"
 persist_with: external_reporting_default_datagroup
 
 
