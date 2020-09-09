@@ -59,11 +59,20 @@ view: dim_address {
     type: string
     html:
     <ul>
-      <li> <b> <h1 style="font-size:3vw"> {{ value }}  </h1> </b> </li>
-      <li> {{ street1._value }} </li>
-      <li> {{ street2._value }} </li>
-      <li> {{ city._value }} </li>
-      <li> {{ state._value }} - {{ zip._value }} </li>
+      <li> <b> <p style="text-align:left;padding-left:10px;font-size:1.5vw"> {{ value }}  </p> </b> </li>
+      <li> <p style="text-align:left;padding-left:10px;font-size:1vw"> {{ street1._value }} </p> </li>
+      <li> <p style="text-align:left;padding-left:10px;font-size:1vw"> {{ street2._value }} </p> </li>
+      <li> <p style="text-align:left;padding-left:10px;font-size:1vw"> {{ city._value }}  </p></li>
+      <li> <p style="text-align:left;padding-left:10px;font-size:1vw"> {{ state._value }} - {{ zip._value }}  </p> </li>
+    </ul> ;;
+  }
+
+  dimension: your_processing_statement{
+    sql: 'Your Card Processing Statement'   ;;
+    type: string
+    html:
+    <ul>
+      <li><p style="text-align:left;padding-left:10px;font-size:2vw">Your Card Processing Statement</p></li
     </ul> ;;
   }
 
