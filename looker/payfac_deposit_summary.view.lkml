@@ -57,6 +57,15 @@ view: payfac_deposit_summary {
     value_format: "$#,##0.00"
   }
 
+  dimension: Title_deposit_summary {
+    type: string
+    sql: 'Deposit Summary' ;;
+    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Deposit Summary </p>;;
+  }
+
+
+
+
   dimension: setl_month {
     type: string
     sql: ${TABLE}.setl_month ;;
