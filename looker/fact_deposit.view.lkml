@@ -48,6 +48,11 @@ view: fact_deposit {
     type: count
     drill_fields: []
   }
+
+  measure: Transaction_count {
+    type: sum
+    sql: ${TABLE}.Transaction_count ;;
+  }
   measure: fee {
     type: sum
     sql: ${TABLE}.fee ;;

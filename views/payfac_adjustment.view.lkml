@@ -8,7 +8,7 @@ view: payfac_adjustment {
 
   measure: amount {
     type: sum
-    sql: ${TABLE}.amount/100 ;;
+    sql: ${TABLE}.amount ;;
     value_format: "$#,##0.00"
   }
 
@@ -20,7 +20,7 @@ view: payfac_adjustment {
   dimension: Title_adjustments {
     type: string
     sql: 'Adjustments' ;;
-    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Adjustments </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Adjustments </p>;;
   }
 
   dimension: case_number {

@@ -16,7 +16,7 @@ persist_with: external_reporting_default_datagroup
 explore: payfac_fee{
   join: payfac_fee_basis {
     type: inner
-   relationship: one_to_many
+   relationship: one_to_one
    sql_on: ${payfac_fee_basis.merchant_id} = ${payfac_fee.merchant_id} and ${payfac_fee.fee} =  ${payfac_fee_basis.fee_type} ;;
   }
 }

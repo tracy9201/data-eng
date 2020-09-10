@@ -3,13 +3,13 @@ view: payfac_deposit_details {
 
   measure: adjustments {
     type: sum
-    sql: ${TABLE}.adjustments/100.0 ;;
+    sql: ${TABLE}.adjustments ;;
     value_format: "$#,##0.00"
   }
 
   measure: chargebacks {
     type: sum
-    sql: ${TABLE}.chargebacks/100.0 ;;
+    sql: ${TABLE}.chargebacks ;;
     value_format: "$#,##0.00"
   }
 
@@ -28,7 +28,7 @@ view: payfac_deposit_details {
   dimension: Title_deposit_details {
     type: string
     sql: 'Deposit Details' ;;
-    html:  <p style="text-align:left;font-weight: bold;color:#684A91;font-size:120%"> Deposit Details </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Deposit Details </p>;;
   }
 
 
