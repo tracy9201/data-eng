@@ -27,8 +27,8 @@ view: payfac_deposit_details {
 
   dimension: Title_deposit_details {
     type: string
-    sql: 'Deposit Details' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Deposit Details </p>;;
+    sql: 'Deposit Detail' ;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Deposit Detail </p>;;
   }
 
 
