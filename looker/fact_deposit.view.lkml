@@ -24,6 +24,12 @@ view: fact_deposit {
     html: <img src="https://i.ibb.co/jbZHvyQ/hint-horiz-mark-purple-tm-598-x-112.png" alt="hint-horiz-mark-purple-tm-598-x-112" border="0"> ;;
   }
 
+  dimension: Title_Summary_Analytics{
+    type: string
+    sql: 'Summary Analytics' ;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Summary Analytics </p>;;
+  }
+
   dimension_group: settlement {
     type: time
     timeframes: [
