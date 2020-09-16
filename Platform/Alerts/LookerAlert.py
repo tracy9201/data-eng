@@ -5,22 +5,8 @@ from slack import WebClient
 import pandas as pd
 from tabulate import tabulate
 
-############# RDS connection #################################
 
-def v4DbConn(user,password,host,port,db):
-
-    v4connection = psycopg2.connect(user=user,
-                              password=password,
-                              host=host,
-                              port=port,
-                              database=db)
-    
-    return v4connection.cursor()
-
-################################################################
-############# Looker Redshift Connection #######################
-
-def LookerRedshiftConn(user,password,host,port,db):
+def DBConn(user,password,host,port,db):
 
     connection = psycopg2.connect(user=user,
                               password=password,
@@ -29,10 +15,8 @@ def LookerRedshiftConn(user,password,host,port,db):
                               database=db)
     
     return connection.cursor()
-
-##################################################################
     
-################ Slack API Connection ############################    
+    
 
 def slack_message(msg, channel,SLACK_API_TOKEN):
     if SLACK_API_TOKEN:
@@ -43,16 +27,15 @@ def slack_message(msg, channel,SLACK_API_TOKEN):
     else:
         print("Slack token not found")
         
-######################### MAIN ###################################
+
         
 def main():
 
-    ALERT_CHANNEL = '#test-alerts-looker'
+    #ALERT_CHANNEL = '#test-alerts-looker'
     #ALERT_CHANNEL = '#dataeng-alerts'
-    #ALERT_CHANNEL = '#prod-alerts'
-    #SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
-    SLACK_API_TOKEN = 'xoxb-3501726291-1252171318321-zQK7btfteUthQxCFKb0vNSsg'
-############### GET REDSHIFT CONNECTION DETAILS ##########################
+    ALERT_CHANNEL = '#prod-alerts'
+    SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
+    
     user = os.environ.get("redshift_user")
     print(user)
     password = os.environ.get("redshift_password")
@@ -60,15 +43,11 @@ def main():
     port = os.environ.get("redshift_port")
     database = os.environ.get("redshift_database")
     
-    redshiftCursor = LookerRedshiftConn(user,password,host,port,database)
+    redshiftCursor = DBConn(user,password,host,port,database)
 
 
-    
-##########################################################################
-
-############# FACT TABLE DATA SYNC CHECK #################################
-
-    factTableDict = {'public.payment_summary':'sales_created_at','public.deposit_summary':'funding_date_time','public.product_sales':'subscription_created','dwh.fact_invoice_item':'pay_date'}
+    factTableDict = {'public.payment_summary':'sales_created_at','public.deposit_summary':'funding_date_time',
+                     'public.product_sales':'subscription_created','dwh.fact_invoice_item':'pay_date'}
     
     for key,val in factTableDict.items():
         print(key, val)
@@ -83,7 +62,7 @@ def main():
             message = table + " view is stale by " + str(diffHours) +" hours."
             slack_message(message, ALERT_CHANNEL,SLACK_API_TOKEN)
     
-############### GET RDS CONNECTION DETAILS ##########################
+    
     rdsUser = os.environ.get("rds_user")
     print(rdsUser)
     rdsPassword = os.environ.get("rds_password")
@@ -91,11 +70,9 @@ def main():
     rdsPort = os.environ.get("rds_port")
     rdsDatabase = os.environ.get("rds_database")
     
-    rdsCursor = v4DbConn(rdsUser,rdsPassword,rdsHost,rdsPort,rdsDatabase)
+    rdsCursor = DBConn(rdsUser,rdsPassword,rdsHost,rdsPort,rdsDatabase)
 
-######################################################################
 
-################ DIMENSION TABLES SYNC CHECK #########################
     dimTableList = ['dwh.dim_customer', 'dwh.dim_provider', 'public.kronos_subscription', 'public.staff_details']
     
     for dimTable in dimTableList:
@@ -125,7 +102,7 @@ def main():
             print("wrong data in table "+dimTable)
             message = dimTable + " view data is inconsistent with the source. Difference:  " + str(diffCount)
             slack_message(message, ALERT_CHANNEL,SLACK_API_TOKEN)
-##########################################################################
+
 
 main()
     
