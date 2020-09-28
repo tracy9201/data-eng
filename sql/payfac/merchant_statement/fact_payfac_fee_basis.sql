@@ -48,19 +48,32 @@ Chargeback_fee as
     WHERE  type = 'Chargeback' 
     GROUP BY 1,2,3
 ),
+-- place holder for pci cert fee
+pci_no_cert_fee as
+(
+    SELECT DISTINCT
+    merchant_id
+    ,to_date('2020-01','YYYY-MM') settlement_month
+    ,'PCI No Cert Fee' as fee_type
+    ,1 as basis
+    FROM fact_deposit
+    LIMIT 1
+),
 
 main as 
 (
     SELECT * FROM cp
     UNION
     SELECT * FROM cnp
-    UNION
-    SELECT * FROM transactions_fee
+    --UNION
+    --SELECT * FROM transactions_fee
     UNION
     SELECT * FROM Chargeback_fee
+    UNION
+    SELECT * FROM pci_no_cert_fee
 )
 
 SELECT 
     *
-    ,CASE WHEN fee_type in ('Card Present Fee','Card Not Present Fee') THEN '$'||basis::varchar  ELSE basis::varchar END as basis_display 
+    ,CASE WHEN fee_type in ('Chargeback','Card Present Fee','Card Not Present Fee') THEN '$'||basis::varchar  ELSE basis::varchar END as basis_display 
 FROM main;

@@ -5,7 +5,11 @@ SELECT
 	a.id
 	,a.fee_type as fee
 	,CASE WHEN a.fee_type = 'PCI No Cert Fee' THEN 'Monthly' ELSE 'Transaction' END as fee_type
-	,'blah blah blah' as description
+	,CASE WHEN a.fee_type = 'PCI No Cert Fee' then 'Monthly PCI Cert Fee'
+		  WHEN a.fee_type = 'Card Present Fee' then 'Transaction fee when card is present'
+		  WHEN a.fee_type = 'Card Not Present Fee' then 'Transaction fee when card is not present' 
+		  WHEN a.fee_type = 'Chargeback Fee' then 'Transaction fee on a Chargeback'
+		  WHEN a.fee_type = 'Transaction Fee' then 'Transaction fee for each Transaction' end as description
 	,a.status
 	,a.start_date
 	,a.End_date
