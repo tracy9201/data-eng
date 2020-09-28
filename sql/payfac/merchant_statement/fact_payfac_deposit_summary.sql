@@ -19,7 +19,7 @@ SELECT
 	,sum(b.refunds) as Refunds
 	,sum(b.chargebacks) as Chargebacks
 	,sum(b.adjustments) as Adjustments
-	,sum(b.total_fee) as total_fee
+	,sum(coalesce(b.total_fee,0)) as total_fee
 	,sum(b.cp_transaction_count) cp_transaction_count
 	,sum(b.cnp_transaction_count) cnp_transaction_count
 	,sum(b.Charges_transaction_count) Charges_transaction_count
