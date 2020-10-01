@@ -144,6 +144,11 @@ view: subscription_tax_off {
   dimension: tax_percentage {
     type: number
     sql: ${TABLE}.tax_percentage ;;
+    html:
+    {% if 1 = 1 %}
+    <p style="color: red; font-size: 50%">{{ rendered_value }}</p>
+    {% endif %};;
+
   }
 
   dimension: subtotal {
