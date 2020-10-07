@@ -1,6 +1,6 @@
 ----- Data Pipeline: v4_g_authorisation ---------------------
 ----- Redshift Table: v4_g_authorisation ---------------------
------ Looker View: v4_authorisation ---------------------
+----- Looker View: authorisation ---------------------
 
 
 SELECT id,
