@@ -28,7 +28,14 @@ view: payfac_deposit_details {
   dimension: Title_deposit_details {
     type: string
     sql: 'Deposit Detail' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Deposit Detail </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#000000;font-size:100%"> Deposit Detail </p>;;
+  }
+
+  dimension: deposit_details_text {
+    type: string
+    sql: 'deposit_details text' ;;
+    html:  <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> The below data represents Deposit Summary of each month. This shows data about transactions, Charges, refunds, Adjustments and any fee if applied </p>
+      <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> This may vary by each month. so keep any eye out for this text</p>;;
   }
 
 

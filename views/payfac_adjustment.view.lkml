@@ -20,7 +20,14 @@ view: payfac_adjustment {
   dimension: Title_adjustments {
     type: string
     sql: 'Adjustments' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Adjustments </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#000000;font-size:100%"> Adjustments </p>;;
+  }
+
+  dimension: Adjustment_text {
+    type: string
+    sql: 'Adjustment text' ;;
+    html:  <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> The below data represents Deposit Summary of each month. This shows data about transactions, Charges, refunds, Adjustments and any fee if applied </p>
+      <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> This may vary by each month. so keep any eye out for this text</p>;;
   }
 
   dimension: case_number {

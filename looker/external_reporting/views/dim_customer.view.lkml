@@ -9,6 +9,10 @@ view: dim_customer {
   dimension: customer_city {
     type: string
     sql: ${TABLE}.customer_city ;;
+    html:
+    {% if 1 = 1 %}
+    <p style="color: red; font-size: 50%">{{ rendered_value }}</p>
+    {% endif %};;
   }
 
   dimension: customer_email {

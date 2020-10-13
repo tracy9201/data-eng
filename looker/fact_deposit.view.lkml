@@ -16,18 +16,18 @@ view: fact_deposit {
     type: number
     sql: ${TABLE}.merchant_id ;;
   }
-
+#https://i.ibb.co/jbZHvyQ/hint-horiz-mark-purple-tm-598-x-112.png
   dimension: hint_image {
     type: string
     sql: 'abc';;
     #html: <img src="https://logo-core.clearbit.com/looker.com" /> ;;
-    html: <img src="https://i.ibb.co/jbZHvyQ/hint-horiz-mark-purple-tm-598-x-112.png" alt="hint-horiz-mark-purple-tm-598-x-112" border="0"> ;;
+    html: <img  style="float:left;padding-left:5px;" src="https://i.ibb.co/gg02GjG/Opul-Logo.png" alt="hint-horiz-mark-purple-tm-598-x-112" border="0"> ;;
   }
-
+# html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Summary Analytics </p>;;
   dimension: Title_Summary_Analytics{
     type: string
     sql: 'Summary Analytics' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Summary Analytics </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#000000;font-size:100%"> Summary Analytics </p>;;
   }
 
   dimension_group: settlement {

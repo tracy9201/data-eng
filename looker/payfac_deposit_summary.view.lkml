@@ -37,15 +37,16 @@ view: payfac_deposit_summary {
 
 #<li>Customer Service&emsp;&emsp;Website - <a href>www.hintmd.com</a> </li>
 #<a href="https://www.w3schools.com">Visit W3Schools</a>
+#     <hr style="height:1px;border:none;color:#333;background-color:#333;" />
   dimension: Other_info{
     sql: ${TABLE}.merchant_id  ;;
     type: string
     html:
     <ul>
       <li><p style="text-align:left;padding-left:10px;font-size:1vw">Statement Periord&emsp;&emsp;{{range}}</p></li>
-      <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
       <li> <p style="text-align:left;padding-left:10px;font-size:1vw">Merchant Number&emsp;&emsp;{{value}}</p> </li>
-      <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
       <li><p style="text-align:left;padding-left:10px;font-size:1vw">Customer Service&emsp;&emsp;&ensp;Website - <a href="https://www.hintmd.com" target="_blank"  >www.hintmd.com</a></p></li>
       <li><p style="text-align:left;padding-left:10px;font-size:1vw">&ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Phone - 1-925-621-8866 </p> </li>
     </ul> ;;
@@ -60,10 +61,15 @@ view: payfac_deposit_summary {
   dimension: Title_deposit_summary {
     type: string
     sql: 'Deposit Summary' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Deposit Summary </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#1C1C1C;font-size:100%"> Deposit Summary </p>;;
   }
 
-
+  dimension: deposit_summary_text {
+    type: string
+    sql: 'Deposit Summary text' ;;
+    html:  <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> The below data represents Deposit Summary of each month. This shows data about transactions, Charges, refunds, Adjustments and any fee if applied </p>
+           <p style="text-align:left;padding-left:5px;color:#1C1C1C;font-size:30%"> This may vary by each month. so keep any eye out for this text</p>;;
+  }
 
 
   dimension: setl_month {

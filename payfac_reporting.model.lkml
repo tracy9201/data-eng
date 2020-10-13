@@ -26,15 +26,18 @@ explore: payfac_deposit_details{}
 
 #explore: date_table {}
 
-explore: fact_deposit { }
+explore: fact_deposit {}
 
-explore: dim_address { }
+explore: dim_address {}
 
-explore: payfac_chargeback { }
+explore: payfac_chargeback {}
 
 explore: payfac_adjustment {}
 
 explore: payfac_deposit_summary{}
+
+
+
 
 #explore: payfac_fee {}
 

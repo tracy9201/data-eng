@@ -40,7 +40,7 @@ view: payfac_fee {
   dimension: Title_Fee_Detail{
     type: string
     sql: 'Fee Detail' ;;
-    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#684A91;font-size:120%"> Fee Detail </p>;;
+    html:  <p style="text-align:left;padding-left:5px;font-weight: bold;color:#000000;font-size:100%"> Fee Detail </p>;;
   }
 
 
