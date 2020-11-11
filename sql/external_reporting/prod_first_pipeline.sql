@@ -216,7 +216,7 @@ SELECT
             NULL AS staff_user_id,
             NULL AS device_id,
             gateway_transaction.gratuity_amount AS gratuity_amount,
-            't' AS is_voided 
+            gateway_transaction.is_voided::text AS is_voided
         FROM
             settlement 
         LEFT JOIN
@@ -266,7 +266,7 @@ SELECT
             NULL AS staff_user_id,
             NULL AS device_id,
             gateway_transaction.gratuity_amount AS gratuity_amount,
-            't' AS is_voided 
+            gateway_transaction.is_voided::text AS is_voided 
         FROM
             settlement 
         LEFT JOIN
