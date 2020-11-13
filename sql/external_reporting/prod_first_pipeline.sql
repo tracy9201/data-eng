@@ -60,8 +60,8 @@ SELECT * from(
      , NULL AS staff_user_id, NULL AS device_id, gt.gratuity_amount, NULL AS is_voided
     FROM gateway_transaction gt
     LEFT JOIN invoice ON invoice_id = invoice.id
-    LEFT JOIN invoice_item ON invoice_item_id = invoice_item.id
-    LEFT JOIN subscription sub ON sub.id = invoice_item.subscription_id
+    LEFT JOIN invoice_item ivi ON invoice_item_id = ivi.id
+    LEFT JOIN subscription sub ON sub.id = ivi.subscription_id
     LEFT JOIN plan ON invoice.plan_id = plan.id
     LEFT JOIN customer ON customer.id = plan.customer_id
     LEFT JOIN provider ON provider.id = provider_id
@@ -74,8 +74,8 @@ SELECT * from(
      FROM settlement
      LEFT JOIN gateway_transaction gt ON gt.id = gateway_transaction_id
      LEFT JOIN invoice ON gt.invoice_id = invoice.id
-     LEFT JOIN invoice_item ON invoice_item.id = gt.invoice_item_id
-     LEFT JOIN subscription sub ON sub.id = invoice_item.subscription_id
+     LEFT JOIN invoice_item ivi ON ivi.id = gt.invoice_item_id
+     LEFT JOIN subscription sub ON sub.id = ivi.subscription_id
      LEFT JOIN plan ON invoice.plan_id = plan.id
      LEFT JOIN customer ON customer_id = customer.id
      LEFT JOIN provider ON provider_id = provider.id
@@ -97,8 +97,8 @@ SELECT * from(
      FROM refund
     LEFT JOIN gratuity ON gratuity.id = refund.gratuity_id
     LEFT JOIN gateway_transaction gt ON refund.gateway_transaction_id = gt.id
-    LEFT JOIN invoice_item ON gt.invoice_item_id = invoice_item.id
-    LEFT JOIN subscription sub ON invoice_item.subscription_id = sub.id
+    LEFT JOIN invoice_item ivi ON gt.invoice_item_id = ivi.id
+    LEFT JOIN subscription sub ON ivi.subscription_id = sub.id
     LEFT JOIN plan ON sub.plan_id = plan.id
     LEFT JOIN customer ON customer.id = plan.customer_id
     LEFT JOIN provider ON provider.id = provider_id
