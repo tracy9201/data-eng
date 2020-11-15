@@ -23,7 +23,7 @@ SELECT * from(
     LEFT JOIN card ON cpg.card_id = card.id
     WHERE payment.id IS NOT NULL AND payment.status = 1
     UNION
-    SELECT 'refund1_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN '' END AS transaction_id, CASE WHEN refund.type = 'credit_card' THEN last4 ELSE refund.reason END AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
+    SELECT 'refund1_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN gt.transaction_id else '' END AS transaction_id, CASE WHEN refund.type = 'credit_card' THEN last4 ELSE refund.reason END AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
     , refund.created_by AS staff_user_id, NULL AS device_id, gratuity.amount AS gratuity_amount, NULL AS is_voided
      FROM refund
     LEFT JOIN gratuity ON gratuity.id = refund.gratuity_id
@@ -90,9 +90,17 @@ SELECT * from(
      LEFT JOIN plan ON payment.plan_id = plan.id
      LEFT JOIN customer ON customer_id = customer.id
      LEFT JOIN provider ON provider_id = provider.id
+     LEFT JOIN 
+     (
+        SELECT  CASE WHEN refund.id IS NOT NULL THEN gt.transaction_id END AS transaction_id
+        FROM refund
+        LEFT JOIN gateway_transaction gt ON refund.gateway_transaction_id = gt.id
+        WHERE  refund.status =20 AND refund.is_void = 't' AND gt.payment_id IS NOT NULL
+    ) AS void4 on gt.transaction_id  = void4.transaction_id
      WHERE settlement.settlement_status = 'Voided' AND invoice_id IS NULL AND gt.is_voided = 'f'
+     and void4.transaction_id is null
     UNION
-    SELECT 'void3_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN '' END AS transaction_id,  refund.reason AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
+    SELECT 'void3_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN gt.transaction_id else '' END AS transaction_id,  refund.reason AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
     , refund.created_by AS staff_user_id, NULL AS device_id, gratuity.amount AS gratuity_amount, refund.is_void::text AS is_voided
      FROM refund
     LEFT JOIN gratuity ON gratuity.id = refund.gratuity_id
@@ -105,8 +113,8 @@ SELECT * from(
     LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
     WHERE  refund.status =20 AND refund.is_void = 't' AND gt.payment_id IS NULL
     UNION
-    SELECT 'void4_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN '' END AS transaction_id,  refund.reason AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
-    , refund.created_by AS staff_user_id, NULL AS device_id, gratuity.amount AS gratuity_amount, refund.is_void::text AS is_voided
+    SELECT 'void4_'||cast(refund.id AS text) AS sales_id, refund.name AS sales_name, refund.amount AS sales_amount, refund.type AS sales_type, refund.status AS sales_status, refund.created_at AS sales_created_at, customer.encrypted_ref_id AS gx_customer_id, provider.encrypted_ref_id AS gx_provider_id,  CASE WHEN refund.id IS NOT NULL THEN gt.transaction_id else '' END AS transaction_id,  refund.reason AS payment_id, cpg.tokenization, sub.encrypted_ref_id AS gx_subscription_id
+    ,refund.created_by AS staff_user_id, NULL AS device_id, gratuity.amount AS gratuity_amount, refund.is_void::text AS is_voided
      FROM refund
     LEFT JOIN gratuity ON gratuity.id = refund.gratuity_id
     LEFT JOIN subscription sub ON refund.subscription_id = sub.id
@@ -118,4 +126,5 @@ SELECT * from(
     LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
     WHERE  refund.status =20 AND refund.is_void = 't' AND gt.payment_id IS NOT NULL
  ) AS a
+ --where transaction_id = '300714254418'
  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
