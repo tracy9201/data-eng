@@ -9,17 +9,17 @@ LEFT JOIN customer ON customer.id = plan.customer_id
 LEFT JOIN provider ON provider.id = provider_id
 WHERE c.id IS NOT NULL AND c.status =1
 UNION ALL
-SELECT 'payment_'||cast(payment.id AS text) AS sales_id,payment.name AS sales_name,payment.amount AS sales_amount,payment.type AS sales_type,payment.status AS sales_status,payment.created_at AS sales_created_at,customer.encrypted_ref_id AS gx_customer_id,provider.encrypted_ref_id AS gx_provider_id,payment.transaction_id,CASE WHEN payment.type ='credit_card' THEN account_number ELSE payment.name END AS payment_id,cpg.tokenization,sub.encrypted_ref_id AS gx_subscription_id,payment.created_by AS staff_user_id,payment.device_id,gratuity.amount AS gratuity_amount,NULL AS is_voided
-FROM payment
-LEFT JOIN subscription sub ON sub.id = payment.subscription_id
-LEFT JOIN gratuity ON gratuity.id = payment.gratuity_id
-LEFT JOIN plan ON payment.plan_id = plan.id
+SELECT 'payment_'||cast(p.id AS text) AS sales_id,p.name AS sales_name,p.amount AS sales_amount,p.type AS sales_type,p.status AS sales_status,p.created_at AS sales_created_at,customer.encrypted_ref_id AS gx_customer_id,provider.encrypted_ref_id AS gx_provider_id,p.transaction_id,CASE WHEN p.type ='credit_card' THEN account_number ELSE p.name END AS payment_id,cpg.tokenization,sub.encrypted_ref_id AS gx_subscription_id,p.created_by AS staff_user_id,p.device_id,gratuity.amount AS gratuity_amount,NULL AS is_voided
+FROM payment p
+LEFT JOIN subscription sub ON sub.id = p.subscription_id
+LEFT JOIN gratuity ON gratuity.id = p.gratuity_id
+LEFT JOIN plan ON p.plan_id = plan.id
 LEFT JOIN customer ON customer.id = customer_id
 LEFT JOIN provider ON provider.id = provider_id
-LEFT JOIN gateway_transaction gt ON gt.payment_id = payment.id
+LEFT JOIN gateway_transaction gt ON gt.payment_id = p.id
 LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN card ON cpg.card_id = card.id
-WHERE payment.id IS NOT NULL AND payment.status = 1
+WHERE p.id IS NOT NULL AND p.status = 1
 UNION ALL
 SELECT 'refund1_'||cast(refund.id AS text) AS sales_id,refund.name AS sales_name,refund.amount AS sales_amount,refund.type AS sales_type,refund.status AS sales_status,refund.created_at AS sales_created_at,customer.encrypted_ref_id AS gx_customer_id,provider.encrypted_ref_id AS gx_provider_id,CASE WHEN refund.id IS NOT NULL THEN gt.transaction_id else '' END AS transaction_id,CASE WHEN refund.type = 'credit_card' THEN last4 ELSE refund.reason END AS payment_id,cpg.tokenization,sub.encrypted_ref_id AS gx_subscription_id
 ,refund.created_by AS staff_user_id,NULL AS device_id,gratuity.amount AS gratuity_amount,NULL AS is_voided
