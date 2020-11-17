@@ -1,0 +1,118 @@
+test: HINT_void_is_accurate_1 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-05-13", practice.k_practice_id: "296"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 6140.86 ;;
+  }
+}
+test: HINT_void_is_accurate_2 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2019-11-14", practice.k_practice_id: "98"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 350.96 ;;
+  }
+}
+test: HINT_void_is_accurate_3 {
+    explore_source: date_table {
+      column: batch_report_summary.sum_credit_card {
+        field: batch_report_summary.sum_credit_card
+      }
+      filters: [batch_report_summary.sales_created_at_date: "2020-10-26", practice.k_practice_id: "97"]
+    }
+    assert: credit_card_is_expected_value {
+      expression: ${batch_report_summary.sum_credit_card} = 7592.97 ;;
+    }
+  }
+test: CC_void_is_accurate_1 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-05-19", practice.k_practice_id: "97"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 5551.55 ;;
+  }
+}
+
+
+
+
+test: Daily_Batch_Summary_OTHER_is_accurate_1 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_other {
+      field: batch_report_summary.sum_other
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-06-08", practice.k_practice_id: "295"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_other} = 4025.00 ;;
+  }
+}
+test: Daily_Batch_Summary_CASH_is_accurate_2 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_cash {
+      field: batch_report_summary.sum_cash
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-06-08", practice.k_practice_id: "295"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_cash} = 489.76 ;;
+  }
+}
+test: Daily_Batch_Summary_BD_is_accurate_3 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_check {
+      field: batch_report_summary.sum_check
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-07-13", practice.k_practice_id: "383"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_check} = 5860.85 ;;
+  }
+}
+
+
+
+
+test: tip_refund_is_accurate_1 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-11-11", practice.k_practice_id: "165"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 2681.00 ;;
+  }
+}
+test: tip_refund_is_accurate_2 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-09-04", practice.k_practice_id: "371"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 6453.90 ;;
+  }
+}
+test: tip_refund_is_accurate_3 {
+  explore_source: date_table {
+    column: batch_report_summary.sum_credit_card {
+      field: batch_report_summary.sum_credit_card
+    }
+    filters: [batch_report_summary.sales_created_at_date: "2020-11-07", practice.k_practice_id: "395"]
+  }
+  assert: credit_card_is_expected_value {
+    expression: ${batch_report_summary.sum_credit_card} = 2098.20 ;;
+  }
+}
