@@ -59,7 +59,7 @@ LEFT JOIN
     gratuity 
         ON gratuity.id = p.gratuity_id 
 LEFT JOIN
---gateway_transaction gt
+-- gateway_transaction gt
  (SELECT distinct payment_id,card_payment_gateway_id 
   FROM  gateway_transaction 
   WHERE card_payment_gateway_id IS NOT NULL) gt 
@@ -213,18 +213,18 @@ WHERE
 
 hintmd_voids as
 (
-        SELECT
-            CASE 
-                WHEN refund.id IS NOT NULL THEN gt.transaction_id 
-            END AS transaction_id 
-        FROM
-            refund 
-        LEFT JOIN
-            gateway_transaction gt 
-                ON refund.gateway_transaction_id = gt.id 
-        WHERE
-            refund.status =20 
-            AND refund.is_void = 't' 
+    SELECT
+        CASE 
+            WHEN refund.id IS NOT NULL THEN gt.transaction_id 
+        END AS transaction_id 
+    FROM
+        refund 
+    LEFT JOIN
+        gateway_transaction gt 
+            ON refund.gateway_transaction_id = gt.id 
+    WHERE
+        refund.status =20 
+        AND refund.is_void = 't' 
 ),
 
 void1 as
@@ -265,7 +265,7 @@ WHERE
     settlement.settlement_status = 'Voided' 
     AND gt.invoice_id IS NOT NULL 
     AND gt.is_voided = 'f' 
-    and h_void.transaction_id is null 
+    AND h_void.transaction_id IS NULL
 ),
 
 void2 as
@@ -304,7 +304,7 @@ WHERE
     settlement.settlement_status = 'Voided' 
     AND invoice_id IS NULL 
     AND gt.is_voided = 'f' 
-    and h_void.transaction_id is null 
+    AND h_void.transaction_id IS NULL
 ),
 
 void3 as
@@ -445,4 +445,4 @@ main as
         ON provider.id = provider_id 
 )
 
-select * from main;
+SELECT * FROM main;
