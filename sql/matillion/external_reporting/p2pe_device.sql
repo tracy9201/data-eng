@@ -1,7 +1,4 @@
-DELETE FROM p2pe_device;
-
-INSERT INTO p2pe_device
-with main as
+WITH main as
 (SELECT
  	id AS device_id,
  	organization_id,
@@ -12,4 +9,4 @@ with main as
 FROM
 	p2pe_device 
 )
-select * from main;
+SELECT * FROM main;

@@ -1,7 +1,4 @@
-DELETE FROM kronos_subscription;
-
-INSERT INTO kronos_subscription
-with main as
+WITH main as
 (SELECT
     sub.id AS subscription_id,
     sub.status,
@@ -19,6 +16,6 @@ FROM
     subscription sub  
 LEFT JOIN
     ad_hoc_offering ad          
-        on ad.id = ad_hoc_offering_id 
+        ON ad.id = ad_hoc_offering_id 
 )
-select * from main;
+SELECT * FROM main;

@@ -1,7 +1,4 @@
-DELETE FROM practice;
-
-INSERT INTO practice
-with main as
+WITH main as
 (SELECT
     organization_data.id AS k_practice_id,
     gx_provider_id,
@@ -22,4 +19,4 @@ JOIN
 WHERE
     role = 7
 )
-select * from main;
+SELECT * FROM main;

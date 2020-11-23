@@ -1,17 +1,8 @@
-DELETE FROM customer;
-
-INSERT INTO customer
 WITH sub_plan AS 
 (SELECT
     plan_id,
-    to_char(min(CASE          
-        WHEN subscription.type =1  THEN subscription.created_at          
-        WHEN subscription.type=2 THEN subscription.created_at          
-        ELSE NULL end),'yyyy-mm-dd') AS member_on_boarding_date,
-    to_char(max(CASE          
-        WHEN subscription.type =1  THEN subscription.deprecated_at          
-        WHEN subscription.type=2 THEN subscription.deprecated_at          
-        ELSE NULL end),'yyyy-mm-dd') AS member_cancel_date  
+    to_char(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL end),'yyyy-mm-dd') AS member_on_boarding_date,
+    to_char(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL end),'yyyy-mm-dd') AS member_cancel_date  
 FROM
     subscription  
 WHERE

@@ -1,6 +1,3 @@
-DELETE FROM product_sales;
-
-INSERT INTO product_sales
 WITH Subscription_auto_renewal AS  
 (SELECT
     subscription.id AS subscription_id,
@@ -90,4 +87,4 @@ SELECT
 FROM
     all_data      
 )
-select * from main;
+SELECT * FROM main;

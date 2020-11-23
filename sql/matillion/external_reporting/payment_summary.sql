@@ -1,6 +1,3 @@
-DELETE FROM payment_summary;
-
-INSERT INTO payment_summary 
 WITH credit_data as
 (   SELECT
     'credit_'||c.id::varchar AS sales_id,
