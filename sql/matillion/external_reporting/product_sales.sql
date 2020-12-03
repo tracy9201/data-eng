@@ -1,4 +1,4 @@
-WITH Subscription_auto_renewal AS  
+WITH Subscription_auto_renewal AS
 (SELECT
     subscription.id AS subscription_id,
     subscription.encrypted_ref_id AS k_subscirption_id,
@@ -32,59 +32,55 @@ WITH Subscription_auto_renewal AS
     customer.encrypted_ref_id AS k_customer_id,
     provider_id,
     provider.encrypted_ref_id AS k_provider_id,
-    now()      
+    current_timestamp
 FROM
-    subscription          
+    gaia.subscription subscription
 JOIN
-    plan                  
-        ON plan_id = plan.id          
+    gaia.plan plan
+        ON plan_id = plan.id
 JOIN
-    customer                  
-        ON customer.id = customer_id          
+    gaia.customer customer
+        ON customer.id = customer_id
 JOIN
-    provider                  
-        ON provider.id = provider_id          
+    gaia.provider provider
+        ON provider.id = provider_id
 WHERE
-    subscription.status = 1 
-    AND subscription.auto_renewal = 't'  
-), 
-
-invoice AS  
+    subscription.status = 1
+    AND subscription.auto_renewal = 't'
+),
+invoice AS
 (SELECT
     invoice.id AS invoice_id,
     invoice.plan_id AS invoice_plan,
-    invoice.status AS invoice_status      
+    invoice.status AS invoice_status
 FROM
-    invoice  
-), 
-
-subscription_no_auto_renewal AS  
+    gaia.invoice invoice
+),
+subscription_no_auto_renewal AS
 (SELECT
     sub_auto_ren.*      
 FROM
-    Subscription_auto_renewal as sub_auto_ren          
+    Subscription_auto_renewal as sub_auto_ren
 JOIN
-    invoice                  
-        ON sub_auto_ren.plan_id = invoice.invoice_plan          
+     invoice
+        ON sub_auto_ren.plan_id = invoice_plan
 WHERE
-    invoice_status = 20              
-    AND sub_auto_ren.auto_renewal = 'f'  
-), 
-
-all_data AS  
+    invoice_status = 20
+    AND sub_auto_ren.auto_renewal = 'f'
+),
+all_data AS
 (
-SELECT * FROM Subscription_auto_renewal     
+SELECT * FROM Subscription_auto_renewal
 WHERE
-sub_auto_ren.auto_renewal = 't'      
-UNION ALL      
+auto_renewal = 't'
+UNION ALL
 SELECT * FROM subscription_no_auto_renewal
 ),
-
 main AS
-(     
+(
 SELECT
-    distinct *     
+    distinct *
 FROM
-    all_data      
+    all_data
 )
-SELECT * FROM main;
+SELECT * FROM main

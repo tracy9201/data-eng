@@ -19,4 +19,4 @@ JOIN
 WHERE
     role = 7
 )
-SELECT * FROM main;
+SELECT * FROM main

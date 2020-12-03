@@ -46,4 +46,4 @@ LEFT JOIN
     address          
         ON billing_address_id = address.id 
 ) 
-SELECT * FROM main;
+SELECT * FROM main

@@ -18,4 +18,4 @@ LEFT JOIN
     ad_hoc_offering ad          
         ON ad.id = ad_hoc_offering_id 
 )
-SELECT * FROM main;
+SELECT * FROM main

@@ -9,4 +9,4 @@ WITH main as
 FROM
 	p2pe_device 
 )
-SELECT * FROM main;
+SELECT * FROM main
