@@ -44,7 +44,7 @@ view: payfac_deposit_summary {
     html:
     <ul>
       <li><p style="text-align:left;padding-left:10px;font-size:1vw">Statement Periord&emsp;&emsp;{{range}}</p></li>
-
+      <hr style="height:1px;border:none;color:#333;background-color:#333;" />
       <li> <p style="text-align:left;padding-left:10px;font-size:1vw">Merchant Number&emsp;&emsp;{{value}}</p> </li>
 
       <li><p style="text-align:left;padding-left:10px;font-size:1vw">Customer Service&emsp;&emsp;&ensp;Website - <a href="https://www.hintmd.com" target="_blank"  >www.hintmd.com</a></p></li>
