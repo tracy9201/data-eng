@@ -1,5 +1,5 @@
 view: deposit_summary{
-  sql_table_name: dwh_opul.fact_deposit_summary ;;
+  sql_table_name: dwh_hint.fact_deposit_summary ;;
 
   # derived_table: {
 

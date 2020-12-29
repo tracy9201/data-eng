@@ -1,5 +1,5 @@
 view: dim_customer {
-  sql_table_name: dwh_opul.dim_customer ;;
+  sql_table_name: dwh_hint.dim_customer ;;
 
 
   dimension: gx_customer_id {

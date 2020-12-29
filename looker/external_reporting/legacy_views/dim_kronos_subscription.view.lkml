@@ -1,5 +1,5 @@
 view: kronos_subscription {
-  sql_table_name: dwh_opul.dim_kronos_subscription ;;
+  sql_table_name: dwh_hint.dim_kronos_subscription ;;
 
   dimension: cycles {
     type: number

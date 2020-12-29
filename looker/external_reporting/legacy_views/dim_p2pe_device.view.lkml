@@ -1,5 +1,5 @@
 view: device_data {
-  sql_table_name: dwh_opul.dim_p2pe_device ;;
+  sql_table_name: dwh_hint.dim_p2pe_device ;;
 
   measure: count {
     type: count

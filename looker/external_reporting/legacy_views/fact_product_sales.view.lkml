@@ -1,5 +1,5 @@
 view: product_sales {
-  sql_table_name: dwh_opul.fact_product_sales ;;
+  sql_table_name: dwh_hint.fact_product_sales ;;
 
   dimension: auto_renewal {
     type: string

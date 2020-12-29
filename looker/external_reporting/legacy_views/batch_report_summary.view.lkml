@@ -1,5 +1,5 @@
 view: batch_report_summary {
-  sql_table_name: dwh_opul.fact_payment_summary ;;
+  sql_table_name: dwh_hint.fact_payment_summary ;;
 
   measure: count {
     type: count

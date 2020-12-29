@@ -1,7 +1,7 @@
 view: batch_report_details {
   derived_table:{
     sql:  select payment_summary.*, subscription_name, user_type
-              from dwh_opul.fact_payment_summary payment_summary
+              from dwh_hint.fact_payment_summary payment_summary
               left join (
                   select subscription_name, gx_cus_id, user_type
                   from (

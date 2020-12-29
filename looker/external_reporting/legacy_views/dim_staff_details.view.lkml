@@ -1,5 +1,5 @@
 view: staff_details {
-  sql_table_name: dwh_opul.dim_staff_details ;;
+  sql_table_name: dwh_hint.dim_staff_details ;;
 
   dimension_group: created {
     type: time

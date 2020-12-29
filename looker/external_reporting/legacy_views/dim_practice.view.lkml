@@ -1,7 +1,7 @@
 
 view: practice {
 
-  sql_table_name: dwh_opul.dim_practice ;;
+  sql_table_name: dwh_hint.dim_practice ;;
 
   dimension: gx_provider_id {
     primary_key: yes
