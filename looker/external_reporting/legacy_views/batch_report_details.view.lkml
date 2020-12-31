@@ -7,8 +7,8 @@ view: batch_report_details {
                   from (
                       select subscription_name, customer2.gx_customer_id as gx_cus_id, user_type,
                         count(subscription_created) over (partition by product_sales.k_customer_id order by subscription_created desc rows between unbounded preceding and unbounded following) as sub_created
-                      from dwh_opul.fact_product_sales product_sales
-                      join dwh_opul.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
+                      from dwh_hint.fact_product_sales product_sales
+                      join dwh_hint.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
                       where user_type=1
                   ) sub_cus
                   where sub_created = 1
