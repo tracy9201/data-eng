@@ -14,8 +14,8 @@ GROUP BY
 main AS 
 ( SELECT
     customer_data.id AS k_customer_id,
-    member_on_boarding_date,
-    member_cancel_date,
+    to_timestamp(member_on_boarding_date, 'YYYY-MM-DD HH24:MI:SS') as member_on_boarding_date,
+    to_timestamp(member_cancel_date, 'YYYY-MM-DD HH24:MI:SS') as member_cancel_date,
     email AS customer_email,
     mobile AS customer_mobile,
     gender AS customer_gender,
