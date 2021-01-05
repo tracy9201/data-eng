@@ -1,5 +1,5 @@
-- dashboard: Legacy_Payments
-  title: Legacy Daily Batch Summary
+- dashboard: Payments
+  title: Daily Batch Summary
   layout: newspaper
   embed_style:
 #    background_color: "#ffffff"
@@ -10,7 +10,7 @@
   elements:
   - title: Note Tile
     name: Note
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     #explore: payment_summary
     explore: top_product_sales
     type: single_value
@@ -38,7 +38,7 @@
 
   - title: Note Tile Left
     name: Note Left
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: top_product_sales
     type: single_value
     fields: [product_sales.Note_Tile_Left]
@@ -63,7 +63,7 @@
 
   - title: Grand Total
     name: Grand Total
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     #fields: [payment_summary.sum_amount]
@@ -90,7 +90,7 @@
 
   - title: Payment_Methods_Tile
     name: Payment_Methods_Tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     #explore: payment_summary
     explore: date_table
     type: single_value
@@ -116,7 +116,7 @@
 
   - title: Transaction Count By Payment Method
     name: Transaction Count By Payment Method
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: looker_pie
     #fields: [payment_summary.sales_type, payment_summary.count]
@@ -158,7 +158,7 @@
 
   - title: Top Product Tile
     name: Top Product Tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: top_product_sales
     type: single_value
     fields: [product_sales.top_five_products]
@@ -183,7 +183,7 @@
 
   - title: Top Product Sales
     name: Top Product Sales
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: top_product_sales
     type: looker_bar
     fields: [product_sales.subscription_name, product_sales.total_amount]
@@ -235,7 +235,7 @@
     height: 7
   - title: total card brand tile
     name: total card brand tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.data_by_card_brand]
@@ -290,7 +290,7 @@
 
   - title: Total By Device Tile
     name: Total By Device Tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.data_by_device]
@@ -345,7 +345,7 @@
 
   - title: total retail
     name: total retail
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_total_retail]
@@ -374,7 +374,7 @@
     height: 26
   - title: total credit card
     name: total credit card
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_credit_card]
@@ -403,7 +403,7 @@
     height: 3
   - title: Total Check
     name: Total Check
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_check]
@@ -431,7 +431,7 @@
     height: 3
   - title: total practice credit
     name: total practice credit
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_practice_credit]
@@ -460,7 +460,7 @@
     height: 3
   - title: total BD
     name: total BD
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_BD]
@@ -489,7 +489,7 @@
 
   - title: Total Cash
     name: Total Cash
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_cash]
@@ -517,7 +517,7 @@
     height: 3
   - title: total other
     name: total other
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: single_value
     fields: [batch_report_summary.sum_other]
@@ -545,7 +545,7 @@
     height: 3
   - name: Total by card brand
     title: Total By Card Brand
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: looker_bar
     fields: [batch_report_summary.payment_method, batch_report_summary.sum_amount_tile_test]
@@ -645,7 +645,7 @@
     height: 8
   - title: Device Data Table
     name: Device Data Table
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: batch_report_details
     type: looker_grid
     fields: [batch_report_details.sum_total, device_data.label, device_data.status]
@@ -710,7 +710,7 @@
     height: 8
   - title: Total by Device
     name: Total by Device
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: batch_report_details
     type: looker_pie
     fields: [batch_report_details.sum_total, device_data.label]
@@ -763,7 +763,7 @@
 
   - name: credit card type table
     title: credit card type table
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: date_table
     type: looker_grid
     fields: [ batch_report_summary.payment_method, batch_report_summary.sum_amount_tile_test ]
@@ -864,7 +864,7 @@
 
   - title: Total Recurring Payments
     name: Total Recurring Payments
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     #explore: payment_summary
     explore: date_table
     type: single_value

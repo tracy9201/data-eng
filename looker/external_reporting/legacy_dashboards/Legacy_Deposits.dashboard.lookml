@@ -1,10 +1,10 @@
-- dashboard: LegacyDeposits
-  title: Legacy Deposits2
+- dashboard: Deposits
+  title: Deposits2
   layout: newspaper
   elements:
   #- title: Upcoming
   #  name: Upcoming
-  #  model: legacy_looker_hintmd
+  #  model: matillion_hintmd
   #  explore: today_upcoming_deposits_derived
   #  type: single_value
   #  fields: [today_upcoming_deposits_derived.upcoming_deposit]
@@ -24,7 +24,7 @@
   # height: 6
   - title: Funding_details_Tile
     name: Funding_details_Tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: payment_summary
     type: single_value
     fields: [payment_summary.Funding_details_Tile]
@@ -48,7 +48,7 @@
     height: 2
   - title: Funding details
     name: Funding details
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: table
     fields: [deposit_summary.funding_date, deposit_summary.funding_master_id, deposit_summary.status, deposit_summary.net_sales,
@@ -79,7 +79,7 @@
     height: 16
   - title: Total Deposits
     name: Total Deposits
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: single_value
     fields: [deposit_summary.total_funds]
@@ -102,7 +102,7 @@
     height: 6
   - title: Note_Tile
     name: Note_Tile
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     #explore: payment_summary
     explore: top_product_sales
     type: single_value
@@ -129,7 +129,7 @@
     height: 1
   - title: Note Tile Left
     name: Note Left
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     #explore: payment_summary
     explore: top_product_sales
     type: single_value
@@ -156,7 +156,7 @@
     height: 1
   - title: Total Deposits 7 days
     name: Total Deposits 7 days
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: single_value
     fields: [deposit_summary.total_funds_7_days]
@@ -182,7 +182,7 @@
     height: 6
   - title: Total deposit current month
     name: Total deposit current month
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: single_value
     fields: [deposit_summary.total_funds_current_month]
@@ -208,7 +208,7 @@
     height: 6
   - title: total deposits Last month
     name: total deposits Last month
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: single_value
     fields: [deposit_summary.total_funds_last_month]
@@ -234,7 +234,7 @@
     height: 6
   - title: Total deposits current year
     name: Total deposits current year
-    model: legacy_looker_hintmd
+    model: matillion_hintmd
     explore: deposit_summary
     type: single_value
     fields: [deposit_summary.total_funds_current_year]

@@ -1,6 +1,6 @@
-- dashboard: Legacybatchreport
+- dashboard: batchreport
 
-  title: Legacy Daily Batch Details
+  title: Daily Batch Details
   layout: newspaper
 
   filters:
@@ -17,7 +17,7 @@
       default_value: ''
       allow_multiple_values: true
       required: false
-      model: legacy_looker_hintmd
+      model: matillion_hintmd
       explore: batch_report_details
       listens_to_filters: []
       field: device_data.label
@@ -27,14 +27,14 @@
       default_value: ''
       allow_multiple_values: true
       required: false
-      model: legacy_looker_hintmd
+      model: matillion_hintmd
       explore: batch_report_details
       listens_to_filters: []
       field: staff_details.staff_name
   elements:
     - name: Daily Batch Report
       title: Daily Batch Report
-      model: legacy_looker_hintmd
+      model: matillion_hintmd
       explore: batch_report_details
       #type: looker_grid
       type: table
