@@ -49,10 +49,10 @@
         Date: date_table.date_date
       series_labels:
         fact_invoice_item.pay_date_time: Date
-        dim_customer.firstname: First Name
-        dim_customer.lastname: Last Name
-        dim_customer.customer_mobile: Phone
-        dim_customer.customer_type: Customer Type
+        dim_customer_inv.firstname: First Name
+        dim_customer_inv.lastname: Last Name
+        dim_customer_inv.customer_mobile: Phone
+        dim_customer_inv.customer_type: Customer Type
         fact_invoice_item.product_service: Product/Service
         fact_invoice_item.price_unit: Price/Unit
         fact_invoice_item.recurring_payment: Recurring Pmt
