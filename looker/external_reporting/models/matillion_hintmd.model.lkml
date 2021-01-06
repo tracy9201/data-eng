@@ -4,12 +4,41 @@ connection: "qa-redshift2"
 include: "/looker/external_reporting/legacy_views/*.view"
 include: "/looker/external_reporting/legacy_dashboards/*.dashboard.lookml"
 
-datagroup: looker_hintmd_default_datagroup {
+datagroup: matillion_hintmd_default_datagroup{
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: looker_hintmd_default_datagroup
+persist_with: matillion_hintmd_default_datagroup
+
+explore: subscription_tax_off {}
+
+explore: fact_invoice_item {
+  persist_for: "0 seconds"
+  label: "Invoice Details"
+
+  join: dim_customer_inv {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${fact_invoice_item.gx_customer_id} = ${dim_customer_inv.gx_customer_id} ;;
+  }
+  join: dim_provider {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${fact_invoice_item.gx_provider_id} = ${dim_provider.gx_provider_id} ;;
+  }
+  join: date_table {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${fact_invoice_item.pay_date_date} = ${date_table.date_date} ;;
+  }
+
+  access_filter: {
+    field: dim_provider.k_practice_id
+    user_attribute: practice_filter_attribute
+  }
+}
+
 
 explore: payment_summary {
   persist_for: "0 seconds"
