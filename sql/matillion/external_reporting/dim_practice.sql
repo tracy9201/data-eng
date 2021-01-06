@@ -7,7 +7,8 @@ WITH main as
     lastname AS practice_name,
     city AS practice_city,
     state AS practice_state,
-    zip AS practice_zip  
+    zip AS practice_zip,
+    merchant_id
 FROM
     kronos.organization_data  organization_data
 JOIN

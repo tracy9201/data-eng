@@ -32,7 +32,7 @@ WITH Subscription_auto_renewal AS
     customer.encrypted_ref_id AS k_customer_id,
     provider_id,
     provider.encrypted_ref_id AS k_provider_id,
-    current_timestamp
+    current_timestamp::timestamp as loaded_at
 FROM
     gaia_opul.subscription subscription
 JOIN
