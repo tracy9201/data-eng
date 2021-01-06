@@ -1,5 +1,4 @@
-- dashboard: batchreport
-
+- dashboard: DailyBatchDetails
   title: Daily Batch Details
   layout: newspaper
 

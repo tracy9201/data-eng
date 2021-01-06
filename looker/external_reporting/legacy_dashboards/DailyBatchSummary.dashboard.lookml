@@ -1,4 +1,4 @@
-- dashboard: Payments
+- dashboard: DailyBatchSummary
   title: Daily Batch Summary
   layout: newspaper
   embed_style:
