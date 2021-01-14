@@ -178,6 +178,10 @@ view: batch_report_details {
     }
   }
 
+  dimension: blank {
+    type: string
+    sql: '' ;;
+  }
   dimension: sales_id {
     type: string
     sql: ${TABLE}.sales_id ;;

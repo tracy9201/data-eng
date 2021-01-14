@@ -20,6 +20,11 @@ view: dim_customer {
 
   }
 
+  dimension: blank {
+    type: string
+    sql: '' ;;
+  }
+
   dimension: customer_email {
     type: string
     sql: ${TABLE}.customer_email ;;

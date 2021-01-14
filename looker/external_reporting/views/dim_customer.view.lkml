@@ -20,6 +20,9 @@ view: dim_customer {
     sql: ${TABLE}.customer_email ;;
   }
 
+
+
+
   dimension: customer_gender {
     type: number
     sql: ${TABLE}.customer_gender ;;
