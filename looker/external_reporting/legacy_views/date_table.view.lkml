@@ -16,6 +16,8 @@ view: date_table {
     sql: ${TABLE}.date ;;
   }
 
+  #
+
   dimension: day {
     type: number
     sql: ${TABLE}.day ;;
