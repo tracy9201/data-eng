@@ -1,4 +1,4 @@
-connection: "qa-redshift2"
+connection: "redshift_cluster"
 
 # include all the views
 include: "/looker/external_reporting/legacy_views/*.view"
