@@ -1,46 +1,79 @@
-with funding as  
-(  
-SELECT
-    funding_master_id,
-    net_sales*100 AS net_sales,
-    third_party*100 AS third_party,
-    adjustment*100 AS adjustment,
-    interchange_fee*100 AS interchange_fee,
-    service_charge*100 AS service_charge,
-    fee*100 AS fee,
-    reversal*100 AS reversal,
-    other_adjustment*100 AS other_adjustment,
-    total_funding*100 AS total_funding,
-    funding_date,
-    date_added,
-    provider.encrypted_ref_id AS gx_provider_id,
-    funding.status,
-    funding.id AS funding_id  
-FROM
-    gaia_opul.funding funding 
- JOIN
-    gaia_opul.authorisation authorisation
-        ON authorisation_id = authorisation.id  
-JOIN
-    gaia_opul.provider provider 
-        ON object_id = provider.id 
-),
-
-main as 
-( 
-SELECT
-    gx_provider_id,
-    funding_master_id,
-    interchange_fee + service_charge + fee + third_party AS fees,
-    adjustment + other_adjustment AS adjustments,
-    net_sales,
-    total_funding,
-    funding_date,
-    date_added,
-    reversal AS chargebacks,
-    status,
-    funding_id 
-FROM
-    funding 
-) 
-SELECT * FROM main
+with adjustments AS (                              
+        select
+            'adjustment_'||id as depost_id,
+            reference_id,
+            merchant_id,
+            amount,
+            'Adjustment' AS type,
+            transaction_date,
+            exchange_date_added::date as settled_date                                  
+        from
+            odf.fiserv_deposit_adjustment                        
+            )
+            
+, transactions AS (                            
+        SELECT
+            'transaction_'||id as depost_id,
+            funding_instruction_id::varchar as reference_id,
+            merchant_id,
+            amount,
+            transaction_type AS type,
+            transaction_date,
+            settled_at::date as settled_date                                  
+        FROM
+            odf.fiserv_transaction                            
+        WHERE
+            transaction_status = 20
+            )
+, chargebacks AS (                            
+        SELECT
+            'chargeback_'||id as depost_id,
+            reference_id,
+            merchant_id,
+            amount,
+            'Chargeback' AS type,
+            transaction_date,
+            exchange_date_added::date as settled_date                            
+        FROM
+            odf.fiserv_chargeback                        
+            )
+, transaction_fee as (                            
+        SELECT
+            'transaction_fee_'||id as depost_id,
+            funding_instruction_id::varchar as reference_id,
+            merchant_id,
+            percent_fee + fixed_fee as amount,
+            transaction_type AS type,
+            transaction_date,
+            settled_at::date as settled_date                           
+        FROM
+            odf.fiserv_transaction                            
+        WHERE
+            transaction_status = 20                       
+            )
+, payfac AS (                           
+        SELECT * FROM transactions  
+        UNION ALL 
+        SELECT * FROM chargebacks                  
+        UNION ALL                         
+        SELECT * FROM adjustments            
+        UNION ALL                     
+        SELECT * FROM transaction_fee            
+        )                        
+, main as (
+        SELECT
+          reference_id,
+          merchant_id,
+          settled_date ,
+          case when type = 'Adjustment' then sum(amount) else 0 end as adjustments,
+          case when type = 'fees' then sum(amount) else 0 end as fees,
+          case when type in ('Charge', 'Refund') then sum(amount) else 0 end as net_sales,
+          case when type = 'Chargeback' then sum(amount) else 0 end as chargebacks            
+      from payfac
+      group by
+          merchant_id,
+          reference_id,
+          settled_date,
+          type 
+        )
+select * from main
