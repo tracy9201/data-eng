@@ -31,12 +31,12 @@ batch_report_details as
       end as payment_method,
   case when sales_type = 'cash'  then 'Cash'
       when sales_type = 'check'  then 'Check'
-      when sales_type = 'credit_card'  and substring(tokenization,2,2) like '4%' then 'Visa'
-      when sales_type = 'credit_card'  and (substring(tokenization,2,2) like '34%' or substring(tokenization,2,2) like '37%') then 'Amex'
-      when sales_type = 'credit_card'  and (substring(tokenization,2,2) like '51%' or substring(tokenization,2,2) like '52%' or substring(tokenization,2,2) like '53%' or substring(tokenization,2,2) like '54%' or substring(tokenization,2,2) like '55%') then 'Mastercard'
-      when sales_type = 'credit_card'  and (substring(tokenization,2,2) like '60%' or substring(tokenization,2,2) like '65%' ) then 'Discover'
-      when sales_type = 'credit_card'  and (substring(tokenization,2,2) not like '4%' or substring(tokenization,2,2) not like '34%' or substring(tokenization,2,2) not like '37%' or substring(tokenization,2,2) not like '51%' or substring(tokenization,2,2) not like '52%' or substring(tokenization,2,2) not like '53%' or substring(tokenization,2,2) not like '54%' or substring(tokenization,2,2) not like '55%' or substring(tokenization,2,2) not like '60%' or substring(tokenization,2,2) not like '65%') then 'Other Credit Card'
-      when sales_type = 'reward' then 
+      when sales_type = 'credit_card'  and token_substr like '4%' then 'Visa'
+      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then 'Amex'
+      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%') then 'Mastercard'
+      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
+      when sales_type = 'credit_card'  and (token_substr not like '4%' or token_substr not like '34%' or token_substr not like '37%' or token_substr not like '51%' or token_substr not like '52%' or token_substr not like '53%' or token_substr not like '54%' or token_substr not like '55%' or token_substr not like '60%' or token_substr not like '65%') then 'Other Credit Card'
+      when sales_type = 'reward' then 'Reward'
       when sales_type = 'provider credit' then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
@@ -54,8 +54,7 @@ batch_report_details as
   as description,
   case 
        when sales_type = 'check' then payment_id
-       when sales_type ='credit_card' and sales_id like 'tran%' then CONCAT('**** ',cast(payment_id as VARCHAR))
-       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then CONCAT('**** ',cast(payment_id as VARCHAR))
+       when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
        else null end 
   as payment_id,
   gx_customer_id,
@@ -79,6 +78,7 @@ main as
 (
   select *,
   extract (epoch from sales_created_at) as epoch_sales_created_at,
-  extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
+  extract (epoch from original_sales_created_at) as epoch_original_sales_created_at
+  from batch_report_details
 )
 select * from main
