@@ -58,12 +58,12 @@ FROM
 ),
 subscription_no_auto_renewal AS
 (SELECT
-    *      
+    Subscription_all.*      
 FROM
     Subscription_all 
 JOIN
      invoice
-        ON plan_id = invoice_plan
+        ON Subscription_all.plan_id = invoice.invoice_plan
 WHERE
     invoice_status = 20
     AND auto_renewal = 'f'
