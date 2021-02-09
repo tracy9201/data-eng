@@ -33,7 +33,6 @@ WITH batch_report_summary as
       end 
   as payment_detail,
   case 
-      when user_type=1 then subscription_name
       when sales_type = 'check' then null
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
