@@ -13,6 +13,7 @@ batch_report_details as
   select 
   subscription_name, 
   user_type,
+  is_voided,
   sales_id,
   case when sales_id like 'refund%' then 'Refund'
       when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and sales_name = 'BD Payment' then 'Offer Redemption'
@@ -70,7 +71,7 @@ batch_report_details as
       else coalesce(sales_amount/100,0) end
   as sales_amount,
   coalesce((gratuity_amount)/100,0) as gratuity_amount
-  from dwh_opul.fact_payment_summary payment_summary
+  from dwh_opul.fact_payment_summary_1 payment_summary
   left join sub_cus as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   where sc.sub_created = 1
 ),
@@ -78,7 +79,10 @@ main as
 (
   select *,
   extract (epoch from sales_created_at) as epoch_sales_created_at,
-  extract (epoch from original_sales_created_at) as epoch_original_sales_created_at
+  extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
+  case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
+       when payment_method= 'adjustment' then 'BAD'
+       else 'GOOD' end  category
   from batch_report_details
 )
 select * from main
