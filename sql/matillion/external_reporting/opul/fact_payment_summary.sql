@@ -418,6 +418,7 @@ main as
     a.transaction_id,
     a.payment_id,
     a.tokenization,
+    substring(a.tokenization,2,2) as token_substr,
     a.gx_subscription_id ,
     a.staff_user_id,
     a.device_id,
