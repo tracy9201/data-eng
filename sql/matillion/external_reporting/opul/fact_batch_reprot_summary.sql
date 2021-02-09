@@ -33,15 +33,6 @@ WITH batch_report_summary as
       end 
   as payment_detail,
   case 
-      when user_type=1 then subscription_name
-      when sales_type = 'check' then null
-      when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
-      when sales_type ='credit_card' and sales_id like 'tran%' then null
-      when sales_type = 'Recurring Pmt' and sales_type = 'credit_card' then null
-      else payment_id end
-  as description,
-  case 
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
        else null end 
