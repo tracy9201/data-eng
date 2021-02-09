@@ -36,7 +36,6 @@ batch_report_details as
       when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then 'Amex'
       when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%') then 'Mastercard'
       when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
-      -- when sales_type = 'credit_card'  and (token_substr not like '4%' or token_substr not like '34%' or token_substr not like '37%' or token_substr not like '51%' or token_substr not like '52%' or token_substr not like '53%' or token_substr not like '54%' or token_substr not like '55%' or token_substr not like '60%' or token_substr not like '65%') then 'Other Credit Card'
       when sales_type = 'credit_card' then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
       when sales_type = 'provider credit' then 'Practice Credit'

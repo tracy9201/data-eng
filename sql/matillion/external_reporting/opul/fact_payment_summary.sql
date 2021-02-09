@@ -55,7 +55,6 @@ LEFT JOIN
     gaia_opul.gratuity gratuity
         ON gratuity.id = p.gratuity_id
 LEFT JOIN
--- gateway_transaction gt
  (SELECT distinct payment_id,card_payment_gateway_id
   FROM  gaia_opul.gateway_transaction
   WHERE card_payment_gateway_id IS NOT NULL) gt
