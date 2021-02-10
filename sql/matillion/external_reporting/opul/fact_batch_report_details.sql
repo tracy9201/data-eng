@@ -72,8 +72,8 @@ batch_report_details as
   as sales_amount,
   coalesce((gratuity_amount)/100,0) as gratuity_amount
   from dwh_opul.fact_payment_summary payment_summary
-  left join sub_cus as sc on payment_summary.gx_customer_id = sc.gx_cus_id
-  where sc.sub_created = 1
+  left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
+  
 ),
 main as
 (
