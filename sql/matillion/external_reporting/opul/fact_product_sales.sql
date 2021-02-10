@@ -45,7 +45,7 @@ JOIN
     gaia_opul.provider provider
         ON provider.id = provider_id
 WHERE
-    subscription.status in (1,-1,20)
+    subscription.status in (0,1,-1,20)
     
 ),
 invoice AS
