@@ -27,7 +27,7 @@ WITH batch_report_summary as
       when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
       when sales_type = 'credit_card'  then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
-      when sales_type = 'provider credit' then 'Practice Credit'
+      when sales_type in ('provider credit', 'wallet') then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
