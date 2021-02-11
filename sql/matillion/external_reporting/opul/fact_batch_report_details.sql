@@ -65,6 +65,7 @@ batch_report_details as
   sales_created_at as original_sales_created_at,
   staff_user_id,
   device_id,
+  tokenization,
   case 
       when sales_id like 'refund%' then coalesce((-1*sales_amount)/100,0)
       when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
@@ -75,14 +76,28 @@ batch_report_details as
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
 ),
+guest_name as(
+  select 
+    card_holder_name, 
+    tokenization as token
+  from gaia_opul.card
+  join kronos_opul.customer_data on customer_id = customer_data.id 
+  where 
+    type = 1 
+    and card_holder_name is not null
+),
 main as
 (
   select *,
+  card_holder_name,
+  substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
+  substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
   extract (epoch from sales_created_at) as epoch_sales_created_at,
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
        else 'GOOD' end  category
   from batch_report_details
+  left join guest_name on token = tokenization
 )
 select * from main
