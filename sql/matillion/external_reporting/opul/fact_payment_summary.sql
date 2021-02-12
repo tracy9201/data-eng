@@ -42,7 +42,7 @@ payment_data as
         ELSE p.name
     END AS payment_id,
     cpg.tokenization,
-    card.brand,
+    coalesce(card.brand,p.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id,
     p.created_by AS staff_user_id,
     p.device_id,
@@ -89,7 +89,7 @@ refund1 as
         ELSE refund.reason
     END AS payment_id,
     cpg.tokenization,
-    card.brand as card_brand,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -132,7 +132,7 @@ refund3 as
         ELSE refund.reason
     END AS payment_id,
     cpg.tokenization,
-    card.brand as card_brand,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id,
     refund.created_by AS staff_user_id ,
     NULL::text AS device_id,
@@ -331,7 +331,7 @@ void3 as
     END AS transaction_id,
     refund.reason AS payment_id,
     cpg.tokenization,
-    card.brand as card_brand,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -378,7 +378,7 @@ void4 as
     END AS transaction_id,
     refund.reason AS payment_id,
     cpg.tokenization,
-    card.brand as card_brand,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -462,4 +462,4 @@ main as
     gaia_opul.provider provider
         ON provider.id = provider_id
 )
-SELECT * FROM main
+SELECT * FROM main 
