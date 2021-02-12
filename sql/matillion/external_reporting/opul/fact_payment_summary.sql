@@ -468,4 +468,4 @@ main as
     gaia_opul.provider provider
         ON provider.id = provider_id
 )
-SELECT card_brand FROM main group by 1
+SELECT * FROM main
