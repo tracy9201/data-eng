@@ -444,10 +444,11 @@ main as
     a.transaction_id,
     a.payment_id,
     a.tokenization,
-    CASE WHEN a.card_brand like 'A' then 'Amex'
+    CASE WHEN a.card_brand in ('A','AMEX') then 'Amex'
          WHEN a.card_brand like 'M' then 'Mastercard'
          WHEN a.card_brand like 'D' then 'Discover'
-         WHEN a.card_brand like 'V' then 'Visa'
+         WHEN a.card_brand in ('V','VISA') then 'Visa'
+         WHEN a.card_brand like 'N' then 'Other'
          ELSE a.card_brand
          END as card_brand,
     substring(a.tokenization,2,2) as token_substr,
@@ -467,4 +468,4 @@ main as
     gaia_opul.provider provider
         ON provider.id = provider_id
 )
-SELECT * FROM main 
+SELECT card_brand FROM main group by 1
