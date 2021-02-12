@@ -88,15 +88,14 @@ guest_name as(
 ),
 main as
 (
-  select *,
-  card_holder_name,
-  substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
-  substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
+  select batch_report_details.*,
   extract (epoch from sales_created_at) as epoch_sales_created_at,
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
-       else 'GOOD' end  category
+       else 'GOOD' end  category,
+  substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
+  substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname
   from batch_report_details
   left join guest_name on token = tokenization
 )
