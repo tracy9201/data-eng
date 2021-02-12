@@ -444,7 +444,12 @@ main as
     a.transaction_id,
     a.payment_id,
     a.tokenization,
-    a.card_brand,
+    CASE WHEN a.card_brand like 'A' then 'Amex'
+         WHEN a.card_brand like 'M' then 'Mastercard'
+         WHEN a.card_brand like 'D' then 'Discover'
+         WHEN a.card_brand like 'V' then 'Visa'
+         ELSE a.card_brand
+         END as card_brand,
     substring(a.tokenization,2,2) as token_substr,
     a.gx_subscription_id ,
     a.staff_user_id,
