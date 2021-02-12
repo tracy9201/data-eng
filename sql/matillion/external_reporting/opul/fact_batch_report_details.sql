@@ -32,11 +32,11 @@ batch_report_details as
       end as payment_method,
   case when sales_type = 'cash'  then 'Cash'
       when sales_type = 'check'  then 'Check'
-      when sales_type = 'credit_card'  and token_substr like '4%' then 'Visa'
-      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then 'Amex'
-      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%') then 'Mastercard'
-      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
-      when sales_type = 'credit_card' then 'Other Credit Card'
+      when sales_type = 'credit_card'  and token_substr like '4%' then coalesce(card_brand,'Visa')
+      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then coalesce(card_brand,'Amex')
+      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%' or token_substr like '2%') then coalesce(card_brand,'Mastercard')
+      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then coalesce(card_brand,'Discover')
+      when sales_type = 'credit_card'  then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
       when sales_type = 'provider credit' then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
