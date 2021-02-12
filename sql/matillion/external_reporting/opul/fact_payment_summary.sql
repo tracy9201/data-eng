@@ -12,6 +12,7 @@ WITH credit_data as
     END AS transaction_id,
     c.name AS payment_id,
     '0000000000000000'::varchar AS tokenization,
+    NULL::varchar as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     c.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -41,6 +42,7 @@ payment_data as
         ELSE p.name
     END AS payment_id,
     cpg.tokenization,
+    coalesce(card.brand,p.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id,
     p.created_by AS staff_user_id,
     p.device_id,
@@ -87,6 +89,7 @@ refund1 as
         ELSE refund.reason
     END AS payment_id,
     cpg.tokenization,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -129,6 +132,7 @@ refund3 as
         ELSE refund.reason
     END AS payment_id,
     cpg.tokenization,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id,
     refund.created_by AS staff_user_id ,
     NULL::text AS device_id,
@@ -174,6 +178,7 @@ tran as
     transaction_id,
     last4 AS payment_id ,
     cpg.tokenization,
+    card.brand as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     NULL::text AS staff_user_id,
     NULL::text AS device_id,
@@ -229,6 +234,7 @@ void1 as
     gt.transaction_id,
     settlement.last_four AS payment_id,
     token AS tokenization,
+    card.brand as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     NULL::text AS staff_user_id,
     NULL::text AS device_id,
@@ -240,6 +246,12 @@ FROM
 LEFT JOIN
     gaia_opul.gateway_transaction gt
         ON gt.id = gateway_transaction_id
+LEFT JOIN
+    gaia_opul.card_payment_gateway cpg
+        ON cpg.id = gt.card_payment_gateway_id
+LEFT JOIN
+    gaia_opul.card
+        ON cpg.card_id = card.id
 LEFT JOIN
     gaia_opul.invoice invoice
         ON gt.invoice_id = invoice.id
@@ -271,6 +283,7 @@ void2 as
     gt.transaction_id,
     settlement.last_four AS payment_id,
     token AS tokenization,
+    card.brand as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     NULL::text AS staff_user_id,
     NULL::text AS device_id,
@@ -282,6 +295,12 @@ FROM
 LEFT JOIN
     gaia_opul.gateway_transaction gt
         ON gt.id = gateway_transaction_id
+LEFT JOIN
+    gaia_opul.card_payment_gateway cpg
+        ON cpg.id = gt.card_payment_gateway_id
+LEFT JOIN
+    gaia_opul.card
+        ON cpg.card_id = card.id
 LEFT JOIN
     gaia_opul.payment
         ON  payment_id = payment.id
@@ -312,6 +331,7 @@ void3 as
     END AS transaction_id,
     refund.reason AS payment_id,
     cpg.tokenization,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -335,6 +355,9 @@ LEFT JOIN
 LEFT JOIN
     gaia_opul.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
+LEFT JOIN
+    gaia_opul.card
+        ON cpg.card_id = card.id
 WHERE
     refund.status =20
     AND refund.is_void = 't'
@@ -355,6 +378,7 @@ void4 as
     END AS transaction_id,
     refund.reason AS payment_id,
     cpg.tokenization,
+    coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
@@ -378,6 +402,9 @@ LEFT JOIN
 LEFT JOIN
     gaia_opul.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
+LEFT JOIN
+    gaia_opul.card
+        ON cpg.card_id = card.id
 WHERE
     refund.status =20
     AND refund.is_void = 't'
@@ -417,6 +444,13 @@ main as
     a.transaction_id,
     a.payment_id,
     a.tokenization,
+    CASE WHEN a.card_brand in ('A','AMEX') then 'Amex'
+         WHEN a.card_brand like 'M' then 'Mastercard'
+         WHEN a.card_brand like 'D' then 'Discover'
+         WHEN a.card_brand in ('V','VISA') then 'Visa'
+         WHEN a.card_brand like 'N' then 'Other'
+         ELSE a.card_brand
+         END as card_brand,
     substring(a.tokenization,2,2) as token_substr,
     a.gx_subscription_id ,
     a.staff_user_id,
@@ -434,4 +468,4 @@ main as
     gaia_opul.provider provider
         ON provider.id = provider_id
 )
-SELECT * FROM main
+SELECT card_brand FROM main group by 1
