@@ -87,8 +87,9 @@ refund1 as
         else ''
     END AS transaction_id,
     CASE
+        WHEN refund.reason is not null THEN refund.reason
         WHEN refund.type = 'credit_card' THEN last4
-        ELSE refund.reason
+        ELSE ' '
     END AS payment_id,
     cpg.tokenization,
     coalesce(card.brand,refund.card_brand) as card_brand,
@@ -131,8 +132,9 @@ refund3 as
     payment.plan_id,
     gt.transaction_id,
     CASE
+        WHEN refund.reason is not null THEN refund.reason
         WHEN refund.type = 'credit_card' THEN last4
-        ELSE refund.reason
+        ELSE ' '
     END AS payment_id,
     cpg.tokenization,
     coalesce(card.brand,refund.card_brand) as card_brand,
