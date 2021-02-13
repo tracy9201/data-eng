@@ -17,7 +17,8 @@ WITH credit_data as
     c.created_by AS staff_user_id,
     NULL::text AS device_id,
     NULL::bigint AS gratuity_amount,
-    NULL::text AS is_voided
+    NULL::text AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.credit c
 LEFT JOIN
@@ -47,7 +48,8 @@ payment_data as
     p.created_by AS staff_user_id,
     p.device_id,
     gratuity.amount AS gratuity_amount,
-    NULL::text AS is_voided
+    NULL::text AS is_voided,
+    card_holder_name
 FROM
     gaia_opul.payment p
 LEFT JOIN
@@ -94,7 +96,8 @@ refund1 as
     refund.created_by AS staff_user_id,
     NULL::text AS device_id,
     gratuity.amount AS gratuity_amount,
-    NULL::text AS is_voided
+    NULL::text AS is_voided,
+    card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
@@ -137,7 +140,8 @@ refund3 as
     refund.created_by AS staff_user_id ,
     NULL::text AS device_id,
     gratuity.amount AS gratuity_amount,
-    NULL::text AS is_voided
+    NULL::text AS is_voided,
+    card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
@@ -183,7 +187,8 @@ tran as
     NULL::text AS staff_user_id,
     NULL::text AS device_id,
     gt.gratuity_amount,
-    NULL::text AS is_voided
+    NULL::text AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.gateway_transaction gt
 LEFT JOIN
@@ -240,7 +245,8 @@ void1 as
     NULL::text AS device_id,
     gt.gratuity_amount AS gratuity_amount,
     CASE WHEN gt.is_voided = 't' then 't'::varchar 
-         WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided
+         WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.settlement settlement
 LEFT JOIN
@@ -289,7 +295,8 @@ void2 as
     NULL::text AS device_id,
     gt.gratuity_amount AS gratuity_amount,
     CASE WHEN gt.is_voided = 't' then 't'::varchar 
-         WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided
+         WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.settlement settlement
 LEFT JOIN
@@ -337,7 +344,8 @@ void3 as
     NULL::text AS device_id,
     gratuity.amount AS gratuity_amount,
     CASE WHEN refund.is_void = 't' then 't'::varchar 
-         WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR  END AS is_voided
+         WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR  END AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
@@ -384,7 +392,8 @@ void4 as
     NULL::text AS device_id,
     gratuity.amount AS gratuity_amount,
     CASE WHEN refund.is_void = 't' then 't'::varchar 
-         WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided
+         WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
+    NULL::text as card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
@@ -448,7 +457,7 @@ main as
          WHEN a.card_brand like 'M' then 'Mastercard'
          WHEN a.card_brand like 'D' then 'Discover'
          WHEN a.card_brand in ('V','VISA') then 'Visa'
-         WHEN a.card_brand like 'N' then 'Other'
+         WHEN a.card_brand like 'N' then 'Other Credit Card'
          ELSE a.card_brand
          END as card_brand,
     substring(a.tokenization,2,2) as token_substr,
@@ -456,7 +465,8 @@ main as
     a.staff_user_id,
     a.device_id,
     a.gratuity_amount,
-    a.is_voided
+    a.is_voided,
+    card_holder_name
     FROM all_data a
     LEFT JOIN
     gaia_opul.plan plan
