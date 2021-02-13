@@ -24,7 +24,7 @@ batch_report_details as
   case when sales_type = 'cash' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Cash'
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
-      when sales_type = 'provider credit' and (sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
+      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
@@ -39,7 +39,7 @@ batch_report_details as
       when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
       when sales_type = 'credit_card'  then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
-      when sales_type = 'provider credit' then 'Practice Credit'
+      when sales_type in ('wallet', 'provider credit') then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
@@ -72,20 +72,11 @@ batch_report_details as
       when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
       else coalesce(sales_amount/100,0) end
   as sales_amount,
-  coalesce((gratuity_amount)/100,0) as gratuity_amount
+  coalesce((gratuity_amount)/100,0) as gratuity_amount,
+  card_holder_name
   from dwh_opul.fact_payment_summary payment_summary
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
-),
-guest_name as(
-  select 
-    card_holder_name, 
-    tokenization as token
-  from gaia_opul.card
-  join kronos_opul.customer_data on customer_id = customer_data.id 
-  where 
-    type = 1 
-    and card_holder_name is not null
 ),
 main as
 (
@@ -120,6 +111,5 @@ main as
   substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
   substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname
   from batch_report_details
-  left join guest_name on token = tokenization
 )
-select * from main
+select * from main 
