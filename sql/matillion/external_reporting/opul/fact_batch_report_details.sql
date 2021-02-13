@@ -30,12 +30,13 @@ batch_report_details as
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
       when sales_id like 'void%' or tokenization is not null then 'Credit Card'
       end as payment_method,
+  card_brand,
   case when sales_type = 'cash'  then 'Cash'
       when sales_type = 'check'  then 'Check'
-      when sales_type = 'credit_card'  and token_substr like '4%' then coalesce(card_brand,'Visa')
-      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then coalesce(card_brand,'Amex')
-      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%' or token_substr like '2%') then coalesce(card_brand,'Mastercard')
-      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then coalesce(card_brand,'Discover')
+      when sales_type = 'credit_card'  and token_substr like '4%' then 'Visa'
+      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then 'Amex'
+      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%' or token_substr like '2%') then 'Mastercard'
+      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
       when sales_type = 'credit_card'  then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
       when sales_type = 'provider credit' then 'Practice Credit'
@@ -88,7 +89,28 @@ guest_name as(
 ),
 main as
 (
-  select *,
+  select 
+  subscription_name, 
+  user_type,
+  is_voided,
+  sales_id,
+  transaction,
+  payment_method,
+  card_brand,
+  case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+       else payment_detail end
+  as payment_detail,
+  description,
+  payment_id,
+  gx_customer_id,
+  gx_provider_id,
+  sales_created_at,
+  original_sales_created_at,
+  staff_user_id,
+  device_id,
+  tokenization,
+  sales_amount,
+  gratuity_amount,
   card_holder_name,
   substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
   substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
@@ -100,4 +122,4 @@ main as
   from batch_report_details
   left join guest_name on token = tokenization
 )
-select * from main
+select * from main 
