@@ -19,12 +19,13 @@ WITH batch_report_summary as
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
       when sales_id like 'void%' or tokenization is not null then 'Credit Card'
       end as payment_method,
+  card_brand,
   case when sales_type = 'cash'  then 'Cash'
       when sales_type = 'check'  then 'Check'
-      when sales_type = 'credit_card'  and token_substr like '4%' then coalesce(card_brand,'Visa')
-      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then coalesce(card_brand,'Amex')
-      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%' or token_substr like '2%') then coalesce(card_brand,'Mastercard')
-      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then coalesce(card_brand,'Discover')
+      when sales_type = 'credit_card'  and token_substr like '4%' then 'Visa'
+      when sales_type = 'credit_card'  and (token_substr like '34%' or token_substr like '37%') then 'Amex'
+      when sales_type = 'credit_card'  and (token_substr like '51%' or token_substr like '52%' or token_substr like '53%' or token_substr like '54%' or token_substr like '55%') then 'Mastercard'
+      when sales_type = 'credit_card'  and (token_substr like '60%' or token_substr like '65%' ) then 'Discover'
       when sales_type = 'credit_card'  then 'Other Credit Card'
       when sales_type = 'reward' then 'Reward'
       when sales_type in ('provider credit', 'wallet') then 'Practice Credit'
@@ -33,6 +34,7 @@ WITH batch_report_summary as
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
       end 
   as payment_detail,
+  tokenization,
   case 
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
@@ -55,7 +57,23 @@ WITH batch_report_summary as
 ),
 main as
 (
-  select *,
+  select 
+  is_voided,
+  sales_id,
+  sales_type,
+  transaction,
+  payment_method,
+  case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+       else payment_detail end
+  as payment_detail,
+  payment_id,
+  gx_customer_id,
+  gx_provider_id,
+  original_sales_created_at,
+  staff_user_id,
+  device_id,
+  sales_amount,
+  gratuity_amount,
   extract (epoch from sales_created_at) as epoch_sales_created_at,
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
@@ -63,4 +81,4 @@ main as
        else 'GOOD' end  category
   from batch_report_summary
 )
-select * from main
+select * from main 
