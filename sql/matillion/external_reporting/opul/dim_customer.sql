@@ -32,9 +32,9 @@ customer AS
     firstname,
     lastname  
 FROM kronos_opul.users  users
-JOIN kronos_opul.customer_data customer_data ON users.id = user_id  
+JOIN kronos_opul.customer_data customer_data ON users.id = customer_data.user_id  
 LEFT JOIN kronos_opul.plan plan ON plan.user_id = users.id  
-LEFT JOIN sub_plan ON plan_id = plan.id  
+LEFT JOIN sub_plan ON sub_plan.plan_id = plan.id  
 LEFT JOIN kronos_opul.address address ON billing_address_id = address.id 
 ) ,
 
@@ -54,8 +54,8 @@ main as
     customer_state,
     customer_zip,
     user_type,
-    coalesce(CASE WHEN customer.user_type = 1 THEN 'Guest' 
-                  WHEN customer.user_type =0 THEN (CASE WHEN customer.member_type = 'member'  THEN 'Subscriber' ELSE 'Non-Subscriber' END) 
+    coalesce(CASE WHEN user_type = 1 THEN 'Guest' 
+                  WHEN user_type =0 THEN (CASE WHEN member_type = 'member'  THEN 'Subscriber' ELSE 'Non-Subscriber' END) 
                   END,' ') AS customer_type,
     firstname,
     lastname  
