@@ -38,7 +38,7 @@ ALTER TABLE dwh_opul.dim_p2pe_device
 ALTER SORTKEY (device_uuid,label,status) ;
 
 ALTER TABLE dwh_opul.fact_batch_report_details
-ALTER SORTKEY (epoch_sales_created_at,gx_customer_id,gx_provider_id,staff_user_id,device_id,sales_type,sales_id,category) ;
+ALTER SORTKEY (epoch_sales_created_at,gx_provider_id,gx_customer_id,staff_user_id,device_id,sales_id,category) ;
 
 
 ALTER TABLE dwh_opul.fact_batch_report_summary
