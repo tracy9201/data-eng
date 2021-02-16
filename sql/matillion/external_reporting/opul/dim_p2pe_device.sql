@@ -3,7 +3,7 @@ WITH main as
  	id AS device_id,
  	organization_id,
  	merchant_id,
- 	label,
+ 	coalesce(device_data.label,' ') as label
  	status,
  	device_uuid  
 FROM

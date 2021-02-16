@@ -11,7 +11,7 @@ GROUP BY
     plan_id 
 ), 
 
-main AS 
+customer AS 
 ( SELECT
     customer_data.id AS k_customer_id,
     member_on_boarding_date,
@@ -45,5 +45,29 @@ LEFT JOIN
 LEFT JOIN
     kronos_opul.address address          
         ON billing_address_id = address.id 
-) 
+) ,
+
+main
+(   
+    SELECT
+    k_customer_id,
+    member_on_boarding_date,
+    member_cancel_date,
+    customer_email,
+    coalesce(CASE WHEN customer_mobile IS NULL or customer_mobile = '' then customer_mobile else '(' || substring(customer_mobile,3,3) || ') ' || substring(customer_mobile,6,3) || '-' || substring(customer_mobile,9,4)  END, ' ') AS customer_mobile,
+    customer_gender,
+    customer_birth_year,
+    gx_customer_id,
+    member_type,
+    customer_city,
+    customer_state,
+    customer_zip,
+    user_type,
+    coalesce(case when customer.user_type = 1 then 'Guest' 
+                  when customer.user_type =0 then (CASE WHEN customer.member_type = 'member'  THEN 'Subscriber' ELSE 'Non-Subscriber' END) 
+                  end,' ') AS customer_type,
+    firstname,
+    lastname  
+)
+
 SELECT * FROM main
