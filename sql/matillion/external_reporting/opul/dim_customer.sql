@@ -1,8 +1,8 @@
 WITH sub_plan AS 
 (SELECT
     plan_id,
-    to_char(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL end),'yyyy-mm-dd') AS member_on_boarding_date,
-    to_char(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL end),'yyyy-mm-dd') AS member_cancel_date  
+    to_char(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL END),'yyyy-mm-dd') AS member_on_boarding_date,
+    to_char(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL END),'yyyy-mm-dd') AS member_cancel_date  
 FROM
     kronos_opul.subscription as subscription
 WHERE
@@ -11,7 +11,7 @@ GROUP BY
     plan_id 
 ), 
 
-main AS 
+customer AS 
 ( SELECT
     customer_data.id AS k_customer_id,
     member_on_boarding_date,
@@ -31,19 +31,36 @@ main AS
     customer_data.type AS user_type,
     firstname,
     lastname  
-FROM
-    kronos_opul.users  users
-JOIN
-    kronos_opul.customer_data customer_data  
-        ON users.id = user_id  
-LEFT JOIN
-    kronos_opul.plan plan          
-        ON plan.user_id = users.id  
-LEFT JOIN
-    sub_plan          
-        ON plan_id = plan.id  
-LEFT JOIN
-    kronos_opul.address address          
-        ON billing_address_id = address.id 
-) 
+FROM kronos_opul.users  users
+JOIN kronos_opul.customer_data customer_data ON users.id = customer_data.user_id  
+LEFT JOIN kronos_opul.plan plan ON plan.user_id = users.id  
+LEFT JOIN sub_plan ON sub_plan.plan_id = plan.id  
+LEFT JOIN kronos_opul.address address ON billing_address_id = address.id 
+) ,
+
+main as
+(   
+    SELECT
+    k_customer_id,
+    member_on_boarding_date,
+    member_cancel_date,
+    customer_email,
+    coalesce(CASE WHEN customer_mobile IS NULL or customer_mobile = '' THEN customer_mobile else '(' || substring(customer_mobile,3,3) || ') ' || substring(customer_mobile,6,3) || '-' || substring(customer_mobile,9,4)  END, ' ') AS customer_mobile,
+    customer_gender,
+    customer_birth_year,
+    gx_customer_id,
+    member_type,
+    customer_city,
+    customer_state,
+    customer_zip,
+    user_type,
+    coalesce(CASE WHEN user_type = 1 THEN 'Guest' 
+                  WHEN user_type =0 THEN (CASE WHEN member_type = 'member'  THEN 'Subscriber' ELSE 'Non-Subscriber' END) 
+                  END,' ') AS customer_type,
+    firstname,
+    lastname  
+    FROM customer
+)
+
+
 SELECT * FROM main

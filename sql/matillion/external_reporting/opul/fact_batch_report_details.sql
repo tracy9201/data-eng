@@ -91,8 +91,12 @@ main as
   case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
        else payment_detail end
   as payment_detail,
-  description,
-  payment_id,
+  case when user_type = 1 and transaction='Refund' and description = ' ' then ' '
+        when user_type = 1 and transaction='Refund' and description != ' ' then payment_id
+        else coalesce(description,' ') end AS description,
+  case when transaction='Refund' and description != ' ' then null
+       else payment_id
+       end AS payment_id,
   gx_customer_id,
   gx_provider_id,
   sales_created_at,
