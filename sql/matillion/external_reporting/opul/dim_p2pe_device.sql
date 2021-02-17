@@ -7,6 +7,6 @@ WITH main as
  	status,
  	device_uuid  
 FROM
-	p2pe_opul.p2pe_device 
+	p2pe_opul.p2pe_device device_data
 )
 SELECT * FROM main
