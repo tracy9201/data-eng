@@ -389,7 +389,7 @@ void4 as
     coalesce(card.brand,refund.card_brand) as card_brand,
     sub.encrypted_ref_id AS gx_subscription_id ,
     refund.created_by AS staff_user_id,
-    NULL::text AS device_id,
+    payment.device_id AS device_id,
     gratuity.amount AS gratuity_amount,
     CASE WHEN refund.is_void = 't' then 't'::varchar 
          WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
