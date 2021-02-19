@@ -59,6 +59,7 @@ batch_report_details as
   case 
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
+       when transaction = 'Void' then CONCAT('**** ',cast(right(tokenization,4) as VARCHAR))
        else null end 
   as payment_id,
   gx_customer_id,
