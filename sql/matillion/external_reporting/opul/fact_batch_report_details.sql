@@ -8,6 +8,7 @@ WITH sub_cus as
     join dwh_opul.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
     where user_type=1
 ),
+
 batch_report_details as
 (
   select 
@@ -78,6 +79,7 @@ batch_report_details as
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
 ),
+
 main as
 (
   select 
@@ -88,15 +90,14 @@ main as
   transaction,
   payment_method,
   card_brand,
-  case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
-       else payment_detail end
-  as payment_detail,
-  case when user_type = 1 and transaction='Refund' and description = ' ' then ' '
+  coalesce(case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+       else payment_detail end,'N/A') as payment_detail,
+  case when user_type = 1 and transaction='Refund' and description = ' ' then 'N/A'
         when user_type = 1 and transaction='Refund' and description != ' ' then payment_id
-        else coalesce(description,' ') end AS description,
-  case when transaction='Refund' and description != ' ' then null
+        else coalesce(description,'N/A') end AS description,
+  coalesce(case when transaction='Refund' and description != ' ' then null
        else payment_id
-       end AS payment_id,
+       end,'N/A') AS payment_id,
   gx_customer_id,
   gx_provider_id,
   sales_created_at,

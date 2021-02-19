@@ -45,7 +45,7 @@ main as
     member_on_boarding_date,
     member_cancel_date,
     customer_email,
-    coalesce(CASE WHEN customer_mobile IS NULL or customer_mobile = '' THEN customer_mobile else '(' || substring(customer_mobile,3,3) || ') ' || substring(customer_mobile,6,3) || '-' || substring(customer_mobile,9,4)  END, ' ') AS customer_mobile,
+    coalesce(CASE WHEN customer_mobile IS NULL or customer_mobile = '' THEN customer_mobile else '(' || substring(customer_mobile,3,3) || ') ' || substring(customer_mobile,6,3) || '-' || substring(customer_mobile,9,4)  END, 'N/A') AS customer_mobile,
     customer_gender,
     customer_birth_year,
     gx_customer_id,
