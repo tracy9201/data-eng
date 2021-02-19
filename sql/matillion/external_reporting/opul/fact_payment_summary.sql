@@ -345,7 +345,7 @@ void3 as
     gratuity.amount AS gratuity_amount,
     CASE WHEN refund.is_void = 't' then 't'::varchar 
          WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR  END AS is_voided,
-    NULL::text as card_holder_name
+    card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
@@ -393,7 +393,7 @@ void4 as
     gratuity.amount AS gratuity_amount,
     CASE WHEN refund.is_void = 't' then 't'::varchar 
          WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
-    NULL::text as card_holder_name
+    card_holder_name
 FROM
     gaia_opul.refund refund
 LEFT JOIN
