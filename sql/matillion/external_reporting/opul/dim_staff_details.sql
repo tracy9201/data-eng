@@ -88,7 +88,7 @@ main as
     users.title,     
     case when users.firstname IS NULL or users.firstname = '' then 'N/A' else users.firstname end as firstname,  
     case when users.lastname IS NULL or users.lastname = '' then '' else users.lastname end as lastname, 
-    trim((case when users.firstname IS NULL or users.firstname = '' then 'N/A' else users.firstname end) || ' ' || (case when users.lastname IS NULL or users.lastname = '' then ' ' else users.lastname end)) AS staff_name,
+    trim((case when users.title IS NULL or users.title = '' then ' ' else users.title end) || ' ' ||(case when users.firstname IS NULL or users.firstname = '' then 'N/A' else users.firstname end) || ' ' || (case when users.lastname IS NULL or users.lastname = '' then ' ' else users.lastname end)) AS staff_name,
     users.role,
     users.email,     
     users.mobile,     
