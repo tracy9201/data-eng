@@ -8,7 +8,6 @@ WITH sub_cus as
     join dwh_opul.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
     where user_type=1
 ),
-
 batch_report_details as
 (
   select 
@@ -17,6 +16,7 @@ batch_report_details as
   is_voided,
   sales_id,
   case when sales_id like 'refund%' then 'Refund'
+      when sales_id like 'credit%' then 'Redemption'
       when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and sales_name = 'BD Payment' then 'Offer Redemption'
       when sales_id like 'credit%'  and  sales_type = 'provider credit' then 'Deposit From Patient'
       when sales_id like 'void%' then 'Void'
@@ -25,7 +25,7 @@ batch_report_details as
   case when sales_type = 'cash' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Cash'
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
-      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
+      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%' or sales_id like 'payment%') then 'Practice Credit'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
@@ -47,8 +47,9 @@ batch_report_details as
       end 
   as payment_detail,
   case 
-      when user_type=1 then subscription_name
-      when sales_type = 'check' then null
+      when sales_id like 'refund%' then payment_id
+      when user_type=1 then subscription_name 
+      when sales_type = 'check' and sales_id like 'refund%' then null
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
       when sales_type ='credit_card' and sales_id like 'tran%' then null
@@ -79,7 +80,6 @@ batch_report_details as
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
 ),
-
 main as
 (
   select 
@@ -90,14 +90,17 @@ main as
   transaction,
   payment_method,
   card_brand,
-  coalesce(case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
-       else payment_detail end,'N/A') as payment_detail,
-  case when user_type = 1 and transaction='Refund' and description = ' ' then 'N/A'
-        when user_type = 1 and transaction='Refund' and description != ' ' then payment_id
-        else coalesce(description,'N/A') end AS description,
-  coalesce(case when transaction='Refund' and description != ' ' then null
-       else payment_id
-       end,'N/A') AS payment_id,
+  case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+       else payment_detail end
+  as payment_detail,
+  case when user_type = 1 and transaction='Refund' and description = ' ' then ' '
+        when user_type = 1 and transaction='Refund' and description != ' ' then description
+        else coalesce(description,' ') end AS 
+        description,
+  case when transaction='Refund' and description != ' ' then null
+      else payment_id
+      end AS 
+       payment_id,
   gx_customer_id,
   gx_provider_id,
   sales_created_at,
