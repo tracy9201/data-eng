@@ -19,13 +19,14 @@ batch_report_details as
   case when sales_id like 'refund%' then 'Refund'
       when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and sales_name = 'BD Payment' then 'Offer Redemption'
       when sales_id like 'credit%'  and  sales_type = 'provider credit' then 'Deposit From Patient'
+      when sales_id like 'credit%' then 'Redemption'
       when sales_id like 'void%' then 'Void'
       else 'Sale'
       end as transaction,
   case when sales_type = 'cash' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Cash'
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
-      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
+      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%' or sales_id like 'payment%') then 'Practice Credit'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
@@ -47,7 +48,7 @@ batch_report_details as
       end 
   as payment_detail,
   case 
-      when user_type=1 then subscription_name
+      when user_type=1 and (sales_id like 'payment%' or sales_id like 'credit%') and subscription_name is not null then subscription_name
       when sales_type = 'check' then null
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
@@ -58,6 +59,7 @@ batch_report_details as
   case 
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
+       when transaction = 'Void' then CONCAT('**** ',cast(right(tokenization,4) as VARCHAR))
        else null end 
   as payment_id,
   gx_customer_id,
@@ -88,15 +90,18 @@ main as
   is_voided,
   sales_id,
   transaction,
-  payment_method,
+  coalesce(payment_method,'N/A') as payment_method,
   card_brand,
-  coalesce(case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+  coalesce(case when payment_detail is NULL OR trim(payment_detail) = '' then 'N/A'
+                when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
        else payment_detail end,'N/A') as payment_detail,
-  case when user_type = 1 and transaction='Refund' and description = ' ' then 'N/A'
-        when user_type = 1 and transaction='Refund' and description != ' ' then payment_id
-        else coalesce(description,'N/A') end AS description,
-  coalesce(case when transaction='Refund' and description != ' ' then null
-       else payment_id
+  case when description is NULL or trim(description) = '' then 'N/A'
+       when user_type = 1 and transaction='Refund' and trim(description) = '' then 'N/A'
+       when user_type = 1 and transaction='Refund' and trim(description) != '' then description
+       else description end AS description,
+  coalesce(case when transaction='Refund' and trim(description) != '' then 'N/A'
+                when payment_id is NULL OR trim(payment_id) = '' then 'N/A'
+                else payment_id
        end,'N/A') AS payment_id,
   gx_customer_id,
   gx_provider_id,
