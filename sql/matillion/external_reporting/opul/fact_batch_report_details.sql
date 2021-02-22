@@ -68,6 +68,7 @@ batch_report_details as
       else sales_created_at END  as sales_created_at,
   sales_created_at as original_sales_created_at,
   staff_user_id,
+  transaction_id,
   device_id,
   tokenization,
   case 
@@ -110,6 +111,7 @@ main as
   staff_user_id,
   device_id,
   tokenization,
+  transaction_id
   sales_amount,
   gratuity_amount,
   card_holder_name,
