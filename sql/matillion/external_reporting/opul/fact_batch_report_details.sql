@@ -82,6 +82,32 @@ batch_report_details as
   
 ),
 
+batch_report_details_formatting as
+(
+    select
+    subscription_name, 
+    user_type,
+    is_voided,
+    sales_id,
+    transaction,
+    payment_method,
+    card_brand,
+    case when trim(payment_detail) = '' then  NULL else payment_detail end as payment_detail ,
+    case when trim(description) = '' then  NULL else description end as description ,
+    case when trim(payment_id) = '' then  NULL else payment_id end as payment_id ,
+    gx_customer_id,
+    gx_provider_id,
+    sales_created_at,
+    original_sales_created_at,
+    staff_user_id,
+    device_id,
+    tokenization,
+    sales_amount,
+    gratuity_amount,
+    card_holder_name
+    from batch_report_details
+),
+
 main as
 (
   select 
@@ -92,15 +118,18 @@ main as
   transaction,
   coalesce(payment_method,'N/A') as payment_method,
   card_brand,
-  coalesce(case when payment_detail is NULL OR trim(payment_detail) = '' then 'N/A'
-                when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
-       else payment_detail end,'N/A') as payment_detail,
-  case when description is NULL or trim(description) = '' then 'N/A'
-       when user_type = 1 and transaction='Refund' and trim(description) = '' then 'N/A'
-       when user_type = 1 and transaction='Refund' and trim(description) != '' then description
+  case when payment_method = 'Credit Card' then coalesce(card_brand,payment_detail)
+       when payment_detail is NULL  then 'N/A'
+       else payment_detail  end as payment_detail,
+  case when user_type = 1 and transaction='Refund' and  description is  null and upper(payment_id) <> lower(payment_id) then payment_id
+       when user_type = 1 and transaction='Refund' and description is not null then description
+       when payment_method = 'Check' and transaction='Refund' and payment_id is not null and  description is null then payment_id
+       when transaction='Refund'  and  description is null and upper(payment_id) <> lower(payment_id)  then payment_id
+       when description is NULL then 'N/A'
        else description end AS description,
-  coalesce(case when transaction='Refund' and trim(description) != '' then 'N/A'
-                when payment_id is NULL OR trim(payment_id) = '' then 'N/A'
+  coalesce(case when transaction='Refund'  and payment_method = 'Check' then 'N/A'
+                when upper(payment_id) = lower(payment_id) then payment_id
+                when payment_id is NULL  then 'N/A'
                 else payment_id
        end,'N/A') AS payment_id,
   gx_customer_id,
@@ -120,6 +149,6 @@ main as
        else 'GOOD' end  category,
   substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
   substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname
-  from batch_report_details
+  from batch_report_details_formatting
 )
-select * from main 
+select * from main
