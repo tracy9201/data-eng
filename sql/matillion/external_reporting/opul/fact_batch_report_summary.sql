@@ -52,7 +52,9 @@ WITH batch_report_summary as
       when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
       else coalesce(sales_amount/100,0) end
   as sales_amount,
-  coalesce((gratuity_amount)/100,0) as gratuity_amount
+  coalesce((gratuity_amount)/100,0) as gratuity_amount,
+  created_at,
+  updated_at
   from dwh_opul.fact_payment_summary payment_summary
 ),
 main as
@@ -78,7 +80,10 @@ main as
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
-       else 'GOOD' end  category
+       else 'GOOD' end  category,
+  created_at,
+  updated_at,
+  current_timestamp::timestamp as dwh_created_at
   from batch_report_summary
 )
 select * from main 

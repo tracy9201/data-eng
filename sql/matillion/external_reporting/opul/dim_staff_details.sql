@@ -92,9 +92,10 @@ main as
     users.role,
     users.email,     
     users.mobile,     
-    users.organization_id 
-    from kronos_opul.users as users
-    join all_roles staff on staff.user_id = users.id
+    users.organization_id,
+    current_timestamp::timestamp as dwh_created_at 
+    FROM kronos_opul.users as users
+    JOIN all_roles staff on staff.user_id = users.id
 )
 
 SELECT * FROM main
