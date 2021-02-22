@@ -32,7 +32,7 @@ WITH Subscription_all AS
     customer.encrypted_ref_id AS k_customer_id,
     provider_id,
     provider.encrypted_ref_id AS k_provider_id,
-    current_timestamp::timestamp as loaded_at
+    current_timestamp::timestamp as dwh_created_at
 FROM
     gaia_opul.subscription subscription
 JOIN

@@ -7,7 +7,10 @@ WITH main as
     lastname AS practice_name,
     city AS practice_city,
     state AS practice_state,
-    zip AS practice_zip  
+    zip AS practice_zip,
+    organization_data.created_at,
+    organization_data.updated_at,
+    current_timestamp::timestamp as dwh_created_at
 FROM
     kronos_opul.organization_data  organization_data
 JOIN

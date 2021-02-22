@@ -30,7 +30,10 @@ customer AS
     zip AS customer_zip,
     customer_data.type AS user_type,
     firstname,
-    lastname  
+    lastname,
+    users.created_at,
+    users.updated_at,
+    current_timestamp::timestamp as dwh_created_at
 FROM kronos_opul.users  users
 JOIN kronos_opul.customer_data customer_data ON users.id = customer_data.user_id  
 LEFT JOIN kronos_opul.plan plan ON plan.user_id = users.id  
@@ -58,7 +61,10 @@ main as
                   WHEN user_type =0 THEN (CASE WHEN member_type = 'member'  THEN 'Subscriber' ELSE 'Non-Subscriber' END) 
                   END,' ') AS customer_type,
     firstname,
-    lastname  
+    lastname,
+    created_at,
+    updated_at,
+    dwh_created_at  
     FROM customer
 )
 

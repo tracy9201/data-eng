@@ -76,7 +76,9 @@ batch_report_details as
       else coalesce(sales_amount/100,0) end
   as sales_amount,
   coalesce((gratuity_amount)/100,0) as gratuity_amount,
-  card_holder_name
+  card_holder_name,
+  created_at,
+  updated_at
   from dwh_opul.fact_payment_summary payment_summary
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
@@ -104,7 +106,9 @@ batch_report_details_formatting as
     tokenization,
     sales_amount,
     gratuity_amount,
-    card_holder_name
+    card_holder_name,
+    created_at,
+  	updated_at
     from batch_report_details
 ),
 
@@ -148,7 +152,10 @@ main as
        when payment_method= 'adjustment' then 'BAD'
        else 'GOOD' end  category,
   substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
-  substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname
+  substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
+  created_at,
+  updated_at,
+  current_timestamp::timestamp as dwh_created_at
   from batch_report_details_formatting
 )
 select * from main
