@@ -140,7 +140,6 @@ main as
        end,'N/A') AS payment_id,
   gx_customer_id,
   gx_provider_id,
-  transaction_id,
   sales_created_at,
   original_sales_created_at,
   staff_user_id,
@@ -158,7 +157,8 @@ main as
   substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
   created_at,
   updated_at,
-  current_timestamp::timestamp as dwh_created_at
+  current_timestamp::timestamp as dwh_created_at,
+  case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id
   from batch_report_details_formatting
 )
 select * from main
