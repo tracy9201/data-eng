@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS dwh_opul.fact_batch_report_summary;
 
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_summary
 (
-  ,is_voided varchar(10) ENCODE raw
+  is_voided varchar(10) ENCODE raw
   ,sales_id VARCHAR(255)   ENCODE raw
   ,sales_type VARCHAR(255)   ENCODE raw
   ,transaction VARCHAR(128)   ENCODE raw
