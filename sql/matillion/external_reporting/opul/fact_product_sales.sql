@@ -1,7 +1,7 @@
 WITH Subscription_all AS
 (SELECT
     subscription.id AS subscription_id,
-    subscription.encrypted_ref_id AS k_subscirption_id,
+    subscription.encrypted_ref_id AS k_subscription_id,
     subscription.quantity,
     subscription.unit_name,
     subscription.remaining_payment,
