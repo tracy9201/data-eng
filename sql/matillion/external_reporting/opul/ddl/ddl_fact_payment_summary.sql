@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
   ,transaction_id VARCHAR(255) ENCODE raw
   ,payment_id VARCHAR(255)   ENCODE raw
   ,tokenization VARCHAR(255)   ENCODE raw
+  ,card_brand VARCHAR(255) ENCODE raw
   ,token_substr VARCHAR(8) ENCODE raw
   ,gx_subscription_id  VARCHAR(64)   ENCODE raw
   ,staff_user_id VARCHAR(64)   ENCODE raw
