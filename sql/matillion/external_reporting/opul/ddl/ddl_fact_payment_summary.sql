@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
   ,tokenization VARCHAR(255)   ENCODE raw
   ,token_substr VARCHAR(8) ENCODE raw
   ,gx_subscription_id  VARCHAR(64)   ENCODE raw
-  ,staff_user_id BIGINT   ENCODE raw
+  ,staff_user_id VARCHAR(64)   ENCODE raw
   ,device_id VARCHAR(255)   ENCODE raw
   ,gratuity_amount NUMERIC(18,0)   ENCODE raw
   ,is_voided varchar(10) ENCODE raw
