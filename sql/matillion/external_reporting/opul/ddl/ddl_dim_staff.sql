@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.dim_staff
   ,mobile  VARCHAR(MAX)  ENCODE  raw
   ,organization_id BIGINT  ENCODE  raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-  ,primary key(subscription_id)
-  ,UNIQUE(subscription_id, updated_at)
+  ,primary key(id)
+  ,UNIQUE(id, updated_at)
 )
 DISTSTYLE ALL
 SORTKEY (user_id)
