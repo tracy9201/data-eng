@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.dim_staff;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.dim_staff
 (
 

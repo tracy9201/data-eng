@@ -1,3 +1,5 @@
+DROP TABLE IF  EXISTS dwh_opul.fact_payment_summary;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
 (
   sales_id VARCHAR(255)   ENCODE raw

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.dim_customer;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.dim_customer
 (
   k_customer_id BIGINT   ENCODE raw

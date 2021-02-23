@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.dim_kronos_subscription;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.dim_kronos_subscription
 (
   subscription_id BIGINT ENCODE raw

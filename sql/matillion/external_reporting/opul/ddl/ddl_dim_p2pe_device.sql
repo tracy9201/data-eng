@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.dim_p2pe_device;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.dim_p2pe_device
 (
   device_id BIGINT ENCODE raw
@@ -8,9 +10,6 @@ CREATE TABLE IF NOT EXISTS dwh_opul.dim_p2pe_device
   ,device_uuid VARCHAR(37)   ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-  ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
-  ,updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(device_id)
   ,UNIQUE(device_uuid, updated_at)

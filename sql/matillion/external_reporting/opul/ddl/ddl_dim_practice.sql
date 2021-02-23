@@ -1,3 +1,5 @@
+DROP TABLE IF  EXISTS dwh_opul.dim_practice;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.dim_practice
 (
   k_practice_id BIGINT  ENCODE raw

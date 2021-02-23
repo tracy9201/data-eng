@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.fact_batch_report_details;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_details
 (
   subscription_name VARCHAR(MAX) ENCODE raw
