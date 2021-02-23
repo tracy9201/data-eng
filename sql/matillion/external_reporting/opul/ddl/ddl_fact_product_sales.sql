@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_product_sales
   ,k_provider_id VARCHAR(32)   ENCODE raw
   ,dwh_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,primary key(subscription_id)
-  ,UNIQUE(k_subscription_id, updated_at)
+  ,UNIQUE(k_subscription_id, subscription_updated_at)
 )
 DISTKEY (k_customer_id)
 SORTKEY (k_customer_id)
