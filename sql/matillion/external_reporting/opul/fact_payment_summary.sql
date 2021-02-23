@@ -487,7 +487,7 @@ main as
     a.created_at,
     a.updated_at,
     current_timestamp::timestamp as dwh_created_at,
-    case when trim(transaction_id) is null or transaction_id ='' then 'N/A' else transaction_id end as transaction_id  
+    case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id  
     FROM all_data a
     LEFT JOIN
     gaia_opul.plan plan
