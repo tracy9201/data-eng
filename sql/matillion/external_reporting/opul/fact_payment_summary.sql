@@ -468,7 +468,6 @@ main as
     a.sales_created_at,
     customer.encrypted_ref_id AS gx_customer_id,
     provider.encrypted_ref_id AS gx_provider_id,
-    a.transaction_id,
     a.payment_id,
     a.tokenization,
     CASE WHEN a.card_brand in ('A','AMEX') then 'Amex'
@@ -487,7 +486,8 @@ main as
     card_holder_name,
     a.created_at,
     a.updated_at,
-    current_timestamp::timestamp as dwh_created_at
+    current_timestamp::timestamp as dwh_created_at,
+    case when trim(transaction_id) is null or transaction_id ='' then 'N/A' else transaction_id end as transaction_id  
     FROM all_data a
     LEFT JOIN
     gaia_opul.plan plan
