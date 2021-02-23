@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_details
   ,description VARCHAR(MAX) ENCODE raw
   ,payment_id VARCHAR(MAX)   ENCODE raw
   ,gx_customer_id VARCHAR(255)   ENCODE raw
-  ,gx_provider_id  VARCHAR(255)   ENCODE raw,
+  ,gx_provider_id  VARCHAR(255)   ENCODE raw
+  ,transaction_id VARCHAR(255)   ENCODE raw
   ,sales_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,original_sales_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,staff_user_id VARCHAR(255) ENCODE raw
