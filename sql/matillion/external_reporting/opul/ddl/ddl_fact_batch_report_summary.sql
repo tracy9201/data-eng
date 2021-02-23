@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.fact_batch_report_summary;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_summary
 (
   ,is_voided varchar(10) ENCODE raw

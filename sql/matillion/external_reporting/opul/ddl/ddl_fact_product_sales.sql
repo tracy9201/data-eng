@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS dwh_opul.fact_product_sales;
+
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_product_sales
 (
   subscription_id BIGINT  ENCODE raw
