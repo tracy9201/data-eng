@@ -8,6 +8,7 @@ WITH main as
     city AS practice_city,
     state AS practice_state,
     zip AS practice_zip,
+    merchant_id,
     organization_data.created_at,
     organization_data.updated_at,
     current_timestamp::timestamp as dwh_created_at
