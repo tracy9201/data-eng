@@ -1,8 +1,8 @@
 WITH sub_plan AS 
 (SELECT
     plan_id,
-    to_char(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL END),'yyyy-mm-dd') AS member_on_boarding_date,
-    to_char(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL END),'yyyy-mm-dd') AS member_cancel_date  
+    to_date(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL END),'yyyy-mm-dd') AS member_on_boarding_date,
+    to_date(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL END),'yyyy-mm-dd') AS member_cancel_date  
 FROM
     kronos_opul.subscription as subscription
 WHERE
