@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_details
   ,sales_amount NUMERIC(18,0)   ENCODE raw
   ,gratuity_amount NUMERIC(18,0)   ENCODE raw
   ,card_holder_name VARCHAR(MAX) ENCODE raw
-  ,epoch_sales_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
-  ,epoch_original_sales_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
+  ,epoch_sales_created_at  BIGINT   ENCODE raw
+  ,epoch_original_sales_created_at  BIGINT  ENCODE raw
   ,category VARCHAR(4) ENCODE raw
   ,firstname VARCHAR(255)   ENCODE raw
   ,lastname VARCHAR(255)   ENCODE raw
