@@ -64,7 +64,7 @@ batch_report_details as
   as payment_id,
   gx_customer_id,
   gx_provider_id,
-  case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id, 
+  transaction_id, 
   case when (sales_id like 'void1%' or sales_id like 'void2%')  then sales_created_at + INTERVAL '1 DAY' 
       else sales_created_at END  as sales_created_at,
   sales_created_at as original_sales_created_at,
