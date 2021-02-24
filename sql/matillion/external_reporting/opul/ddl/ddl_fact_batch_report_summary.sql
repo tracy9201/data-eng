@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS dwh_opul.fact_batch_report_summary;
 
 CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_summary
 (
-  is_voided varchar(10) ENCODE raw
+  is_voided VARCHAR(10) ENCODE raw
   ,sales_id VARCHAR(255)   ENCODE raw
   ,sales_type VARCHAR(255)   ENCODE raw
   ,transaction VARCHAR(128)   ENCODE raw
@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_summary
   ,original_sales_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,staff_user_id VARCHAR(255) ENCODE raw
   ,device_id VARCHAR(255)   ENCODE raw
-  ,sales_amount NUMERIC(18,0)   ENCODE raw
-  ,gratuity_amount NUMERIC(18,0)   ENCODE raw
+  ,sales_amount NUMERIC(18,2)   ENCODE raw
+  ,gratuity_amount NUMERIC(18,2)   ENCODE raw
   ,epoch_sales_created_at BIGINT ENCODE raw
   ,epoch_original_sales_created_at BIGINT ENCODE raw
   ,category VARCHAR(4) ENCODE raw

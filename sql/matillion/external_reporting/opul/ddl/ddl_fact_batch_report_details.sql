@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_batch_report_details
   ,staff_user_id VARCHAR(255) ENCODE raw
   ,device_id VARCHAR(255)   ENCODE raw
   ,tokenization VARCHAR(255)   ENCODE raw
-  ,sales_amount NUMERIC(18,0)   ENCODE raw
-  ,gratuity_amount NUMERIC(18,0)   ENCODE raw
+  ,sales_amount NUMERIC(18,2)   ENCODE raw
+  ,gratuity_amount NUMERIC(18,2)   ENCODE raw
   ,card_holder_name VARCHAR(MAX) ENCODE raw
   ,epoch_sales_created_at  BIGINT   ENCODE raw
   ,epoch_original_sales_created_at  BIGINT  ENCODE raw

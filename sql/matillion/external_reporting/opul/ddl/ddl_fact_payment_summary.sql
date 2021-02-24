@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
 (
   sales_id VARCHAR(255)   ENCODE raw
   ,sales_name VARCHAR(MAX)   ENCODE raw
-  ,sales_amount NUMERIC(18,0)   ENCODE raw
+  ,sales_amount NUMERIC(18,2)   ENCODE raw
   ,sales_type VARCHAR(16)   ENCODE raw
   ,sales_status BIGINT   ENCODE raw
   ,sales_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
   ,gx_subscription_id  VARCHAR(64)   ENCODE raw
   ,staff_user_id VARCHAR(64)   ENCODE raw
   ,device_id VARCHAR(255)   ENCODE raw
-  ,gratuity_amount NUMERIC(18,0)   ENCODE raw
-  ,is_voided varchar(10) ENCODE raw
+  ,gratuity_amount NUMERIC(18,2)   ENCODE raw
+  ,is_voided VARCHAR(10) ENCODE raw
   ,card_holder_name VARCHAR(255) ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
