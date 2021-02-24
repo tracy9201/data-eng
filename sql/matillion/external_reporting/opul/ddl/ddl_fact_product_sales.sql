@@ -4,19 +4,19 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_product_sales
 (
   subscription_id BIGINT  ENCODE raw
   ,k_subscription_id VARCHAR(32) ENCODE raw
-  ,quantity INTEGER ENCODE raw
+  ,quantity NUMERIC(18,2)   ENCODE raw
   ,unit_name VARCHAR(max) ENCODE raw
-  ,remaining_payment INTEGER ENCODE raw
-  ,balance INTEGER ENCODE raw
-  ,discount_percentages INTEGER ENCODE raw
-  ,discount_amts INTEGER ENCODE raw
-  ,coupons INTEGER ENCODE raw
-  ,credits INTEGER ENCODE raw
-  ,payments INTEGER ENCODE raw
-  ,total_installment INTEGER ENCODE raw
-  ,tax INTEGER ENCODE raw
-  ,subtotal INTEGER ENCODE raw
-  ,total INTEGER ENCODE raw
+  ,remaining_payment NUMERIC(18,2)   ENCODE raw
+  ,balance NUMERIC(18,2)   ENCODE raw
+  ,discount_percentages NUMERIC(18,2)   ENCODE raw
+  ,discount_amts NUMERIC(18,2)   ENCODE raw
+  ,coupons NUMERIC(18,2)   ENCODE raw
+  ,credits NUMERIC(18,2)   ENCODE raw
+  ,payments NUMERIC(18,2)   ENCODE raw
+  ,total_installment NUMERIC(18,2)   ENCODE raw
+  ,tax NUMERIC(18,2)   ENCODE raw
+  ,subtotal NUMERIC(18,2)   ENCODE raw
+  ,total NUMERIC(18,2)   ENCODE raw
   ,START_date  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,END_date TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,end_count INTEGER ENCODE raw
