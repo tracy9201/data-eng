@@ -72,11 +72,11 @@ batch_report_details as
   device_id,
   tokenization,
   case 
-      when sales_id like 'refund%' then coalesce((-1*sales_amount)/100,0)
-      when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
-      else coalesce(sales_amount/100,0) end
+      when sales_id like 'refund%' then coalesce((-1*sales_amount),0)
+      when sales_id like 'void%' then coalesce((-1*sales_amount),0)
+      else coalesce(sales_amount,0) end
   as sales_amount,
-  coalesce((gratuity_amount)/100,0) as gratuity_amount,
+  coalesce((gratuity_amount),0) as gratuity_amount,
   card_holder_name,
   created_at,
   updated_at
