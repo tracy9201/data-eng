@@ -90,7 +90,8 @@ GROUP BY
 main AS
 (
 SELECT *, 
-    extract(epoch from settled_date) as epoch_settled_date
+    extract(epoch from settled_date) as epoch_settled_date,
+    current_timestamp::timestamp as dwh_created_at
 FROM payfac
 )
 
