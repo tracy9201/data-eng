@@ -1,0 +1,39 @@
+SELECT distinct practice_name, account, provider 
+FROM (
+  select * , 
+  case when practice_name = 'Saltz Plastic Surgery' then 'Saltz Plastic Surgery & Saltz Spa Vitória -'
+    when practice_name = 'Morpheus Connections' then 'Albany - Morpheus Connections'
+    when practice_name = 'SkinVIP	' then 'Laser & Skin Surgery Center'
+    when practice_name = 'Ovation Med Spa	' then 'Ovation Aesthetic Group, LLC'
+    when practice_name = 'Mandel Dermatology' then 'Mitchell J. Mandel, M.D., P.C.'
+    when practice_name = 'Steven Camp MD Plastic Surgery' then 'Dr. Steven Camp MD Plastic Surgery'
+    when practice_name = 'zztestorg-Hint, Inc' then ''
+    when practice_name = 'MIA Plastic Surgery' then 'Mia Plastic Surgery'
+    when practice_name = 'Marina MedSpa' then 'OrangeTwist Institute'
+    when practice_name = 'FOX VALLEY PLASTIC SURGERY SC' then 'Fox Valley Plastic Surgery, S.C.'
+    when practice_name = 'Aspire Med Spa (Lexington)' then 'Aspire Med Spa'
+    when practice_name = 'Aspire Med Spa (Wellesley)' then ''
+    when practice_name = 'Look of LOVE' then 'Tim R. Love, MD'
+    when practice_name = 'zztestorg-HintMD Internal Beauty' then ''
+    when practice_name = 'My Spa and Laser Center (Forney)' then 'My Spa and Laser Center'
+    when practice_name = 'Babich Skin Care Center' then 'Babachi Skin Care Center'
+    when practice_name = 'LevelUp Health Care' then 'Dr. Shirley Wang'
+    when practice_name = 'Dr. Haena Kim Facial Plastic & Reconstructive Surgery' then 'Dr. Haena Kim'
+    when practice_name = 'Premier Plastic Surgery Arts' then ''
+    when practice_name = 'AMAE MED SPA MEMBERSHIP' then 'Dr. Ali'
+    when practice_name = 'ZO Skin Centre (Pasadena)' then 'ZO Skin Centre'
+    when practice_name = 'AVA MD, Santa Monica' then 'AVA MD'
+    when practice_name = 'Serenity MedSpa (San Francisco)' then 'Serenity MedSpa'
+    when practice_name = 'Accent on Body, James Fernau M.D., FACS' then 'Accents Cosmetic Surgery'
+    when practice_name = 'Aesthetic Assets Face and Body Rejuvenation' then 'Aesthetic Assets LLC'
+    when practice_name = 'New Radiance Cosmetic Centers' then 'New Radiance Cosmetic Centers Palm Beach'
+    when practice_name = 'Jade MediSpa at The Wall Center' then 'Jade MedSpa at The Wall Center'
+    when practice_name = 'Windermere Dental & Medical Spa' then 'Windermere Medical Spa'
+    when practice_name = 'Monumental Microderm' then 'Monumental Aesthetics'
+    when practice_name = 'McCormack Plastic Surgery' then 'McCormack Plastic Surgery'
+  else practice_name end as practice
+  from v4_ach_revenue ) tabl
+full join 
+  (select *, left(provider, octetindex(' - CardConnect Merchant Authorization', provider)) as account from g_authorisation) table2 
+  on practice = account 
+order by created_at desc LIMIT 1000
