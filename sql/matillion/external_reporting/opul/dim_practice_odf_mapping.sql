@@ -6,8 +6,8 @@ WITH dim_practice_odf_mapping as
 	cp.mid as card_processing_mid,
 	od.merchant_id as org_data_merchant_id,
 	od.gx_provider_id,
-	organization_data.created_at,
-	 organization_data.updated_at,
+	od.created_at,
+	od.updated_at,
 	current_timestamp::timestamp as dwh_created_at
 	FROM merchant.card_processing cp 
 	JOIN kronos_opul.organization_merchant om on cp.merchant_id = om.payfac_merchant_id
