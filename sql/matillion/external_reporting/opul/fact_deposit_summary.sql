@@ -25,7 +25,7 @@ SELECT
 FROM
     odf.fiserv_transaction                            
 WHERE
-    transaction_status = 20
+    status = 'PROCESSED' 
 ),
 
 chargebacks AS 
@@ -55,7 +55,7 @@ SELECT
 FROM
     odf.fiserv_transaction                            
 WHERE
-    transaction_status = 20                       
+    status = 'PROCESSED'              
 ), 
 
 payfac_all AS 
