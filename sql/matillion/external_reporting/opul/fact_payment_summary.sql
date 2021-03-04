@@ -28,7 +28,7 @@ LEFT JOIN
         ON sub.id = c.subscription_id
 WHERE
     c.id IS NOT NULL
-    AND c.status =1
+    AND c.status  in (1,-3)
 ),
 payment_data as
 (   SELECT distinct
@@ -75,7 +75,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     p.id IS NOT NULL
-    AND p.status = 1
+    AND p.status  in (1,-3)
 ),
 refund1 as
 (    SELECT
@@ -123,7 +123,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     subscription_id IS NOT NULL
-    AND refund.status =20
+    AND refund.status  in (20,-3)
     AND refund.is_void = 'f'
 ),
 refund3 as
@@ -174,7 +174,7 @@ WHERE
     refund.subscription_id IS NULL
     AND gt.invoice_item_id IS NULL
     AND source_object_name = 'refund'
-    AND refund.status =20
+    AND refund.status  in (20,-3)
     AND refund.is_void = 'f'
 ),
 tran as
@@ -218,7 +218,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     source_object_name  = 'card_payment_gateway'
-    AND gt.status = 20
+    AND gt.status  in (20,-3)
     AND gt.payment_id IS NULL
     AND gt.is_voided = 'f'
 ),
@@ -383,7 +383,7 @@ LEFT JOIN
     gaia_opul.card
         ON cpg.card_id = card.id
 WHERE
-    refund.status =20
+    refund.status  in (20,-3)
     AND refund.is_void = 't'
     AND gt.payment_id IS NULL
 ),
@@ -433,9 +433,25 @@ LEFT JOIN
     gaia_opul.card
         ON cpg.card_id = card.id
 WHERE
-    refund.status =20
+    refund.status in (20,-3)
     AND refund.is_void = 't'
     AND gt.payment_id IS NOT NULL
+),
+invoice_data as (
+  select distinct 
+    inv.id as inv_id, 
+    inv.status as inv_status,
+    case 
+      when gt.source_object_name = 'payment' then 'payment_'||gt.source_object_id::varchar
+      when gt.source_object_name = 'credit' then 'credit_'||gt.source_object_id::varchar
+      when gt.source_object_name = 'refund' then 'refund1_'||gt.source_object_id::varchar
+      when gt.source_object_name = 'void' then 'void4_'||gt.source_object_id::varchar 
+      end AS sales_id
+  from gaia_opul.invoice inv
+  left join
+    gaia_opul.gateway_transaction gt
+      on inv.id = gt.invoice_id
+  where inv.status = -3 and source_object_name is not null
 ),
 all_data AS
 (
@@ -485,6 +501,8 @@ main as
     a.gratuity_amount,
     a.is_voided,
     card_holder_name,
+    inv_id,
+    inv_status,
     a.created_at,
     a.updated_at,
     current_timestamp::timestamp as dwh_created_at
@@ -498,5 +516,8 @@ main as
     LEFT JOIN
     gaia_opul.provider provider
         ON provider.id = provider_id
+    LEFT JOIN
+    invoice_data inv
+        ON a.sales_id = inv.sales_id
 )
-SELECT * FROM main
+SELECT * FROM main 
