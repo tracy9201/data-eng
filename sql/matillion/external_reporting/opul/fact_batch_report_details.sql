@@ -78,6 +78,8 @@ batch_report_details as
   as sales_amount,
   coalesce((gratuity_amount)/100,0) as gratuity_amount,
   card_holder_name,
+  inv_id,
+  inv_status,
   created_at,
   updated_at
   from dwh_opul.fact_payment_summary payment_summary
@@ -109,6 +111,8 @@ batch_report_details_formatting as
     sales_amount,
     gratuity_amount,
     card_holder_name,
+    inv_id,
+    inv_status,
     created_at,
   	updated_at
     from batch_report_details
