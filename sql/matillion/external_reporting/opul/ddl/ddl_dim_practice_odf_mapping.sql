@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul.dim_practice_odf_mapping
     ,org_data_merchant_id BIGINT  ENCODE raw
     ,gx_provider_id VARCHAR(32) ENCODE raw
     ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-  	,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-  	,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+    ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+    ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
 )
 DISTSTYLE ALL
 SORTKEY (gx_provider_id,k_practice_id)
