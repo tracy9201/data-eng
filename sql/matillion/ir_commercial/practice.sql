@@ -22,6 +22,6 @@ LEFT JOIN
         ON address.id = address_id
 LEFT JOIN 
     gaia.provider provider 
-        ON encrypted_ref_id = gx_provider_id
+        ON provider.encrypted_ref_id = gx_provider_id
 ) 
 SELECT * FROM main
