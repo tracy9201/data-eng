@@ -11,6 +11,7 @@ SELECT
     org.activated_at,
     org.name AS practice_name,
     org.live,
+    FALSE as payfac,
     organization_tax_percentage,
     address.city,
     address.state,
@@ -23,5 +24,5 @@ LEFT JOIN
 LEFT JOIN 
     gaia.provider provider 
         ON provider.encrypted_ref_id = gx_provider_id
-) 
+)
 SELECT * FROM main
