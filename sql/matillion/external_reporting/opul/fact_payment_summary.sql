@@ -19,6 +19,7 @@ WITH credit_data as
     NULL::bigint AS gratuity_amount,
     NULL::text AS is_voided,
     NULL::text as card_holder_name,
+    null as invoice_id,
     c.created_at,
     c.updated_at
 FROM
@@ -28,7 +29,7 @@ LEFT JOIN
         ON sub.id = c.subscription_id
 WHERE
     c.id IS NOT NULL
-    AND c.status =1
+    AND c.status  in (1,-3)
 ),
 payment_data as
 (   SELECT distinct
@@ -52,6 +53,7 @@ payment_data as
     gratuity.amount AS gratuity_amount,
     NULL::text AS is_voided,
     card_holder_name,
+    null as invoice_id,
     p.created_at,
     p.updated_at
 FROM
@@ -75,7 +77,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     p.id IS NOT NULL
-    AND p.status = 1
+    AND p.status  in (1,-3)
 ),
 refund1 as
 (    SELECT
@@ -102,6 +104,7 @@ refund1 as
     gratuity.amount AS gratuity_amount,
     NULL::text AS is_voided,
     card_holder_name,
+    refund.invoice_id::varchar as invoice_id,
     refund.created_at,
     refund.updated_at
 FROM
@@ -123,7 +126,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     subscription_id IS NOT NULL
-    AND refund.status =20
+    AND refund.status  in (20,-3)
     AND refund.is_void = 'f'
 ),
 refund3 as
@@ -148,6 +151,7 @@ refund3 as
     gratuity.amount AS gratuity_amount,
     NULL::text AS is_voided,
     card_holder_name,
+    refund.invoice_id::varchar as invoice_id,
     refund.created_at,
     refund.updated_at
 FROM
@@ -174,7 +178,7 @@ WHERE
     refund.subscription_id IS NULL
     AND gt.invoice_item_id IS NULL
     AND source_object_name = 'refund'
-    AND refund.status =20
+    AND refund.status  in (20,-3)
     AND refund.is_void = 'f'
 ),
 tran as
@@ -197,6 +201,7 @@ tran as
     gt.gratuity_amount,
     NULL::text AS is_voided,
     NULL::text as card_holder_name,
+    gt.invoice_id::varchar as invoice_id,
     gt.created_at,
     gt.updated_at
 FROM
@@ -218,7 +223,7 @@ LEFT JOIN
         ON cpg.card_id = card.id
 WHERE
     source_object_name  = 'card_payment_gateway'
-    AND gt.status = 20
+    AND gt.status  in (20,-3)
     AND gt.payment_id IS NULL
     AND gt.is_voided = 'f'
 ),
@@ -257,6 +262,7 @@ void1 as
     CASE WHEN gt.is_voided = 't' then 't'::varchar 
          WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
     NULL::text as card_holder_name,
+    invoice.id::varchar as invoice_id,
     settlement.created_at,
     settlement.updated_at
 FROM
@@ -309,6 +315,7 @@ void2 as
     CASE WHEN gt.is_voided = 't' then 't'::varchar 
          WHEN gt.is_voided = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
     NULL::text as card_holder_name,
+    gt.invoice_id::varchar as invoice_id,
     settlement.created_at,
     settlement.updated_at
 FROM
@@ -360,6 +367,7 @@ void3 as
     CASE WHEN refund.is_void = 't' then 't'::varchar 
          WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR  END AS is_voided,
     card_holder_name,
+    refund.invoice_id::varchar as invoice_id,
     refund.created_at,
     refund.updated_at
 FROM
@@ -383,7 +391,7 @@ LEFT JOIN
     gaia_opul.card
         ON cpg.card_id = card.id
 WHERE
-    refund.status =20
+    refund.status  in (20,-3)
     AND refund.is_void = 't'
     AND gt.payment_id IS NULL
 ),
@@ -410,6 +418,7 @@ void4 as
     CASE WHEN refund.is_void = 't' then 't'::varchar 
          WHEN refund.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided,
     card_holder_name,
+    refund.invoice_id::varchar as invoice_id,
     refund.created_at,
     refund.updated_at
 FROM
@@ -433,9 +442,24 @@ LEFT JOIN
     gaia_opul.card
         ON cpg.card_id = card.id
 WHERE
-    refund.status =20
+    refund.status in (20,-3)
     AND refund.is_void = 't'
     AND gt.payment_id IS NOT NULL
+),
+invoice_data as (
+  select distinct 
+    inv.id::varchar as inv_id,
+    inv.status as inv_status,
+    case 
+      when gt.source_object_name = 'payment' then 'payment_'||gt.source_object_id::varchar
+      when gt.source_object_name = 'credit' then 'credit_'||gt.source_object_id::varchar
+      else null
+      end AS sales_id
+  from gaia_opul.invoice inv
+  left join
+    gaia_opul.gateway_transaction gt
+      on inv.id = gt.invoice_id
+  where inv.status = -3 and source_object_name in ('payment', 'credit')
 ),
 all_data AS
 (
@@ -485,6 +509,9 @@ main as
     a.gratuity_amount,
     a.is_voided,
     card_holder_name,
+    invoice_id,
+    inv_id,
+    inv_status,
     a.created_at,
     a.updated_at,
     current_timestamp::timestamp as dwh_created_at
@@ -498,5 +525,59 @@ main as
     LEFT JOIN
     gaia_opul.provider provider
         ON provider.id = provider_id
+    LEFT JOIN
+    invoice_data inv
+        ON a.sales_id = inv.sales_id
+    where a.sales_id like 'payment%' or a.sales_id like 'credit%' or  a.sales_id like 'tran%' or  a.sales_id like 'void1%' or  a.sales_id like 'void2%'
+    
+    UNION ALL
+    
+    SELECT
+    a.sales_id,
+    a.sales_name,
+    a.sales_amount,
+    a.sales_type,
+    a.sales_status,
+    a.sales_created_at,
+    customer.encrypted_ref_id AS gx_customer_id,
+    provider.encrypted_ref_id AS gx_provider_id,
+    case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id,
+    a.payment_id,
+    a.tokenization,
+    CASE WHEN a.card_brand in ('A','AMEX') then 'Amex'
+        WHEN a.card_brand like 'M' then 'Mastercard'
+        WHEN a.card_brand like 'D' then 'Discover'
+        WHEN a.card_brand in ('V','VISA') then 'Visa'
+        WHEN a.card_brand like 'N' then 'Other Credit Card'
+        ELSE a.card_brand
+        END as card_brand,
+    substring(a.tokenization,2,2) as token_substr,
+    a.gx_subscription_id ,
+    a.staff_user_id,
+    a.device_id,
+    a.gratuity_amount,
+    a.is_voided,
+    card_holder_name,
+    invoice_id,
+    inv_id as inv_id,
+    inv_status as inv_status,
+    a.created_at,
+    a.updated_at,
+    current_timestamp::timestamp as dwh_created_at
+    FROM all_data a
+    LEFT JOIN
+    gaia_opul.plan plan
+        ON a.plan_id = plan.id
+    LEFT JOIN
+    gaia_opul.customer customer
+        ON customer.id = plan.customer_id
+    LEFT JOIN
+    gaia_opul.provider provider
+        ON provider.id = provider_id
+    LEFT JOIN
+    invoice_data inv
+        ON a.invoice_id = inv.inv_id
+    where a.sales_id like 'refund1%' or a.sales_id like 'refund3%' or a.sales_id like 'void3%' or  a.sales_id like 'void4%'
 )
 SELECT * FROM main
+order by sales_created_at desc
