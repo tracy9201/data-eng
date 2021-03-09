@@ -53,6 +53,8 @@ WITH batch_report_summary as
       else coalesce(sales_amount/100,0) end
   as sales_amount,
   coalesce((gratuity_amount)/100,0) as gratuity_amount,
+  inv_id,
+  inv_status
   created_at,
   updated_at
   from dwh_opul.fact_payment_summary payment_summary
@@ -80,6 +82,7 @@ main as
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
+       when inv_status = -3 then 'BAD'
        else 'GOOD' end  category,
   created_at,
   updated_at,
