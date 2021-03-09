@@ -25,7 +25,7 @@ SELECT
 FROM
     odf.fiserv_transaction                            
 WHERE
-    transaction_status = 20
+    status = 'SETTLED'
 ),
 
 chargebacks AS 
@@ -54,8 +54,8 @@ SELECT
     settled_at::date AS settled_date                           
 FROM
     odf.fiserv_transaction                            
-WHERE
-    transaction_status = 20                       
+WHERE 
+    status = 'SETTLED'          
 ), 
 
 payfac_all AS 
