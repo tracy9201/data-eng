@@ -157,7 +157,7 @@ main as
   extract (epoch from original_sales_created_at) as epoch_original_sales_created_at,
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
-       when inv_status = -3 then 'BAD'
+       when inv_status = -3 and payment_method != 'Credit Card' then 'BAD'
        else 'GOOD' end  category,
   substring(card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname,
   substring(card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname,
