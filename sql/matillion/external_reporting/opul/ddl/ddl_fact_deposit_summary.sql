@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_deposit_summary
   ,UNIQUE(reference_id)  
 )
 DISTKEY(merchant_id)  
-SORTKEY(merchant_id, settled_date);
+SORTKEY(merchant_id, funding_date);
