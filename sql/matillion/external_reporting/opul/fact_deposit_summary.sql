@@ -1,96 +1,38 @@
-WITH adjustments AS 
-(                              
-SELECT
-    'adjustment_'||id AS depost_id,
-    reference_id,
-    merchant_id,
-    amount,
-    'Adjustment' AS type,
-    transaction_date,
-    exchange_date_added::date AS settled_date                                  
+with funding_instruction as
+(SELECT
+    id as funding_instruction_id,
+    mid as merchant_id,
+    (created_at)::varchar||merchant_id::varchar as reference_id,
+    created_at AS funding_date,
+    0 as adjustments,
+    coalesce(fee,0) as fees,
+    coalesce(amount,0) as net_sales,
+    0 as chargebacks,
+    extract(epoch from created_at) as epoch_funding_date,
+    current_timestamp::timestamp as dwh_created_at                           
 FROM
-    odf.fiserv_deposit_adjustment                        
-), 
-
-transactions AS 
-(                            
-SELECT
-    'transaction_'||id AS depost_id,
-    funding_instruction_id::varchar AS reference_id,
-    merchant_id,
-    amount,
-    transaction_type AS type,
-    transaction_date,
-    settled_at::date AS settled_date                                  
-FROM
-    odf.fiserv_transaction                            
-WHERE
-    status = 'SETTLED'
+     odf.funding_instruction                        
+WHERE 
+    status = 'SETTLED' 
 ),
 
-chargebacks AS 
-(                            
-SELECT
-    'chargeback_'||id AS depost_id,
-    reference_id,
-    merchant_id,
-    amount,
-    'Chargeback' AS type,
-    transaction_date,
-    exchange_date_added::date AS settled_date                            
-FROM
-    odf.fiserv_chargeback                        
-), 
-
-transaction_fee AS 
-(                            
-SELECT
-    'transaction_fee_'||id AS depost_id,
-    funding_instruction_id::varchar AS reference_id,
-    merchant_id,
-    percent_fee + fixed_fee AS amount,
-    'fees' AS type,
-    transaction_date,
-    settled_at::date AS settled_date                           
-FROM
-    odf.fiserv_transaction                            
-WHERE 
-    status = 'SETTLED'          
-), 
-
-payfac_all AS 
-(                           
-SELECT * FROM transactions  
-UNION ALL 
-SELECT * FROM chargebacks                  
-UNION ALL                         
-SELECT * FROM adjustments            
-UNION ALL                     
-SELECT * FROM transaction_fee            
-), 
-
-payfac AS 
+payfac as
 (
-SELECT
-    reference_id,
+SELECT 
+    funding_instruction_id as reference_id,
+    funding_date,
     merchant_id,
-    settled_date ,
-    case when type = 'Adjustment' then sum(amount) else 0 end AS adjustments,
-    case when type = 'fees' then sum(amount) else 0 end AS fees,
-    case when type in ('PAYMENT', 'REFUND') then sum(amount) else 0 end AS net_sales,
-    case when type = 'Chargeback' then sum(amount) else 0 end AS chargebacks            
-FROM payfac_all
-GROUP BY
-    merchant_id,
-    reference_id,
-    settled_date,
-    type 
+    adjustments/100.0 as adjustments,
+    fees/100.0 AS fees,
+    net_sales/100.0 AS net_sales,
+    chargebacks/100.0 as chargebacks
+FROM funding_instruction
 ),
 
 main AS
 (
 SELECT *, 
-    extract(epoch from settled_date) as epoch_settled_date,
+    extract(epoch from funding_date) as epoch_funding_date,
     current_timestamp::timestamp as dwh_created_at
 FROM payfac
 )
