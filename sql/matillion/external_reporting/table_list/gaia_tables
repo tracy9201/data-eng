@@ -13,5 +13,3 @@ gateway_transaction
 invoice_item
 settlement
 funding
-authorisation
-discount
