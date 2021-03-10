@@ -461,6 +461,16 @@ invoice_data as (
       on inv.id = gt.invoice_id
   where inv.status = -3 and source_object_name in ('payment', 'credit')
 ),
+invoice_data2 as (
+  select distinct 
+    inv.id::varchar as inv_id,
+    inv.status as inv_status
+  from gaia_opul.invoice inv
+  left join
+    gaia_opul.gateway_transaction gt
+      on inv.id = gt.invoice_id
+  where inv.status = -3 and source_object_name in ('payment', 'credit')
+),
 all_data AS
 (
     SELECT * FROM credit_data
@@ -575,8 +585,8 @@ main as
     gaia_opul.provider provider
         ON provider.id = provider_id
     LEFT JOIN
-    invoice_data inv
-        ON a.invoice_id = inv.inv_id
+    invoice_data2 inv2
+        ON a.invoice_id = inv2.inv_id
     where a.sales_id like 'refund1%' or a.sales_id like 'refund3%' or a.sales_id like 'void3%' or  a.sales_id like 'void4%'
 )
 SELECT * FROM main
