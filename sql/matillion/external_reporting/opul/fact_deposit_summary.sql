@@ -2,8 +2,8 @@ with funding_instruction as
 (SELECT
     id as funding_instruction_id,
     mid as merchant_id,
-    (created_at::date)::varchar||merchant_id::varchar as reference_id,
-    created_at::date AS funding_date,
+    (created_at)::varchar||merchant_id::varchar as reference_id,
+    created_at AS funding_date,
     0 as adjustments,
     coalesce(fee,0) as fees,
     coalesce(amount,0) as net_sales,
@@ -19,15 +19,14 @@ WHERE
 payfac as
 (
 SELECT 
-    reference_id,
+    funding_instruction_id as reference_id,
     funding_date,
     merchant_id,
-    SUM(adjustments)/100.0 as adjustments,
-    SUM(fees)/100.0 AS fees,
-    SUM(net_sales)/100.0 AS net_sales,
-    SUM(chargebacks)/100.0 as chargebacks
+    adjustments/100.0 as adjustments,
+    fees/100.0 AS fees,
+    net_sales/100.0 AS net_sales,
+    chargebacks/100.0 as chargebacks
 FROM funding_instruction
-GROUP BY 1,2,3
 ),
 
 main AS
