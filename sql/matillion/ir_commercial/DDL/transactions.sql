@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.transactions
   ,gratuity_amount  NUMERIC(18,2)   ENCODE raw
   ,customer_type VARCHAR(64)   ENCODE raw
   ,payment_detail VARCHAR(max)   ENCODE raw
+  ,gx_provider_id VARCHAR(max)   ENCODE raw
   ,primary key(transaction_id)
 )
 ;
