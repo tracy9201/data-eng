@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_payment_summary
   ,gratuity_amount NUMERIC(18,2)   ENCODE raw
   ,is_voided VARCHAR(10) ENCODE raw
   ,card_holder_name VARCHAR(255) ENCODE raw
-  ,inv_id BIGINT ENCODE raw
+  ,inv_id VARCHAR(10) ENCODE raw
   ,inv_status SMALLINT ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
