@@ -1,4 +1,25 @@
-WITH transaction AS (
+WITH clover as (
+select case when settle.gateway_transaction_id is not null then 'settle_'||settle.transaction_id
+          when settle.gateway_transaction_id is null then 'settle_'||settle.id end as transaction_id
+          , settle.settlement_status as status
+          , null as user_id
+          , 'credit_card' as payment_method
+          , 'practice_clover_sale' as transaction
+          , case when settle.settlement_status = 'Voided' then -1 * cast(settle.amount as numeric) else cast(settle.amount as numeric) end as amount
+          , null as device_id 
+          , settle.created_at as created_at
+          , settle.created_at as updated_at
+          , null as created_by
+          , 0 as gratuity_amount
+          , 'practice_clover_guest' as customer_type
+          , null as payment_detail
+          , pro.encrypted_ref_id as gx_provider_id
+          from gaia.settlement settle
+          left join gaia.authorisation auth on auth.identifier = settle.authorisation_id
+          left join gaia.provider pro on auth.object_id = pro.id
+          where settle.settlement_status in ('Accepted', 'Processed', 'Voided')
+),
+transaction AS (
 select 
     transactions.id as transaction_id,
     transactions.status, 
@@ -12,8 +33,11 @@ select
     transactions.created_by,
     round(cast(transactions.gratuity_amount as numeric)/100,2) as gratuity_amount, 
     transactions.customer_type,
-    transactions.payment_detail
-from kronos.transactions
+    transactions.payment_detail,
+    org.gx_provider_id
+from kronos.transactions transactions
+left join kronos.users users on transactions.user_id  = users.id
+left join kronos.organization_data org on org.id = users.organization_id
 ),
 refund as (
     select 
@@ -41,7 +65,8 @@ select
     null as created_by,
     0 as gratuity_amount,
     null as customer_type,
-    null as payment_detail
+    null as payment_detail,
+    org.gx_provider_id
 from gaia.settlement settlement
 inner join 
     gaia.gateway_transaction gt 
@@ -56,7 +81,9 @@ inner JOIN
         ON payment.plan_id = gplan.id
 inner join 
     kronos.plan kplan 
-        on gplan.encrypted_ref_id = gx_plan_id
+       on gplan.encrypted_ref_id = gx_plan_id
+left join kronos.users users on kplan.user_id  = users.id
+left join kronos.organization_data org on org.id = users.organization_id
 where 
     settlement.settlement_status = 'Voided' 
     AND invoice_id IS NULL 
@@ -77,7 +104,8 @@ select
     null as created_by,
     0 as gratuity_amount,
     null as customer_type,
-    null as payment_detail
+    null as payment_detail,
+    org.gx_provider_id
 from gaia.settlement settlement
 inner join 
     gaia.gateway_transaction gt 
@@ -93,6 +121,8 @@ left outer join refund
     inner join 
         kronos.plan kplan 
             on gplan.encrypted_ref_id = gx_plan_id
+left join kronos.users users on kplan.user_id  = users.id
+left join kronos.organization_data org on org.id = users.organization_id
   where 
     settlement.settlement_status = 'Voided' 
     AND invoice_id IS NOT NULL 
