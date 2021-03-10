@@ -24,7 +24,7 @@ SELECT
     merchant_id,
     SUM(adjustments)/100.0 as adjustments,
     SUM(fees)/100.0 AS fees,
-    SUM(net_sales)/100.0 AS amount,
+    SUM(net_sales)/100.0 AS net_sales,
     SUM(chargebacks)/100.0 as chargebacks
 FROM funding_instruction
 GROUP BY 1,2,3
