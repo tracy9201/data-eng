@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
   ,type VARCHAR(64)   ENCODE raw
   ,name VARCHAR(max)   ENCODE raw
   ,offering_id BIGINT  ENCODE raw
+  ,user_id BIGINT  ENCODE raw
   ,primary key(id)
 )
 ;
