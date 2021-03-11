@@ -13,10 +13,14 @@ select
     round(cast(ful.shipping_cost as numeric)/100,2) as shipping_cost,
     ful.type, 
     ful.name, 
-    sub.offering_id
+    sub.offering_id,
+    plan.user_id
 from kronos.cached_gx_fulfillment ful
 left join 
     kronos.subscription sub 
         on ful.gx_subscription_id = sub.gx_subscription_id
+left join 
+    kronos.plan plan
+        on sub.plan_id = plan.id
 )
 SELECT * FROM main
