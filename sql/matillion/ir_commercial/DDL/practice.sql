@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.practice
   ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,status VARCHAR(255)   ENCODE raw
+  ,gx_provider_id VARCHAR(64)   ENCODE raw
   ,per_member_rate NUMERIC(18,2)   ENCODE raw
   ,practice_rate NUMERIC(18,2)   ENCODE raw
   ,timezone VARCHAR(64)   ENCODE raw 
