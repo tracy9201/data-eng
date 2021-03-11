@@ -83,6 +83,7 @@ main as
   case when (sales_id like 'void1%' or sales_id like 'void2%') and is_voided = 'Yes' then 'BAD'
        when payment_method= 'adjustment' then 'BAD'
        when inv_status = -3 and payment_method != 'Credit Card' then 'BAD'
+       when inv_status = -3 and payment_method = 'Credit Card' and is_voided = 't' then 'BAD'
        else 'GOOD' end  category,
   created_at,
   updated_at,
