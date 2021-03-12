@@ -51,7 +51,7 @@ payment_data as
     p.created_by AS staff_user_id,
     p.device_id,
     gratuity.amount AS gratuity_amount,
-    NULL::text AS is_voided,
+    gt.is_voided AS is_voided,
     card_holder_name,
     null as invoice_id,
     p.created_at,
@@ -65,7 +65,7 @@ LEFT JOIN
     gaia_opul.gratuity gratuity
         ON gratuity.id = p.gratuity_id
 LEFT JOIN
- (SELECT distinct payment_id,card_payment_gateway_id
+ (SELECT distinct payment_id, card_payment_gateway_id, is_voided
   FROM  gaia_opul.gateway_transaction
   WHERE card_payment_gateway_id IS NOT NULL) gt
         ON gt.payment_id = p.id
