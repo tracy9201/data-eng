@@ -31,7 +31,7 @@ WHERE
     c.id IS NOT NULL
     AND c.status  in (1,-3)
 ),
-payment_data as
+payment as
 (   SELECT distinct
     'payment_'||p.id::varchar  AS sales_id,
     p.name AS sales_name,
@@ -51,9 +51,10 @@ payment_data as
     p.created_by AS staff_user_id,
     p.device_id,
     gratuity.amount AS gratuity_amount,
-    NULL::text AS is_voided,
+    null AS is_voided,
     card_holder_name,
     null as invoice_id,
+    gt.payment_id as gt_payment_id,
     p.created_at,
     p.updated_at
 FROM
@@ -65,9 +66,13 @@ LEFT JOIN
     gaia_opul.gratuity gratuity
         ON gratuity.id = p.gratuity_id
 LEFT JOIN
- (SELECT distinct payment_id,card_payment_gateway_id
-  FROM  gaia_opul.gateway_transaction
-  WHERE card_payment_gateway_id IS NOT NULL) gt
+ (SELECT distinct 
+  gt.payment_id, 
+  card_payment_gateway_id
+FROM  gaia_opul.gateway_transaction gt
+WHERE 
+  card_payment_gateway_id IS NOT NULL and card_payment_gateway_id != 0
+  and gt.payment_id is not null) gt
         ON gt.payment_id = p.id
 LEFT JOIN
     gaia_opul.card_payment_gateway cpg
@@ -78,6 +83,47 @@ LEFT JOIN
 WHERE
     p.id IS NOT NULL
     AND p.status  in (1,-3)
+),
+payment_void as 
+( SELECT 
+    distinct 
+    gt.payment_id, 
+    CASE WHEN gt.is_voided = 't' then 't'::varchar END AS is_voided
+  FROM  
+    gaia_opul.gateway_transaction gt
+  WHERE 
+    card_payment_gateway_id IS NOT NULL 
+    and card_payment_gateway_id != 0
+    and gt.payment_id is not null 
+    and is_voided = 't'
+),
+payment_data as (
+  SELECT
+    sales_id,
+    sales_name,
+    sales_amount,
+    sales_type,
+    sales_status,
+    sales_created_at,
+    plan_id,
+    transaction_id,
+    payment.payment_id,
+    tokenization,
+    card_brand,
+    gx_subscription_id,
+    staff_user_id,
+    device_id,
+    gratuity_amount,
+    payment_void.is_voided,
+    card_holder_name,
+    invoice_id,
+    created_at,
+    updated_at
+  from 
+    payment
+  left join 
+    payment_void
+    on payment.gt_payment_id = payment_void.payment_id
 ),
 refund1 as
 (    SELECT
