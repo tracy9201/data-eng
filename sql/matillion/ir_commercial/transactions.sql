@@ -130,6 +130,8 @@ left join kronos.organization_data org on org.id = users.organization_id
     and refund.gx_transaction_id is null
 ),
 Main as (
+select * from clover
+union all
 select * from transaction
 union all
 select * from void1
