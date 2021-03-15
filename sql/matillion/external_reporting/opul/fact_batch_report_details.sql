@@ -76,7 +76,11 @@ batch_report_details as
       when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
       else coalesce(sales_amount/100,0) end
   as sales_amount,
-  coalesce((gratuity_amount)/100,0) as gratuity_amount,
+  case 
+      when sales_id like 'refund%' then coalesce((-1*gratuity_amount)/100,0)
+      when sales_id like 'void%' then coalesce((-1*gratuity_amount)/100,0)
+      else coalesce(gratuity_amount/100,0) end
+  as gratuity_amount,
   card_holder_name,
   inv_id,
   inv_status,
