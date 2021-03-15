@@ -1,46 +1,40 @@
-with funding as  
-(  
-SELECT
-    funding_master_id,
-    net_sales*100 AS net_sales,
-    third_party*100 AS third_party,
-    adjustment*100 AS adjustment,
-    interchange_fee*100 AS interchange_fee,
-    service_charge*100 AS service_charge,
-    fee*100 AS fee,
-    reversal*100 AS reversal,
-    other_adjustment*100 AS other_adjustment,
-    total_funding*100 AS total_funding,
-    funding_date,
-    date_added,
-    provider.encrypted_ref_id AS gx_provider_id,
-    funding.status,
-    funding.id AS funding_id  
+with funding_instruction as
+(SELECT
+    id as funding_instruction_id,
+    mid as merchant_id,
+    (created_at)::varchar||merchant_id::varchar as reference_id,
+    created_at AS funding_date,
+    0 as adjustments,
+    coalesce(fee,0) as fees,
+    coalesce(amount,0) as net_sales,
+    0 as chargebacks,
+    extract(epoch from created_at) as epoch_funding_date,
+    current_timestamp::timestamp as dwh_created_at                           
 FROM
-    gaia_opul.funding funding 
- JOIN
-    gaia_opul.authorisation authorisation
-        ON authorisation_id = authorisation.id  
-JOIN
-    gaia_opul.provider provider 
-        ON object_id = provider.id 
+     odf.funding_instruction                        
+WHERE 
+    status = 'SETTLED' 
 ),
 
-main as 
-( 
-SELECT
-    gx_provider_id,
-    funding_master_id,
-    interchange_fee + service_charge + fee + third_party AS fees,
-    adjustment + other_adjustment AS adjustments,
-    net_sales,
-    total_funding,
+payfac as
+(
+SELECT 
+    funding_instruction_id as reference_id,
     funding_date,
-    date_added,
-    reversal AS chargebacks,
-    status,
-    funding_id 
-FROM
-    funding 
-) 
+    merchant_id,
+    adjustments/100.0 as adjustments,
+    fees/100.0 AS fees,
+    net_sales/100.0 AS net_sales,
+    chargebacks/100.0 as chargebacks
+FROM funding_instruction
+),
+
+main AS
+(
+SELECT *, 
+    extract(epoch from funding_date) as epoch_funding_date,
+    current_timestamp::timestamp as dwh_created_at
+FROM payfac
+)
+
 SELECT * FROM main

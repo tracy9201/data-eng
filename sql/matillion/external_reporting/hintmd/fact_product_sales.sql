@@ -1,7 +1,7 @@
 WITH Subscription_auto_renewal AS
 (SELECT
     subscription.id AS subscription_id,
-    subscription.encrypted_ref_id AS k_subscirption_id,
+    subscription.encrypted_ref_id AS k_subscription_id,
     subscription.quantity,
     subscription.unit_name,
     subscription.remaining_payment,
@@ -32,7 +32,7 @@ WITH Subscription_auto_renewal AS
     customer.encrypted_ref_id AS k_customer_id,
     provider_id,
     provider.encrypted_ref_id AS k_provider_id,
-    current_timestamp
+    current_timestamp::timestamp as loaded_at
 FROM
     gaia.subscription subscription
 JOIN

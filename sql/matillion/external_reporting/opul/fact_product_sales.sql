@@ -1,7 +1,7 @@
-WITH Subscription_auto_renewal AS
+WITH Subscription_all AS
 (SELECT
     subscription.id AS subscription_id,
-    subscription.encrypted_ref_id AS k_subscirption_id,
+    subscription.encrypted_ref_id AS k_subscription_id,
     subscription.quantity,
     subscription.unit_name,
     subscription.remaining_payment,
@@ -32,7 +32,7 @@ WITH Subscription_auto_renewal AS
     customer.encrypted_ref_id AS k_customer_id,
     provider_id,
     provider.encrypted_ref_id AS k_provider_id,
-    current_timestamp
+    current_timestamp::timestamp as dwh_created_at
 FROM
     gaia_opul.subscription subscription
 JOIN
@@ -45,8 +45,8 @@ JOIN
     gaia_opul.provider provider
         ON provider.id = provider_id
 WHERE
-    subscription.status = 1
-    AND subscription.auto_renewal = 't'
+    subscription.status in (-1,0,1,20)
+    
 ),
 invoice AS
 (SELECT
@@ -58,19 +58,19 @@ FROM
 ),
 subscription_no_auto_renewal AS
 (SELECT
-    sub_auto_ren.*      
+    Subscription_all.*      
 FROM
-    Subscription_auto_renewal as sub_auto_ren
+    Subscription_all 
 JOIN
      invoice
-        ON sub_auto_ren.plan_id = invoice_plan
+        ON Subscription_all.plan_id = invoice.invoice_plan
 WHERE
     invoice_status = 20
-    AND sub_auto_ren.auto_renewal = 'f'
+    AND auto_renewal = 'f'
 ),
 all_data AS
 (
-SELECT * FROM Subscription_auto_renewal
+SELECT * FROM Subscription_all
 WHERE
 auto_renewal = 't'
 UNION ALL
