@@ -10,4 +10,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.platform_recurring_revenue
   ,organization_product_fee NUMERIC(18,2)   ENCODE raw
   ,total NUMERIC(18,2)   ENCODE raw
 )
+DISTKEY (id)
+SORTKEY (id, transaction_date, practice_name)
 ;
