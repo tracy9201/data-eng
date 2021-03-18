@@ -22,4 +22,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.offering
   ,brand_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,primary key(offering_id)
 )
+DISTKEY (offering_id)
+SORTKEY (offering_id)
 ;
