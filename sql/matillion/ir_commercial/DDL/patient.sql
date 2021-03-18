@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ir_commercial.patient
+DROP TABLE IF EXISTS ir_commercial.patient;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.patient
 (
