@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.patient
   ,patient_type VARCHAR(64)    ENCODE raw
   ,gender VARCHAR(16)    ENCODE raw
   ,organization_id BIGINT  ENCODE raw
-  ,firstname  VARCHAR(64)    ENCODE raw
   ,user_id BIGINT  ENCODE raw
   ,birth_year integer ENCODE raw
   ,city VARCHAR(64)    ENCODE raw
@@ -15,4 +14,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.patient
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,primary key(gx_customer_id)
 )
+DISTSTYLE ALL
+SORTKEY (gx_customer_id)
 ;
