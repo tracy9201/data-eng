@@ -18,4 +18,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.transactions
   ,gx_provider_id VARCHAR(max)   ENCODE raw
   ,primary key(transaction_id)
 )
+DISTKEY (transaction_id)
+SORTKEY (transaction_id, created_at, gx_provider_id)
 ;
