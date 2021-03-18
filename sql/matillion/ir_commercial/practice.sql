@@ -34,7 +34,10 @@ where feature_flags_json like '%GRATUITY%'
 new_main as (
 select 
   main.*,
-  gratuity
+  case 
+      when gratuity is null then 'no' 
+      else gratuity 
+      end as gratuity
 from main
 left join 
   tip
