@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ir_commercial.practice
+DROP TABLE IF EXISTS ir_commercial.practice;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.practice
 (
@@ -18,6 +18,9 @@ CREATE TABLE IF NOT EXISTS ir_commercial.practice
   ,state VARCHAR(64)   ENCODE raw
   ,zip VARCHAR(16) ENCODE raw
   ,business_name VARCHAR(MAX)   ENCODE raw
+  ,gratuity VARCHAR(16)   ENCODE raw
   ,primary key(practice_id)
 )
+DISTSTYLE ALL
+SORTKEY (practice_id)
 ;
