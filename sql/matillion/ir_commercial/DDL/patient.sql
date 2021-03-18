@@ -15,4 +15,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.patient
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,primary key(gx_customer_id)
 )
+DISTSTYLE ALL
+SORTKEY (gx_customer_id)
 ;
