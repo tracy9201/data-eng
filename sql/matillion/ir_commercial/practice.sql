@@ -1,4 +1,4 @@
-WITH main as (
+WITH new_main as (
 SELECT 
     org.id AS practice_id,
     org.created_at,
@@ -31,13 +31,36 @@ SELECT
 FROM kronos_opul.organization_data 
 where feature_flags_json like '%GRATUITY%'
 ),
-new_main as (
+new_main1 as (
 select 
-  main.*,
-  gratuity
-from main
+  new_main.*, 
+  tip.id,
+  tip.gratuity
+from new_main
 left join 
   tip
     on practice_id = id
+),
+main as (
+select 
+  practice_id,
+  created_at,
+  deprecated_at,
+  status, 
+  gx_provider_id,
+  per_member_rate,
+  practice_rate,
+  timezone, 
+  activated_at,
+  practice_name,
+  live,
+  payfac,
+  organization_tax_percentage,
+  city,
+  state,
+  zip,
+  business_name,
+  gratuity
+from new_main1
 )
-SELECT * FROM new_main
+SELECT * FROM main
