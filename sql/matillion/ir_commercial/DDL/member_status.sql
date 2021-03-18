@@ -11,4 +11,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.member_status
   ,gx_provider_id VARCHAR(64)   ENCODE raw
   ,primary key(id)
 )
+DISTKEY (id)
+SORTKEY (id)
 ;
