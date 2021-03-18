@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ir_commercial.fulfillment
+DROP TABLE IF EXISTS ir_commercial.fulfillment;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
 (
