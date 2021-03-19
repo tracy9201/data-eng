@@ -1,4 +1,4 @@
-with X as (
+with subscription as (
 select
 od.id as organization_id
 , od.name as practice_name
@@ -15,22 +15,22 @@ left join kronos.organization_data od on od.id = u.organization_id
 where od.live = true
 group by 1,2,3,4
 )
-, sub_cat as
-( select X.organization_id
-, X.practice_name
-,case when X.sub_type in (1,2) then 'Subscription' else 'Non-Subscription' end as category
-, sum(X.Count) as count_by_category
-from X
+, sub_category as
+( select s.organization_id
+, s.practice_name
+,case when s.sub_type in (1,2) then 'Subscription' else 'Non-Subscription' end as category
+, sum(s.Count) as count_by_category
+from subscription s
 group by 1,2,3
 )
 ,offer as
 ( select distinct organization_id
 from ir_commercial.offering o
 )
-, catalog_org as
-( select sub_cat.* from sub_cat
-join offer on offer.organization_id = sub_cat.organization_id
+, catalog_organizations as
+( select sub_category.* from sub_category
+join offer on offer.organization_id = sub_category.organization_id
 )
 
-select * from catalog_org
+select * from catalog_organizations
 order by 1
