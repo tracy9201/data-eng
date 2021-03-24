@@ -13,7 +13,7 @@ WITH batch_report_summary as
   case when sales_type = 'cash' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Cash'
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
-      when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
+      when sales_type in ('wallet', 'provider credit') and (sales_id like 'payment%' or sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
