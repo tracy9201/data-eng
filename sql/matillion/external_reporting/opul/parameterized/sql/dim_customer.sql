@@ -4,7 +4,7 @@ WITH sub_plan AS
     to_date(min(CASE WHEN subscription.type in (1,2) THEN subscription.created_at ELSE NULL END),'yyyy-mm-dd') AS member_on_boarding_date,
     to_date(max(CASE WHEN subscription.type in (1,2) THEN subscription.deprecated_at ELSE NULL END),'yyyy-mm-dd') AS member_cancel_date  
 FROM
-    kronos_opul_{environment}.subscription as subscription
+    kronos_opul_${environment}.subscription as subscription
 WHERE
     subscription.status=0  
 GROUP BY
@@ -34,11 +34,11 @@ customer AS
     users.created_at,
     users.updated_at,
     current_timestamp::timestamp as dwh_created_at
-FROM kronos_opul_{environment}.users  users
-JOIN kronos_opul_{environment}.customer_data customer_data ON users.id = customer_data.user_id  
-LEFT JOIN kronos_opul_{environment}.plan plan ON plan.user_id = users.id  
+FROM kronos_opul_${environment}.users  users
+JOIN kronos_opul_${environment}.customer_data customer_data ON users.id = customer_data.user_id  
+LEFT JOIN kronos_opul_${environment}.plan plan ON plan.user_id = users.id  
 LEFT JOIN sub_plan ON sub_plan.plan_id = plan.id  
-LEFT JOIN kronos_opul_{environment}.address address ON billing_address_id = address.id 
+LEFT JOIN kronos_opul_${environment}.address address ON billing_address_id = address.id 
 ) ,
 
 main as

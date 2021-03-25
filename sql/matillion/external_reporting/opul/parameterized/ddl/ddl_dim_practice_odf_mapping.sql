@@ -1,6 +1,6 @@
-DROP TABLE IF  EXISTS dwh_opul_{environment}.dim_practice_odf_mapping;
+DROP TABLE IF  EXISTS dwh_opul_${environment}.dim_practice_odf_mapping;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_{environment}.dim_practice_odf_mapping
+CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_practice_odf_mapping
 (
     k_practice_id BIGINT  ENCODE raw
     ,payfac_merchant_id BIGINT  ENCODE raw

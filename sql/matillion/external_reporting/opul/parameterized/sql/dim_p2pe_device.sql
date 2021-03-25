@@ -10,6 +10,6 @@ WITH main as
     updated_at,
     current_timestamp::timestamp as dwh_created_at
 FROM
-	p2pe_opul_{environment}.p2pe_device 
+	p2pe_opul_${environment}.p2pe_device 
 )
 SELECT * FROM main

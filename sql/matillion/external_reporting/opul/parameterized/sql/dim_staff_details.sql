@@ -9,7 +9,7 @@ WITH staff_details AS
     user_id,     
     commission,     
     'staff' as role_name
-  FROM kronos_opul_{environment}.staff_data     
+  FROM kronos_opul_${environment}.staff_data     
 ), 
 
 sys_admin_details AS 
@@ -23,7 +23,7 @@ sys_admin_details AS
     user_id,     
     0 as commission,     
     'sys_admin' as role_name
-  FROM kronos_opul_{environment}.sys_admin_data     
+  FROM kronos_opul_${environment}.sys_admin_data     
 ), 
 
 curator_details AS 
@@ -37,7 +37,7 @@ curator_details AS
     user_id,     
     0 as commission,     
     'curator' as role_name
-  FROM kronos_opul_{environment}.curator_data     
+  FROM kronos_opul_${environment}.curator_data     
 ),
 
 expert_details AS 
@@ -51,7 +51,7 @@ expert_details AS
     user_id,     
     commission,     
     'expert' as role_name
-  FROM kronos_opul_{environment}.expert_data     
+  FROM kronos_opul_${environment}.expert_data     
 ),
 
 admin_details AS 
@@ -65,7 +65,7 @@ admin_details AS
     user_id,     
     commission,     
     'admin' as role_name
-  FROM kronos_opul_{environment}.admin_data     
+  FROM kronos_opul_${environment}.admin_data     
 ),
 
 all_roles as
@@ -94,7 +94,7 @@ main as
     users.mobile,     
     users.organization_id,
     current_timestamp::timestamp as dwh_created_at 
-    FROM kronos_opul_{environment}.users as users
+    FROM kronos_opul_${environment}.users as users
     JOIN all_roles staff on staff.user_id = users.id
 )
 

@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_{environment}.fact_batch_report_summary;
+DROP TABLE IF EXISTS dwh_opul_${environment}.fact_batch_report_summary;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_{environment}.fact_batch_report_summary
+CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.fact_batch_report_summary
 (
   is_voided VARCHAR(10) ENCODE raw
   ,sales_id VARCHAR(255)   ENCODE raw

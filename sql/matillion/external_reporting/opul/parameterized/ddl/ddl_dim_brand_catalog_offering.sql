@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_{environment}.dim_brand_catalog_offering;
+DROP TABLE IF EXISTS dwh_opul_${environment}.dim_brand_catalog_offering;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_{environment}.dim_brand_catalog_offering
+CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_brand_catalog_offering
 (
   offering_id BIGINT   ENCODE raw
   ,offering_name VARCHAR(MAX)   ENCODE raw

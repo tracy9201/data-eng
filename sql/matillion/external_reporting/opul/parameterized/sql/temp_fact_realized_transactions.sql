@@ -15,24 +15,24 @@ WITH ful_sale as (
     ful.subscription_id,
     kcus.gx_customer_id,
     org.gx_provider_id
-  FROM gaia_opul_{environment}.fulfillment ful
+  FROM gaia_opul_${environment}.fulfillment ful
   left join 
-    gaia_opul_{environment}.subscription sub 
+    gaia_opul_${environment}.subscription sub 
       on sub.id = ful.subscription_id
   left join 
-    gaia_opul_{environment}.plan plan 
+    gaia_opul_${environment}.plan plan 
       on sub.plan_id = plan.id
   left join 
-    gaia_opul_{environment}.customer cus 
+    gaia_opul_${environment}.customer cus 
       on cus.id = plan.customer_id
   left join 
-    kronos_opul_{environment}.customer_data kcus
+    kronos_opul_${environment}.customer_data kcus
       on kcus.gx_customer_id = cus.encrypted_ref_id
   left join 
-    kronos_opul_{environment}.users kuser
+    kronos_opul_${environment}.users kuser
       on kuser.id = kcus.user_id
   left join 
-    kronos_opul_{environment}.organization_data org 
+    kronos_opul_${environment}.organization_data org 
       on kuser.organization_id = org.id
   where 
     sub.auto_renewal = 'false' 
@@ -43,12 +43,12 @@ ful_refund as (
   select
     ful.id as ful_id, 
     sum (round(cast(refund.amount as numeric)/100,2)) as refund_amount
-  FROM gaia_opul_{environment}.fulfillment ful
+  FROM gaia_opul_${environment}.fulfillment ful
   inner join 
-    gaia_opul_{environment}.subscription sub 
+    gaia_opul_${environment}.subscription sub 
       on sub.id = subscription_id
   inner join 
-    gaia_opul_{environment}.refund refund 
+    gaia_opul_${environment}.refund refund 
       on refund.subscription_id = sub.id
   where 
     sub.auto_renewal = 'false' 
@@ -61,9 +61,9 @@ offering as (
   select 
     distinct inv.subscription_id,
     null as offering_id
-  from gaia_opul_{environment}.invoice_item inv
+  from gaia_opul_${environment}.invoice_item inv
   left join 
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
       on sub.id = subscription_id
   where inv.status = 20
     and sub.auto_renewal = 'false' 

@@ -1,6 +1,6 @@
-DROP TABLE IF  EXISTS dwh_opul_{environment}.dim_practice;
+DROP TABLE IF  EXISTS dwh_opul_${environment}.dim_practice;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_{environment}.dim_practice
+CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_practice
 (
   k_practice_id BIGINT  ENCODE raw
   ,gx_provider_id VARCHAR(32) ENCODE raw

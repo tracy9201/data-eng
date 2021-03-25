@@ -23,9 +23,9 @@ WITH credit_data as
     c.created_at,
     c.updated_at
 FROM
-    gaia_opul_{environment}.credit c
+    gaia_opul_${environment}.credit c
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON sub.id = c.subscription_id
 WHERE
     c.id IS NOT NULL
@@ -58,27 +58,27 @@ payment as
     p.created_at,
     p.updated_at
 FROM
-    gaia_opul_{environment}.payment p
+    gaia_opul_${environment}.payment p
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON sub.id = p.subscription_id
 LEFT JOIN
-    gaia_opul_{environment}.gratuity gratuity
+    gaia_opul_${environment}.gratuity gratuity
         ON gratuity.id = p.gratuity_id
 LEFT JOIN
  (SELECT distinct 
   gt.payment_id, 
   card_payment_gateway_id
-FROM  gaia_opul_{environment}.gateway_transaction gt
+FROM  gaia_opul_${environment}.gateway_transaction gt
 WHERE 
   card_payment_gateway_id IS NOT NULL and card_payment_gateway_id != 0
   and gt.payment_id is not null) gt
         ON gt.payment_id = p.id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card card
+    gaia_opul_${environment}.card card
         ON cpg.card_id = card.id
 WHERE
     p.id IS NOT NULL
@@ -90,7 +90,7 @@ payment_void as
     gt.payment_id, 
     CASE WHEN gt.is_voided = 't' then 't'::varchar END AS is_voided
   FROM  
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
   WHERE 
     card_payment_gateway_id IS NOT NULL 
     and card_payment_gateway_id != 0
@@ -154,21 +154,21 @@ refund1 as
     refund.created_at,
     refund.updated_at
 FROM
-    gaia_opul_{environment}.refund refund
+    gaia_opul_${environment}.refund refund
 LEFT JOIN
-    gaia_opul_{environment}.gratuity gratuity
+    gaia_opul_${environment}.gratuity gratuity
         ON gratuity.id = refund.gratuity_id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON subscription_id = sub.id
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON refund.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card card
+    gaia_opul_${environment}.card card
         ON cpg.card_id = card.id
 WHERE
     subscription_id IS NOT NULL
@@ -201,24 +201,24 @@ refund3 as
     refund.created_at,
     refund.updated_at
 FROM
-    gaia_opul_{environment}.refund refund
+    gaia_opul_${environment}.refund refund
 LEFT JOIN
-    gaia_opul_{environment}.gratuity gratuity
+    gaia_opul_${environment}.gratuity gratuity
         ON gratuity.id = refund.gratuity_id
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul_{environment}.payment  payment
+    gaia_opul_${environment}.payment  payment
         ON gt.payment_id = payment.id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON payment.subscription_id = sub.id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 WHERE
     refund.subscription_id IS NULL
@@ -251,21 +251,21 @@ tran as
     gt.created_at,
     gt.updated_at
 FROM
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
 LEFT JOIN
-    gaia_opul_{environment}.invoice invoice
+    gaia_opul_${environment}.invoice invoice
         ON invoice_id = invoice.id
 LEFT JOIN
-    gaia_opul_{environment}.invoice_item ivi
+    gaia_opul_${environment}.invoice_item ivi
         ON invoice_item_id = ivi.id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON sub.id = ivi.subscription_id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 WHERE
     source_object_name  = 'card_payment_gateway'
@@ -280,9 +280,9 @@ hintmd_voids as
             WHEN refund.id IS NOT NULL THEN gt.transaction_id
         END AS transaction_id
     FROM
-        gaia_opul_{environment}.refund refund
+        gaia_opul_${environment}.refund refund
     LEFT JOIN
-        gaia_opul_{environment}.gateway_transaction gt
+        gaia_opul_${environment}.gateway_transaction gt
             ON refund.gateway_transaction_id = gt.id
     WHERE
         refund.status =20
@@ -312,24 +312,24 @@ void1 as
     settlement.created_at,
     settlement.updated_at
 FROM
-    gaia_opul_{environment}.settlement settlement
+    gaia_opul_${environment}.settlement settlement
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON gt.id = gateway_transaction_id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul_{environment}.invoice invoice
+    gaia_opul_${environment}.invoice invoice
         ON gt.invoice_id = invoice.id
 LEFT JOIN
-    gaia_opul_{environment}.invoice_item ivi
+    gaia_opul_${environment}.invoice_item ivi
         ON ivi.id = gt.invoice_item_id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON sub.id = ivi.subscription_id
 LEFT JOIN
     hintmd_voids h_void
@@ -365,21 +365,21 @@ void2 as
     settlement.created_at,
     settlement.updated_at
 FROM
-    gaia_opul_{environment}.settlement settlement
+    gaia_opul_${environment}.settlement settlement
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON gt.id = gateway_transaction_id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul_{environment}.payment
+    gaia_opul_${environment}.payment
         ON  payment_id = payment.id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON sub.id = payment.subscription_id
 LEFT JOIN
     hintmd_voids h_void
@@ -417,24 +417,24 @@ void3 as
     refund.created_at,
     refund.updated_at
 FROM
-    gaia_opul_{environment}.refund refund
+    gaia_opul_${environment}.refund refund
 LEFT JOIN
-    gaia_opul_{environment}.gratuity gratuity
+    gaia_opul_${environment}.gratuity gratuity
         ON gratuity.id = refund.gratuity_id
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON refund.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul_{environment}.invoice_item ivi
+    gaia_opul_${environment}.invoice_item ivi
         ON gt.invoice_item_id = ivi.id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON ivi.subscription_id = sub.id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 WHERE
     refund.status  in (20,-3)
@@ -468,24 +468,24 @@ void4 as
     refund.created_at,
     refund.updated_at
 FROM
-    gaia_opul_{environment}.refund refund
+    gaia_opul_${environment}.refund refund
 LEFT JOIN
-    gaia_opul_{environment}.gratuity gratuity
+    gaia_opul_${environment}.gratuity gratuity
         ON gratuity.id = refund.gratuity_id
 LEFT JOIN
-    gaia_opul_{environment}.subscription sub
+    gaia_opul_${environment}.subscription sub
         ON refund.subscription_id = sub.id
 LEFT JOIN
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
         ON refund.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul_{environment}.payment payment
+    gaia_opul_${environment}.payment payment
         ON payment.id = payment_id
 LEFT JOIN
-    gaia_opul_{environment}.card_payment_gateway cpg
+    gaia_opul_${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul_{environment}.card
+    gaia_opul_${environment}.card
         ON cpg.card_id = card.id
 WHERE
     refund.status in (20,-3)
@@ -501,9 +501,9 @@ invoice_data as (
       when gt.source_object_name = 'credit' then 'credit_'||gt.source_object_id::varchar
       else null
       end AS sales_id
-  from gaia_opul_{environment}.invoice inv
+  from gaia_opul_${environment}.invoice inv
   left join
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
       on inv.id = gt.invoice_id
   where inv.status = -3 and source_object_name in ('payment', 'credit')
 ),
@@ -511,9 +511,9 @@ invoice_data2 as (
   select distinct 
     inv.id::varchar as inv_id,
     inv.status as inv_status
-  from gaia_opul_{environment}.invoice inv
+  from gaia_opul_${environment}.invoice inv
   left join
-    gaia_opul_{environment}.gateway_transaction gt
+    gaia_opul_${environment}.gateway_transaction gt
       on inv.id = gt.invoice_id
   where inv.status = -3 and source_object_name in ('payment', 'credit')
 ),
@@ -573,13 +573,13 @@ main as
     current_timestamp::timestamp as dwh_created_at
     FROM all_data a
     LEFT JOIN
-    gaia_opul_{environment}.plan plan
+    gaia_opul_${environment}.plan plan
         ON a.plan_id = plan.id
     LEFT JOIN
-    gaia_opul_{environment}.customer customer
+    gaia_opul_${environment}.customer customer
         ON customer.id = plan.customer_id
     LEFT JOIN
-    gaia_opul_{environment}.provider provider
+    gaia_opul_${environment}.provider provider
         ON provider.id = provider_id
     LEFT JOIN
     invoice_data inv
@@ -622,13 +622,13 @@ main as
     current_timestamp::timestamp as dwh_created_at
     FROM all_data a
     LEFT JOIN
-    gaia_opul_{environment}.plan plan
+    gaia_opul_${environment}.plan plan
         ON a.plan_id = plan.id
     LEFT JOIN
-    gaia_opul_{environment}.customer customer
+    gaia_opul_${environment}.customer customer
         ON customer.id = plan.customer_id
     LEFT JOIN
-    gaia_opul_{environment}.provider provider
+    gaia_opul_${environment}.provider provider
         ON provider.id = provider_id
     LEFT JOIN
     invoice_data2 inv2

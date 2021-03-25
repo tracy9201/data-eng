@@ -13,12 +13,12 @@ WITH main as
     organization_data.updated_at,
     current_timestamp::timestamp as dwh_created_at
 FROM
-    kronos_opul_{environment}.organization_data  organization_data
+    kronos_opul_${environment}.organization_data  organization_data
 JOIN
-    kronos_opul_{environment}.users  users        
+    kronos_opul_${environment}.users  users        
         ON organization_data.id = organization_id  
 JOIN
-    kronos_opul_{environment}.address  address        
+    kronos_opul_${environment}.address  address        
         ON address.id = address_id  
 WHERE
     role = 7
