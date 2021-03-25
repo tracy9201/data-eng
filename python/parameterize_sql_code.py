@@ -14,5 +14,5 @@ for directory, subdirlist, filelist in os.walk(file_path):
 		with open(file_path+f,'w') as file1:
 			file1.write(data)
 
-
+#python parameterize_sql_code.py "file_path to where you SQL code is" "_opul" "_opul_{environment}"
 
