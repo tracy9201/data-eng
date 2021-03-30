@@ -11,7 +11,7 @@ with funding_instruction as
     extract(epoch from created_at) as epoch_funding_date,
     current_timestamp::timestamp as dwh_created_at                           
 FROM
-     odf.funding_instruction                        
+     odf${environment}.funding_instruction                        
 WHERE 
     status = 'SETTLED' 
 ),
