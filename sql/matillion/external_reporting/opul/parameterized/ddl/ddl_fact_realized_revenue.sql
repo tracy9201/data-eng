@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.fact_realized_revenue;
+DROP TABLE IF EXISTS dwh_opul${environment}.fact_realized_revenue;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.fact_realized_revenue
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
 (
   ful_id VARCHAR(16) ENCODE raw
   ,ful_name VARCHAR(max) ENCODE raw

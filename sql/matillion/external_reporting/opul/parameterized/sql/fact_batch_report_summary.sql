@@ -61,7 +61,7 @@ WITH batch_report_summary as
   inv_status,
   created_at,
   updated_at
-  from dwh_opul_${environment}.fact_payment_summary payment_summary
+  from dwh_opul${environment}.fact_payment_summary payment_summary
 ),
 main as
 (

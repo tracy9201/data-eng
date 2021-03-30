@@ -34,15 +34,15 @@ WITH Subscription_all AS
     provider.encrypted_ref_id AS k_provider_id,
     current_timestamp::timestamp as dwh_created_at
 FROM
-    gaia_opul_${environment}.subscription subscription
+    gaia_opul${environment}.subscription subscription
 JOIN
-    gaia_opul_${environment}.plan plan
+    gaia_opul${environment}.plan plan
         ON plan_id = plan.id
 JOIN
-    gaia_opul_${environment}.customer customer
+    gaia_opul${environment}.customer customer
         ON customer.id = customer_id
 JOIN
-    gaia_opul_${environment}.provider provider
+    gaia_opul${environment}.provider provider
         ON provider.id = provider_id
 WHERE
     subscription.status in (-1,0,1,20)
@@ -54,7 +54,7 @@ invoice AS
     invoice.plan_id AS invoice_plan,
     invoice.status AS invoice_status
 FROM
-    gaia_opul_${environment}.invoice invoice
+    gaia_opul${environment}.invoice invoice
 ),
 subscription_no_auto_renewal AS
 (SELECT

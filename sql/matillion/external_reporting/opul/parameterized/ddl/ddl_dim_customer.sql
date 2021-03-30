@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.dim_customer;
+DROP TABLE IF EXISTS dwh_opul${environment}.dim_customer;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_customer
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_customer
 (
   k_customer_id BIGINT   ENCODE raw
   ,member_on_boarding_date TIMESTAMP WITHOUT TIME ZONE   ENCODE raw

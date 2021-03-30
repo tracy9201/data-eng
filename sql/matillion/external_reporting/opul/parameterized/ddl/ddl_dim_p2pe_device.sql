@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.dim_p2pe_device;
+DROP TABLE IF EXISTS dwh_opul${environment}.dim_p2pe_device;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_p2pe_device
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_p2pe_device
 (
   device_id BIGINT ENCODE raw
   ,organization_id BIGINT   ENCODE raw

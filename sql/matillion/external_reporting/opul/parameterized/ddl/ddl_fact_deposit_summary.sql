@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.fact_deposit_summary;   
+DROP TABLE IF EXISTS dwh_opul${environment}.fact_deposit_summary;   
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.fact_deposit_summary
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_deposit_summary
 ( reference_id VARCHAR(255) ENCODE raw
   ,merchant_id VARCHAR(255) ENCODE raw
   ,funding_date  TIMESTAMP WITHOUT TIME ZONE ENCODE raw

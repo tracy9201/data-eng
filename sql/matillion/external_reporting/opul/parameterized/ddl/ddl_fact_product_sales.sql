@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.fact_product_sales;
+DROP TABLE IF EXISTS dwh_opul${environment}.fact_product_sales;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.fact_product_sales
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_product_sales
 (
   subscription_id BIGINT  ENCODE raw
   ,k_subscription_id VARCHAR(32) ENCODE raw
