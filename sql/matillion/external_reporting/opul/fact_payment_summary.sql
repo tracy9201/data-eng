@@ -29,7 +29,7 @@ LEFT JOIN
         ON sub.id = c.subscription_id
 WHERE
     c.id IS NOT NULL
-    AND c.status  in (1,-3)
+    AND c.status  in (1,-3,-4)
 ),
 payment as
 (   SELECT distinct
