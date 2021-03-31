@@ -498,8 +498,8 @@ invoice_data as (
     inv.status as inv_status,
     case 
       when gt.source_object_name in ('payment') then 'payment_'||gt.source_object_id::varchar
-      when gt.source_object_name in ('wallet payment') then 'payment_'||gt.invoice_id::varchar
-      when gt.source_object_name = 'credit' then 'credit_'||gt.payment_id::varchar
+      when gt.source_object_name in ('wallet payment') then 'payment_'||gt.payment_id::varchar
+      when gt.source_object_name = 'credit' then 'credit_'||gt.source_object_id::varchar
       else null
       end AS sales_id
   from gaia_opul.invoice inv
