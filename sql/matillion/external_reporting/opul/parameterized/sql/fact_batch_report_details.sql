@@ -4,8 +4,8 @@ WITH sub_cus as
     customer2.gx_customer_id as gx_cus_id, 
     user_type,
     count(subscription_created) over (partition by product_sales.k_customer_id order by subscription_created desc rows between unbounded preceding and unbounded following) as sub_created
-    from dwh_opul_${environment}.fact_product_sales product_sales
-    join dwh_opul_${environment}.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
+    from dwh_opul${environment}.fact_product_sales product_sales
+    join dwh_opul${environment}.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
     where user_type=1
 ),
 
@@ -86,7 +86,7 @@ batch_report_details as
   inv_status,
   created_at,
   updated_at
-  from dwh_opul_${environment}.fact_payment_summary payment_summary
+  from dwh_opul${environment}.fact_payment_summary payment_summary
   left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
   
 ),

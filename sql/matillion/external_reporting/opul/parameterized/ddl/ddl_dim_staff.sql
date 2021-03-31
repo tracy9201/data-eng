@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.dim_staff;
+DROP TABLE IF EXISTS dwh_opul${environment}.dim_staff;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_staff
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_staff
 (
 
   id  BIGINT  ENCODE  raw

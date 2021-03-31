@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.fact_batch_report_details;
+DROP TABLE IF EXISTS dwh_opul${environment}.fact_batch_report_details;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.fact_batch_report_details
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_batch_report_details
 (
   subscription_name VARCHAR(MAX) ENCODE raw
   ,user_type INTEGER ENCODE raw

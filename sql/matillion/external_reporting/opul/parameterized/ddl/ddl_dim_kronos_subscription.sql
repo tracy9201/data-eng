@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul_${environment}.dim_kronos_subscription;
+DROP TABLE IF EXISTS dwh_opul${environment}.dim_kronos_subscription;
 
-CREATE TABLE IF NOT EXISTS dwh_opul_${environment}.dim_kronos_subscription
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_kronos_subscription
 (
   subscription_id BIGINT ENCODE raw
   ,status INTEGER ENCODE raw
