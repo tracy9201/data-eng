@@ -1,5 +1,6 @@
 with payment as(
-select t.id
+select case when item.id IS NOT NULL then t.id ||'_item_'||item.id else t.id end as transaction_to_item_id
+, t.id
 , t.user_id
 , t.payment_method
 , t.transaction
@@ -26,7 +27,8 @@ where substring(t.id,1,3) = 'pym'
 )
 ,credit as
 (
-select t.id
+select case when item.id IS NOT NULL then t.id ||'_item_'||item.id else t.id end as transaction_to_item_id
+,t.id
 , t.user_id
 , t.payment_method
 , t.transaction
@@ -53,8 +55,8 @@ where substring(t.id,1,3) = 'cre'
 )
 , invoice as
 (
-select
-t.id
+select case when item.id IS NOT NULL then t.id ||'_item_'||item.id else t.id end as transaction_to_item_id
+, t.id
 , t.user_id
 , t.payment_method
 , t.transaction
@@ -81,7 +83,8 @@ where substring(t.id,1,3) = 'inv'
 ,
 refund as
 (
-select t.id
+select case when item.id IS NOT NULL then t.id ||'_item_'||item.id else t.id end as transaction_to_item_id
+, t.id
 , t.user_id
 , t.payment_method
 , t.transaction
@@ -98,6 +101,7 @@ select t.id
 , od.name
 from kronos.transactions t
 left join gaia.refund ref on ref.encrypted_ref_id = t.id
+left join gaia.invoice_item item on item.id = ref.invoice_item_id
 left join gaia.subscription gs on gs.id = ref.subscription_id
 left join kronos.subscription ks on ks.gx_subscription_id = gs.encrypted_ref_id
 left join kronos.users u on u.id = t.user_id
@@ -114,5 +118,7 @@ select * from invoice
 UNION ALL
 select * from refund
 )
-select * from main
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+
+select * from main 
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+
