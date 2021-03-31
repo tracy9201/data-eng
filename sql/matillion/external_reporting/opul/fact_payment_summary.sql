@@ -497,15 +497,16 @@ invoice_data as (
     inv.id::varchar as inv_id,
     inv.status as inv_status,
     case 
-      when gt.source_object_name = 'payment' then 'payment_'||gt.source_object_id::varchar
-      when gt.source_object_name = 'credit' then 'credit_'||gt.source_object_id::varchar
+      when gt.source_object_name in ('payment') then 'payment_'||gt.source_object_id::varchar
+      when gt.source_object_name in ('wallet payment') then 'payment_'||gt.invoice_id::varchar
+      when gt.source_object_name = 'credit' then 'credit_'||gt.payment_id::varchar
       else null
       end AS sales_id
   from gaia_opul.invoice inv
   left join
     gaia_opul.gateway_transaction gt
       on inv.id = gt.invoice_id
-  where inv.status = -3 and source_object_name in ('payment', 'credit')
+  where inv.status = -3 and source_object_name in ('payment', 'credit', 'wallet payment')
 ),
 invoice_data2 as (
   select distinct 
@@ -515,7 +516,7 @@ invoice_data2 as (
   left join
     gaia_opul.gateway_transaction gt
       on inv.id = gt.invoice_id
-  where inv.status = -3 and source_object_name in ('payment', 'credit')
+  where inv.status = -3 and source_object_name in ('payment', 'credit', 'wallet payment')
 ),
 all_data AS
 (
