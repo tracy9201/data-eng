@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS ir_commercial.transactions_to_subscription_mapping;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.transactions_to_subscription_mapping
 (
-id VARCHAR(MAX) ENCODE raw
+transaction_to_item_id VARCHAR(maX) ENCODE raw
+, id VARCHAR(MAX) ENCODE raw
 , user_id BIGINT ENCODE raw
 , payment_method VARCHAR(255) ENCODE raw
 , transaction VARCHAR(255) ENCODE raw
@@ -17,7 +18,7 @@ id VARCHAR(MAX) ENCODE raw
 , organization_id BIGINT ENCODE raw
 , live BOOLEAN ENCODE raw
 , name VARCHAR(MAX) ENCODE raw
-  ,primary key(id,invoice_item_id)
+  ,primary key(transaction_to_item_id)
 )
 
 DISTKEY (organization_id)
