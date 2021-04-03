@@ -4,6 +4,7 @@
  
  
  SELECT id,
+ 
    name,
    payment_gateway_id,
    authorisation_id,
