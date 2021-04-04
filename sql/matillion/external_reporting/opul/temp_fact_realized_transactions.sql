@@ -60,7 +60,7 @@ ful_refund as (
 offering as (
   select 
     distinct inv.subscription_id,
-    null as offering_id
+    inv.offering_id as offering_id
   from gaia_opul.invoice_item inv
   left join 
     gaia_opul.subscription sub
