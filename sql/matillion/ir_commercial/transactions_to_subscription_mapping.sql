@@ -1,5 +1,4 @@
 with payment as(
-
 select case when item.id IS NOT NULL then t.id ||'_item_'||item.id else t.id end as transaction_to_item_id
 , t.id
 , t.user_id
