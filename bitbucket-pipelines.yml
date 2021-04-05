@@ -1,0 +1,24 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
+
+pipelines:
+  branches:
+    master:
+      - parallel:
+        - step:
+            name: 'Build and sync with DEV S3'
+            script:
+              - echo "Build started"
+              - pipe: atlassian/aws-s3-deploy:0.4.4
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                  S3_BUCKET: $S3_BUCKET_NAME
+                  LOCAL_PATH: '$(pwd)'
+              - echo "Build ended"
+              
