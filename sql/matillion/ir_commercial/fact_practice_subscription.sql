@@ -1,4 +1,5 @@
 with subscription as (
+
 select
 od.id as organization_id
 , od.name as practice_name
