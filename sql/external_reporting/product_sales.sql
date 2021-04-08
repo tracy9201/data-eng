@@ -39,7 +39,7 @@ select
 from product_sales prod
 )
 
-, payment_summary_prod_sales as
+, payment_summary_refund_void as
 (
 select prod.subscription_id
 , k_subscirption_id as k_subscription_id
@@ -83,7 +83,7 @@ join payment_summary ps on ps.gx_subscription_id = prod.k_subscirption_id and (p
 (
   select * from cte_product_sales
   UNION
-  select * from payment_summary_prod_sales
+  select * from payment_summary_refund_void
 )
 , main as
 (
@@ -91,4 +91,4 @@ select case when sales_id IS NOT NULL then 'sub_'||subscription_id::varchar||'_'
 union_qry.*
 from union_qry
 )
-select * from main
+select * from main 
