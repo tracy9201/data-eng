@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS public.product_sales
   ,loaded_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,sales_id
       ,primary key(primary_product_id)
-      ,UNIQUE(primary_product_id, subscription_updated_at)
+      ,UNIQUE(primary_product_id)
 )
 DISTKEY (k_customer_id)
 SORTKEY (k_customer_id)
