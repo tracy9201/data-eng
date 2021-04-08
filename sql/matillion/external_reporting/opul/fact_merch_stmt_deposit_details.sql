@@ -95,10 +95,10 @@ SELECT
     ,extract (epoch from settled_month) as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
-    transaction_details_daily_summary_1 a
+    transaction_details_daily_summary a
 JOIN 
     odf.funding_instruction b 
     on a.funding_instruction_id = b.id
 )
 
-SELECT * FROM main;
+SELECT * FROM main
