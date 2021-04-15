@@ -11,17 +11,17 @@ SELECT
     ,case when ft.transaction_type = 'REFUND' then  coalesce(ft.amount/100.0,0)  end as refunds
     ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount/100.0,0) end as chargebacks
     ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount/100.0,0) end as adjustments
-    ,case when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CP' then 0.0199*ft.amount/100
-         when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then 0.0219*ft.amount/100
-         else 0 end as fees
+    ,case when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CP' then round(0.0199*ft.amount/100,2)
+          when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then round(0.0219*ft.amount/100,2)
+          else 0 end as fees
     ,ft.cp_or_cnp
     ,case when ft.card_brand = '00001' then 'MasterCard'
-         when ft.card_brand = '00002' then 'Visa'
-         when ft.card_brand = '00008' then 'Amex'
-         else 'N/A' end as card_brand
+          when ft.card_brand = '00002' then 'Visa'
+          when ft.card_brand = '00008' then 'Amex'
+          else 'N/A' end as card_brand
     ,case when ft.cp_or_cnp = 'CP' then 1.99 
-         when ft.cp_or_cnp = 'CNP' then 2.19 
-         end as percent_fee
+          when ft.cp_or_cnp = 'CNP' then 2.19 
+          end as percent_fee
     ,ft.percent_fee as ft_percent_fee
     ,ft.settled_at::date as funding_date
     ,to_date(settled_at,'YYYY-MM-01') as funding_month
