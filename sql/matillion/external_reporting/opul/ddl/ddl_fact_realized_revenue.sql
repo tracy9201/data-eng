@@ -4,14 +4,13 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_realized_revenue
 (
   ful_id VARCHAR(16) ENCODE raw
   ,ful_name VARCHAR(max) ENCODE raw
+  ,type VARCHAR(max) ENCODE raw
   ,service_date TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,ful_quantity  NUMERIC(18,2) ENCODE raw
   ,unit_name VARCHAR(64) ENCODE raw
   ,quantity  NUMERIC(18,2) ENCODE raw
   ,total NUMERIC(18,2) ENCODE raw
-  ,refund_amount NUMERIC(18,2) ENCODE raw
-  ,final_amount NUMERIC(18,2) ENCODE raw
-  ,offering_id BIGINT ENCODE raw
+  ,offering_id integer ENCODE raw
   ,ful_status SMALLINT ENCODE raw
   ,ful_type VARCHAR(64) ENCODE raw
   ,fulfilled_by BIGINT ENCODE raw
