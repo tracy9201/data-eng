@@ -15,16 +15,17 @@ SELECT
     ,ft.transaction_date
     ,ft.settled_at::date as settled_at
     ,ft.card_brand as card_brand1
-    ,case when ft.card_brand = '00001' then 'MasterCard'
-         when ft.card_brand = '00002' then 'Visa'
-         when ft.card_brand = '00008' then 'Amex'
-         else 'N/A' end as card_brand
+    ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
+          when ft.card_brand in ('00002','00079','00080','00081','00082','00083','00084') then 'Visa'
+          when ft.card_brand = '00003' then 'Discover'
+          when ft.card_brand in ('00006','00008') then 'Amex'
+          else 'Other' end as card_brand
     ,case when ft.cp_or_cnp = 'CP' then 1.99 
-         when ft.cp_or_cnp = 'CNP' then 2.19 
-         end as percent_fee
+          when ft.cp_or_cnp = 'CNP' then 2.19 
+          end as percent_fee
     ,case when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CP' then 0.0199*ft.amount
-         when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then 0.0219*ft.amount
-         else 0 end as fees
+          when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then 0.0219*ft.amount
+          else 0 end as fees
     ,ft.percent_fee as ft_percent_fee
     ,ft.fixed_fee
     ,ft.total_fee

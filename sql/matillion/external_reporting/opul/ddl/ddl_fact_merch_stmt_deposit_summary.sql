@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul.fact_merch_stmt_deposit_summary
  merchant_id VARCHAR(256)   ENCODE raw
 ,funding_month DATE ENCODE raw
 ,range VARCHAR(256)   ENCODE raw
+,range_with_year VARCHAR(256)   ENCODE raw
 ,transactions INTEGER ENCODE raw
 ,charges NUMERIC(18,2)   ENCODE raw
 ,refunds NUMERIC(18,2)   ENCODE raw
