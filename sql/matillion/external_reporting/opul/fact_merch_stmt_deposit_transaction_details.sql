@@ -15,10 +15,11 @@ SELECT
           when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then round(0.0219*ft.amount/100,2)
           else 0 end as fees
     ,ft.cp_or_cnp
-    ,case when ft.card_brand = '00001' then 'MasterCard'
-          when ft.card_brand = '00002' then 'Visa'
-          when ft.card_brand = '00008' then 'Amex'
-          else 'N/A' end as card_brand
+    ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
+          when ft.card_brand in ('00002','00079','00080','00081','00082','00083','00084') then 'Visa'
+          when ft.card_brand = '00003' then 'Discover'
+          when ft.card_brand in ('00006','00008') then 'Amex'
+          else 'Other' end as card_brand
     ,case when ft.cp_or_cnp = 'CP' then 1.99 
           when ft.cp_or_cnp = 'CNP' then 2.19 
           end as percent_fee
