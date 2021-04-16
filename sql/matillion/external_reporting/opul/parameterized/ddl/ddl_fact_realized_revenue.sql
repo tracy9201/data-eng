@@ -4,13 +4,12 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
 (
   ful_id VARCHAR(16) ENCODE raw
   ,ful_name VARCHAR(max) ENCODE raw
+  ,type VARCHAR(max) ENCODE raw
   ,service_date TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,ful_quantity  NUMERIC(18,2) ENCODE raw
   ,unit_name VARCHAR(64) ENCODE raw
   ,quantity  NUMERIC(18,2) ENCODE raw
   ,total NUMERIC(18,2) ENCODE raw
-  ,refund_amount NUMERIC(18,2) ENCODE raw
-  ,final_amount NUMERIC(18,2) ENCODE raw
   ,offering_id BIGINT ENCODE raw
   ,ful_status SMALLINT ENCODE raw
   ,ful_type VARCHAR(64) ENCODE raw
@@ -28,3 +27,4 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
 DISTKEY (gx_provider_id)
 SORTKEY (epoch_created_at,gx_provider_id,gx_customer_id,fulfilled_by)
 ;
+
