@@ -12,7 +12,6 @@ SELECT
     ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount,0) end as chargebacks
     ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount,0) end as adjustments
     ,ft.cp_or_cnp
-    ,ft.transaction_date
     ,ft.settled_at::date as settled_at
     ,ft.card_brand as card_brand1
     ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
