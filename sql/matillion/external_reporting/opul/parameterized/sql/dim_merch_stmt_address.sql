@@ -17,15 +17,15 @@ SELECT  distinct
           else a.address1|| chr(10) ||a.city|| chr(10) ||a.state || '-' ||a.zip end as full_address
     ,current_timestamp::timestamp as dwh_created_at
 FROM
-    merchant.address a 
+    merchant${environment}.address a 
 JOIN
-    merchant.contact c 
+    merchant${environment}.contact c 
     on a.id = c.address_id
 JOIN 
-    merchant.merchant m 
+    merchant${environment}.merchant m 
     on c.merchant_id = m.id
 JOIN 
-    merchant.card_processing cp 
+    merchant${environment}.card_processing cp 
     on m.id = cp.merchant_id
 ),
 
