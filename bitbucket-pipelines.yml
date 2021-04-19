@@ -12,13 +12,25 @@ pipelines:
         - step:
             name: 'Build and sync with DEV S3'
             script:
-              - echo "Build started"
+              - echo "Dev Build started"
               - pipe: atlassian/aws-s3-deploy:0.4.4
                 variables:
-                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                  S3_BUCKET: $S3_BUCKET_NAME
+                  AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $DEV_AWS_DEFAULT_REGION
+                  S3_BUCKET: $DEV_S3_BUCKET_NAME
                   LOCAL_PATH: '$(pwd)'
-              - echo "Build ended"
-              
+              - echo "Dev Build ended"
+        - step:
+            name: 'Build and sync with PROD S3'
+            trigger: manual
+            script:
+              - echo "Prod Build started"
+              - pipe: atlassian/aws-s3-deploy:0.4.4
+                variables:
+                  AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $DEV_AWS_DEFAULT_REGION
+                  S3_BUCKET: $TEST_S3_BUCKET_NAME
+                  LOCAL_PATH: '$(pwd)'
+              - echo "Prod Build ended"
