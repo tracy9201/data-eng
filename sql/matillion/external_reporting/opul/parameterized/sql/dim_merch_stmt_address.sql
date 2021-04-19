@@ -1,7 +1,6 @@
 WITH merchant_address as
 (
 SELECT  distinct
-    -- m.id as merchant_id_original
     cp.mid as merchant_id
     ,m.legal_business_name as merchant_name
     ,a.address1
