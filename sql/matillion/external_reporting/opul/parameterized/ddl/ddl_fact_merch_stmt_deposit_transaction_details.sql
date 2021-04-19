@@ -5,7 +5,7 @@ merchant_id VARCHAR(256)   ENCODE raw
 ,funding_instruction_id INTEGER  ENCODE raw
 ,transaction_id VARCHAR(256)   ENCODE raw
 ,transaction_type VARCHAR(256)   ENCODE raw
-,transction_date TIMESTAMP WITHOUT TIME ZONE   ENCODE raw 
+,transaction_date TIMESTAMP WITHOUT TIME ZONE   ENCODE raw 
 ,transactions INTEGER ENCODE raw
 ,charges NUMERIC(18,2)   ENCODE raw
 ,refunds NUMERIC(18,2)   ENCODE raw
