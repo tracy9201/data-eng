@@ -34,3 +34,17 @@ pipelines:
                   S3_BUCKET: $TEST_S3_BUCKET_NAME
                   LOCAL_PATH: '$(pwd)'
               - echo "Prod Build ended"
+        - step:
+            name: 'Clear S3 and sync with Bitbucket Repo'
+            trigger: manual
+            script:
+              - echo "Dev Build started for clearing S3 started"
+              - pipe: atlassian/aws-s3-deploy:0.4.4
+                variables:
+                  DELETE_FLAG: 'true'
+                  AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $DEV_AWS_DEFAULT_REGION
+                  S3_BUCKET: $DEV_S3_BUCKET_NAME
+                  LOCAL_PATH: '$(pwd)'
+              - echo "Clearing S3 and Dev Build ended"
