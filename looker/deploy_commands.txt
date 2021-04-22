@@ -1,5 +1,5 @@
 The Below commands we need to run after merging the code to production.
-Please be extra careful when to execute these commands.
+Please be extra careful when to execute these commands. Open a web browser and copy paste the URL to deploy 
 
 Below are sample deploy commands for opul_reporting Project
 
