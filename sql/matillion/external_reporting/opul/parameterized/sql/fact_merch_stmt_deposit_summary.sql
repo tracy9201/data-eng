@@ -22,9 +22,9 @@ SELECT
 	,sum(coalesce(b.refunds,0)) as Refunds
 	,sum(coalesce(b.chargebacks,0)) as Chargebacks
 	,sum(coalesce(b.adjustments,0)) as Adjustments
-	,sum(coalesce(b.fees,0)) as total_fee
+	,sum(coalesce(b.fees,0)) as total_fees
 	,sum(coalesce(b.revenue,0)) as revenue
-	,extract (epoch from a.funding_month) as epoch_funding_month
+	,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.funding_month)) as epoch_funding_month
 	,current_timestamp::timestamp as dwh_created_at
 FROM 
 	dwh_opul${environment}.fact_merch_stmt_deposit_details b

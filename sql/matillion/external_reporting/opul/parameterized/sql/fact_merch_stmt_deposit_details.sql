@@ -91,8 +91,8 @@ SELECT
     ,coalesce(a.adjustments,0) as adjustments
     ,coalesce(b.fee,0) as fees
     ,coalesce(b.revenue,0) as revenue
-    ,extract (epoch from settled_at) as epoch_funding_date
-    ,extract (epoch from settled_month) as epoch_funding_month
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at)) as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month)) as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
     transaction_details_daily_summary a
