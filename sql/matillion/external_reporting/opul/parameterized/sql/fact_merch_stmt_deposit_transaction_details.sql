@@ -26,8 +26,8 @@ SELECT
     ,ft.percent_fee as ft_percent_fee
     ,ft.settled_at::date as funding_date
     ,to_date(settled_at,'YYYY-MM-01') as funding_month
-    ,extract (epoch from ft.settled_at::date) as epoch_funding_date
-    ,extract (epoch from to_date(settled_at,'YYYY-MM-01')) as epoch_funding_month
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',ft.settled_at::date)) as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',to_date(settled_at,'YYYY-MM-01'))) as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
     odf${environment}.fiserv_transaction ft
