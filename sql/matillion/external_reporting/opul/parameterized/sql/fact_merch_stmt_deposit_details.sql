@@ -42,8 +42,6 @@ SELECT
     mid
     ,funding_instruction_id
     ,settled_at
-    ,cp_or_cnp
-    ,percent_fee
     ,to_date(settled_at,'YYYY-MM-01') as settled_month
     ,count(1) as transactions
     ,sum(charges)/100.0 as charges
@@ -53,29 +51,8 @@ SELECT
     ,sum(fees)/100.0 AS ft_fees
 FROM
     transaction_details
-GROUP BY 1,2,3,4,5,6
+GROUP BY 1,2,3,4
 ),
-
-transaction_details_daily_summary_computed_fee as
-(
-SELECT
-    mid
-    ,funding_instruction_id
-    ,settled_at
-    ,settled_month
-    ,sum(transactions) transactions
-    ,sum(charges) charges
-    ,sum(refunds) refunds
-    ,sum(chargebacks) chargebacks
-    ,sum(adjustments) adjustments
-    ,sum(ft_fees) ft_fees
-    ,sum((charges - coalesce(refunds,0))*percent_fee/100) as computed_fees
-FROM
-    transaction_details_daily_summary
-GROUP BY 
-    1,2,3,4
-),
-
 
 main as
 (
@@ -91,8 +68,8 @@ SELECT
     ,coalesce(a.adjustments,0) as adjustments
     ,coalesce(b.fee,0) as fees
     ,coalesce(b.revenue,0) as revenue
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at)) as epoch_funding_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month)) as epoch_funding_month
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at))::bigint * 1000 as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month))::bigint * 1000 as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
     transaction_details_daily_summary a
