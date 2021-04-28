@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_opul.fact_merch_stmt_deposit_summary;
+DROP TABLE IF EXISTS dwh_opul${environment}.fact_merch_stmt_deposit_summary;
 
-CREATE TABLE IF NOT EXISTS dwh_opul.fact_merch_stmt_deposit_summary
+CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_merch_stmt_deposit_summary
 (
  merchant_id VARCHAR(256)   ENCODE raw
 ,funding_month DATE ENCODE raw

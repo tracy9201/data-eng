@@ -12,7 +12,6 @@ SELECT
     ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount,0) end as chargebacks
     ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount,0) end as adjustments
     ,ft.cp_or_cnp
-    ,ft.transaction_date
     ,ft.settled_at::date as settled_at
     ,ft.card_brand as card_brand1
     ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
@@ -30,9 +29,9 @@ SELECT
     ,ft.fixed_fee
     ,ft.total_fee
 FROM 
-    odf.fiserv_transaction ft
+    odf${environment}.fiserv_transaction ft
 JOIN 
-    odf.funding_instruction fi on ft.funding_instruction_id = fi.id
+    odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
 WHERE fi.status = 'SETTLED'
 
 ),
@@ -43,8 +42,6 @@ SELECT
     mid
     ,funding_instruction_id
     ,settled_at
-    ,cp_or_cnp
-    ,percent_fee
     ,to_date(settled_at,'YYYY-MM-01') as settled_month
     ,count(1) as transactions
     ,sum(charges)/100.0 as charges
@@ -54,29 +51,8 @@ SELECT
     ,sum(fees)/100.0 AS ft_fees
 FROM
     transaction_details
-GROUP BY 1,2,3,4,5,6
+GROUP BY 1,2,3,4
 ),
-
-transaction_details_daily_summary_computed_fee as
-(
-SELECT
-    mid
-    ,funding_instruction_id
-    ,settled_at
-    ,settled_month
-    ,sum(transactions) transactions
-    ,sum(charges) charges
-    ,sum(refunds) refunds
-    ,sum(chargebacks) chargebacks
-    ,sum(adjustments) adjustments
-    ,sum(ft_fees) ft_fees
-    ,sum((charges - coalesce(refunds,0))*percent_fee/100) as computed_fees
-FROM
-    transaction_details_daily_summary
-GROUP BY 
-    1,2,3,4
-),
-
 
 main as
 (
@@ -90,15 +66,15 @@ SELECT
     ,coalesce(a.refunds,0) as refunds
     ,coalesce(a.chargebacks,0) as chargebacks
     ,coalesce(a.adjustments,0) as adjustments
-    ,coalesce(b.fee,0) as fees
+    ,coalesce(b.fee/100.0,0) as fees
     ,coalesce(b.revenue,0) as revenue
-    ,extract (epoch from settled_at) as epoch_funding_date
-    ,extract (epoch from settled_month) as epoch_funding_month
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at))::bigint * 1000 as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month))::bigint * 1000 as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
     transaction_details_daily_summary a
 JOIN 
-    odf.funding_instruction b 
+    odf${environment}.funding_instruction b 
     on a.funding_instruction_id = b.id
 )
 
