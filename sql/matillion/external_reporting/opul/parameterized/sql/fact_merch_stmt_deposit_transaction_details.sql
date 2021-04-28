@@ -11,9 +11,7 @@ SELECT
     ,case when ft.transaction_type = 'REFUND' then  coalesce(ft.amount/100.0,0)  end as refunds
     ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount/100.0,0) end as chargebacks
     ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount/100.0,0) end as adjustments
-    ,case when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CP' then round(0.0199*ft.amount/100,2)
-          when ft.transaction_type = 'PAYMENT' and  ft.cp_or_cnp = 'CNP' then round(0.0219*ft.amount/100,2)
-          else 0 end as fees
+    ,ft.percent_fee/10000.0*ft.amount/100.0 as fees
     ,ft.cp_or_cnp
     ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
           when ft.card_brand in ('00002','00079','00080','00081','00082','00083','00084') then 'Visa'
@@ -23,11 +21,11 @@ SELECT
     ,case when ft.cp_or_cnp = 'CP' then 1.99 
           when ft.cp_or_cnp = 'CNP' then 2.19 
           end as percent_fee
-    ,ft.percent_fee as ft_percent_fee
+    ,ft.percent_fee as ft_percent_fee 
     ,ft.settled_at::date as funding_date
     ,to_date(settled_at,'YYYY-MM-01') as funding_month
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',ft.settled_at::date)) as epoch_funding_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',to_date(settled_at,'YYYY-MM-01'))) as epoch_funding_month
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',ft.settled_at::date))::bigint * 1000 as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',to_date(settled_at,'YYYY-MM-01')))::bigint * 1000 as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
     odf${environment}.fiserv_transaction ft

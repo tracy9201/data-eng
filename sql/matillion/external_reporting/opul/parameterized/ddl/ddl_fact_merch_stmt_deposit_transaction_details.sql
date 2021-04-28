@@ -11,7 +11,7 @@ merchant_id VARCHAR(256)   ENCODE raw
 ,refunds NUMERIC(18,2)   ENCODE raw
 ,chargebacks NUMERIC(18,2)   ENCODE raw
 ,adjustments NUMERIC(18,2)   ENCODE raw
-,fees NUMERIC(18,2)   ENCODE raw
+,fees NUMERIC(18,6)   ENCODE raw
 ,cp_or_cnp  VARCHAR(20)   ENCODE raw
 ,card_brand  VARCHAR(256)   ENCODE raw
 ,percent_fee NUMERIC(18,2)   ENCODE raw
