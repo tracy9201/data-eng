@@ -11,7 +11,7 @@ SELECT
     ,case when ft.transaction_type = 'REFUND' then  coalesce(ft.amount/100.0,0)  end as refunds
     ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount/100.0,0) end as chargebacks
     ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount/100.0,0) end as adjustments
-    ,round(ft.percent_fee/100.0*ft.amount/100.0,2) as fees
+    ,ft.percent_fee/10000.0*ft.amount/100.0 as fees
     ,ft.cp_or_cnp
     ,case when ft.card_brand in ('00001','00085','00086','00087','00088','00092') then 'MasterCard'
           when ft.card_brand in ('00002','00079','00080','00081','00082','00083','00084') then 'Visa'
