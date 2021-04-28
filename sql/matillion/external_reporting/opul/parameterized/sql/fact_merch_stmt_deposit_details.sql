@@ -66,7 +66,7 @@ SELECT
     ,coalesce(a.refunds,0) as refunds
     ,coalesce(a.chargebacks,0) as chargebacks
     ,coalesce(a.adjustments,0) as adjustments
-    ,coalesce(b.fee,0) as fees
+    ,coalesce(b.fee/100.0,0) as fees
     ,coalesce(b.revenue,0) as revenue
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at))::bigint * 1000 as epoch_funding_date
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month))::bigint * 1000 as epoch_funding_month
