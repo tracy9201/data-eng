@@ -1,0 +1,3 @@
+# The dist folder should be put in .gitignore; currently, to automatically upload the dist folder to s3 bucket through pipeline, it's temporarily commented out
+# dist
+node_modules
