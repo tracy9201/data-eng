@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.transactions
   ,customer_type VARCHAR(64)   ENCODE raw
   ,payment_detail VARCHAR(max)   ENCODE raw
   ,gx_provider_id VARCHAR(max)   ENCODE raw
+  ,clover_transaction_id VARCHAR(64)   ENCODE raw
   ,primary key(transaction_id)
 )
 ;
