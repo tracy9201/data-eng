@@ -14,6 +14,7 @@ select case when settle.gateway_transaction_id is not null then 'settle_'||settl
           , 'practice_clover_guest' as customer_type
           , null as payment_detail
           , pro.encrypted_ref_id as gx_provider_id
+          , settle.transaction_id as clover_transaction_id
           from gaia.settlement settle
           left join gaia.authorisation auth on auth.identifier = settle.authorisation_id
           left join gaia.provider pro on auth.object_id = pro.id
@@ -34,7 +35,8 @@ select
     round(cast(transactions.gratuity_amount as numeric)/100,2) as gratuity_amount, 
     transactions.customer_type,
     transactions.payment_detail,
-    org.gx_provider_id
+    org.gx_provider_id, 
+    transactions.transaction_id::varchar as clover_transaction_id
 from kronos.transactions transactions
 left join kronos.users users on transactions.user_id  = users.id
 left join kronos.organization_data org on org.id = users.organization_id
@@ -66,7 +68,8 @@ select
     0 as gratuity_amount,
     null as customer_type,
     null as payment_detail,
-    org.gx_provider_id
+    org.gx_provider_id,
+    settlement.transaction_id as clover_transaction_id
 from gaia.settlement settlement
 inner join 
     gaia.gateway_transaction gt 
@@ -105,7 +108,8 @@ select
     0 as gratuity_amount,
     null as customer_type,
     null as payment_detail,
-    org.gx_provider_id
+    org.gx_provider_id,
+    settlement.transaction_id as clover_transaction_id
 from gaia.settlement settlement
 inner join 
     gaia.gateway_transaction gt 
