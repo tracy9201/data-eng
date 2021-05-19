@@ -10,7 +10,7 @@ GRANT USAGE ON SCHEMA kronos_stg_opul${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA p2pe_stg_opul${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA gaia_metadata_opul${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA kronos_metadata_opul${environment} to ${lookerUser};
-GRANT USAGE ON SCHEMA p2pe_metadata_opul${environment} to ${lookerUser}
+GRANT USAGE ON SCHEMA p2pe_metadata_opul${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA merchant_stg${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA odf_stg${environment} to ${lookerUser};
 GRANT USAGE ON SCHEMA merchant_metadata${environment} to ${lookerUser};
