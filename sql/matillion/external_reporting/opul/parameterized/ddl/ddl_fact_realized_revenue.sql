@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
   ,unit_name VARCHAR(64) ENCODE raw
   ,quantity  NUMERIC(18,2) ENCODE raw
   ,total NUMERIC(18,2) ENCODE raw
-  ,refund_amount NUMERIC(18,2) ENCODE raw
-  ,final_amount NUMERIC(18,2) ENCODE raw
   ,offering_id BIGINT ENCODE raw
   ,ful_status SMALLINT ENCODE raw
   ,ful_type VARCHAR(64) ENCODE raw
