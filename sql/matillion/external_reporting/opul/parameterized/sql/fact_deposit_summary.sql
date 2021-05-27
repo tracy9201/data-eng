@@ -1,26 +1,37 @@
-with funding_instruction as
+with fiserv_transaction as
+(
+SELECT distinct
+    funding_instruction_id,
+    settled_at
+FROM odf${environment}.fiserv_transaction
+),
+
+funding_instruction as
 (SELECT
-    id as funding_instruction_id,
-    mid as merchant_id,
-    (created_at)::varchar||merchant_id::varchar as reference_id,
-    created_at AS funding_date,
+    fi.id as funding_instruction_id,
+    fi.mid as merchant_id,
+    fi.created_at AS funding_instruction_date,
+    ft.settled_at::date as settled_at_date,
     0 as adjustments,
-    coalesce(fee,0) as fees,
-    coalesce(amount,0) as net_sales,
+    coalesce(fi.fee,0) as fees,
+    coalesce(fi.amount,0) as net_sales,
     0 as chargebacks,
-    extract(epoch from created_at) as epoch_funding_date,
+    extract(epoch from fi.created_at) as epoch_funding_date,
     current_timestamp::timestamp as dwh_created_at                           
 FROM
-     odf${environment}.funding_instruction                        
+     odf${environment}.funding_instruction fi 
+LEFT JOIN 
+     fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    status = 'SETTLED' 
+    fi.status = 'SETTLED' 
 ),
 
 payfac as
 (
 SELECT 
     funding_instruction_id as reference_id,
-    funding_date,
+    funding_instruction_date,
+    settled_at_date,
     merchant_id,
     adjustments/100.0 as adjustments,
     fees/100.0 AS fees,
@@ -32,7 +43,8 @@ FROM funding_instruction
 main AS
 (
 SELECT *, 
-    extract(epoch from funding_date) as epoch_funding_date,
+    extract(epoch from funding_instruction_date) as epoch_funding_instruction_date,
+    extract(epoch from settled_at_date) as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
 FROM payfac
 )

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_kronos_subscription
   ,plan_id  BIGINT  ENCODE raw
   ,offering_id  BIGINT  ENCODE raw
   ,subscription_type  INTEGER   ENCODE raw
-  ,ad_hoc_offering_id BIGINT NCODE raw
+  ,ad_hoc_offering_id BIGINT ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
