@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
 (
   ful_id VARCHAR(16) ENCODE raw
   ,ful_name VARCHAR(max) ENCODE raw
+  ,type VARCHAR(500) ENCODE raw
   ,service_date TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,ful_quantity  NUMERIC(18,2) ENCODE raw
   ,unit_name VARCHAR(64) ENCODE raw
