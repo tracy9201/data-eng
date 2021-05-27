@@ -22,6 +22,19 @@ pipelines:
                   LOCAL_PATH: '$(pwd)'
               - echo "Dev Build ended"
         - step:
+            name: 'Build and sync with PRE-PROD S3'
+            trigger: manual
+            script:
+              - echo "Pre Prod Build started"
+              - pipe: atlassian/aws-s3-deploy:0.4.4
+                variables:
+                  AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $PROD_AWS_DEFAULT_REGION
+                  S3_BUCKET: $PRE_PROD_S3_BUCKET_NAME
+                  LOCAL_PATH: '$(pwd)'
+              - echo "Pre-Prod Build ended"
+        - step:
             name: 'Build and sync with PROD S3'
             trigger: manual
             script:
@@ -48,6 +61,20 @@ pipelines:
                   S3_BUCKET: $DEV_S3_BUCKET_NAME
                   LOCAL_PATH: '$(pwd)'
               - echo "Clearing S3 and Dev Build ended"
+        - step:
+            name: 'Clear Pre-Prod S3 and sync with Bitbucket Repo'
+            trigger: manual
+            script:
+              - echo "Pre-Prod Build started"
+              - pipe: atlassian/aws-s3-deploy:0.4.4
+                variables:
+                  DELETE_FLAG: 'true'
+                  AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $PROD_AWS_DEFAULT_REGION
+                  S3_BUCKET: $PRE_PROD_S3_BUCKET_NAME
+                  LOCAL_PATH: '$(pwd)'
+              - echo "Clearing Pre-Prod S3 and Prod Build ended"
         - step:
             name: 'Clear Prod S3 and sync with Bitbucket Repo'
             trigger: manual
