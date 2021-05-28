@@ -40,7 +40,7 @@ payment as
     p.status AS sales_status,
     p.created_at AS sales_created_at,
     p.plan_id,
-    p.external_id as transaction_id,
+    p.external_id AS transaction_id,
     CASE
         WHEN p.type ='credit_card' THEN account_number
         ELSE p.name
