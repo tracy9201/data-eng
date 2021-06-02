@@ -10,7 +10,7 @@ funding_instruction as
 (SELECT
     fi.id as funding_instruction_id,
     fi.mid as merchant_id,
-    fi.created_at AS funding_instruction_date,
+    fi.created_at AS funding_date,
     ft.settled_at::date as settled_at_date,
     0 as adjustments,
     coalesce(fi.fee,0) as fees,
@@ -30,7 +30,7 @@ payfac as
 (
 SELECT 
     funding_instruction_id as reference_id,
-    funding_instruction_date,
+    funding_date,
     settled_at_date,
     merchant_id,
     adjustments/100.0 as adjustments,
@@ -43,7 +43,7 @@ FROM funding_instruction
 main AS
 (
 SELECT *, 
-    extract(epoch from funding_instruction_date) as epoch_funding_instruction_date,
+    extract(epoch from funding_date) as epoch_funding_date,
     extract(epoch from settled_at_date) as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
 FROM payfac
