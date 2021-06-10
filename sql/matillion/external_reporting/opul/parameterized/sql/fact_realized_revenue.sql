@@ -37,7 +37,6 @@ WITH ful_sale as (
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
-    and ful.quantity_rendered > 0 
 ),
 ful_refund as (
   select
@@ -76,9 +75,9 @@ main as (
     ful_sale.ful_name,
     'refund' as type,
     ful_sale.service_date, 
-    0 as ful_quantity,
-    ful_sale.unit_name,
     ful_sale.quantity,
+    ful_sale.unit_name,
+    0 as ful_quantity,
     coalesce(-1*refund_amount,0) as total,
     0 as offering_id,
     ful_sale.ful_status, 
@@ -102,9 +101,9 @@ main as (
     ful_sale.ful_name,
     'sales' as type,
     ful_sale.service_date, 
-    ful_quantity,
+    ful_quantity as quantity,
     ful_sale.unit_name,
-    ful_sale.quantity,
+    ful_sale.quantity as ful_quantity,
     ful_sale.total as total,
     cast(offering_id as integer) as offering_id,
     ful_sale.ful_status, 
