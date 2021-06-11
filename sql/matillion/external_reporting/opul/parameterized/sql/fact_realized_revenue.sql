@@ -34,10 +34,17 @@ WITH ful_sale as (
   left join 
     kronos_opul${environment}.organization_data org 
       on kuser.organization_id = org.id
+  inner join 
+    gaia_opul${environment}.invoice_item invi 
+      on sub.id = invi.subscription_id
+  inner join 
+    gaia_opul${environment}.invoice inv 
+      on inv.id = invi.invoice_id
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
     and sub.offering_id is not null
+    and inv.status = 20
 ),
 ful_refund as (
   select
@@ -51,11 +58,18 @@ ful_refund as (
   inner join 
     gaia_opul${environment}.refund refund 
       on refund.subscription_id = sub.id
+  inner join 
+    gaia_opul${environment}.invoice_item invi 
+      on sub.id = invi.subscription_id
+  inner join 
+    gaia_opul${environment}.invoice inv 
+      on inv.id = invi.invoice_id
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
     and sub.offering_id is not null 
     and refund.status =20
+    and inv.status =20
   group by 1,2
 ),
 offering as (
