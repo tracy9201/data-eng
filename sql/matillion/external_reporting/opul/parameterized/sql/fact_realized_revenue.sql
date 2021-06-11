@@ -54,7 +54,7 @@ ful_refund as (
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
-    and ful.quantity_rendered > 0 
+    and sub.offering_id is not null 
     and refund.status =20
   group by 1,2
 ),
