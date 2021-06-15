@@ -27,13 +27,13 @@ WITH main AS (
     WHEN staff_data.commission IS NOT NULL THEN round(cast(staff_data.commission as numeric)/100,2)               
     ELSE NULL               
     END AS commssion_percentage 
-  FROM kronos.users users   
+  FROM internal_kronos_hint.users users   
   LEFT JOIN 
-    kronos.expert_data expert_data      
+    internal_kronos_hint.expert_data expert_data      
     ON 
       users.id = expert_data.user_id   
   LEFT JOIN 
-    kronos.staff_data staff_data      
+    internal_kronos_hint.staff_data staff_data      
     ON 
       users.id = staff_data.user_id   
   WHERE 
