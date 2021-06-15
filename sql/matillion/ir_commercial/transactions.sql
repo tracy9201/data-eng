@@ -15,10 +15,15 @@ select case when settle.gateway_transaction_id is not null then 'settle_'||settl
           , null as payment_detail
           , pro.encrypted_ref_id as gx_provider_id
           , settle.transaction_id as clover_transaction_id
-          from gaia.settlement settle
-          left join gaia.authorisation auth on auth.identifier = settle.authorisation_id
-          left join gaia.provider pro on auth.object_id = pro.id
-          where settle.settlement_status in ('Accepted', 'Processed', 'Voided')
+          from internal_gaia_hint.settlement settle
+          left join 
+            internal_gaia_hint.authorisation auth 
+                on auth.identifier = settle.authorisation_id
+          left join 
+            internal_gaia_hint.provider pro 
+                on auth.object_id = pro.id
+          where 
+            settle.settlement_status in ('Accepted', 'Processed', 'Voided')
 ),
 transaction AS (
 select 
@@ -37,19 +42,24 @@ select
     transactions.payment_detail,
     org.gx_provider_id, 
     transactions.transaction_id::varchar as clover_transaction_id
-from kronos.transactions transactions
-left join kronos.users users on transactions.user_id  = users.id
-left join kronos.organization_data org on org.id = users.organization_id
+from 
+    internal_kronos_hint.transactions transactions
+left join 
+    internal_kronos_hint.users users 
+        on transactions.user_id  = users.id
+left join 
+    internal_kronos_hint.organization_data org 
+        on org.id = users.organization_id
 ),
 refund as (
     select 
         distinct gp.gx_transaction_id 
-    from kronos.cached_gx_refund gr
+    from internal_kronos_hint.cached_gx_refund gr
     inner join 
-        kronos.cached_gx_payment gp 
+        internal_kronos_hint.cached_gx_payment gp 
             on gx_payment_id = gp.id 
     inner join 
-        gaia.gateway_transaction gt 
+        internal_gaia_hint.gateway_transaction gt 
             on gp.gx_transaction_id = gt.transaction_id
     where gr.is_void = 'T'
 ),
@@ -70,23 +80,27 @@ select
     null as payment_detail,
     org.gx_provider_id,
     settlement.transaction_id as clover_transaction_id
-from gaia.settlement settlement
+from internal_gaia_hint.settlement settlement
 inner join 
-    gaia.gateway_transaction gt 
+    internal_gaia_hint.gateway_transaction gt 
         on gateway_transaction_id = gt.id 
 left outer join refund
     on gt.transaction_id = refund.gx_transaction_id
 inner JOIN 
-    gaia.payment payment 
+    internal_gaia_hint.payment payment 
         ON  payment_id = payment.id
 inner JOIN 
-    gaia.plan gplan 
+    internal_gaia_hint.plan gplan 
         ON payment.plan_id = gplan.id
 inner join 
-    kronos.plan kplan 
+    internal_kronos_hint.plan kplan 
        on gplan.encrypted_ref_id = gx_plan_id
-left join kronos.users users on kplan.user_id  = users.id
-left join kronos.organization_data org on org.id = users.organization_id
+left join 
+    internal_kronos_hint.users users 
+        on kplan.user_id  = users.id
+left join 
+    internal_kronos_hint.organization_data org 
+        on org.id = users.organization_id
 where 
     settlement.settlement_status = 'Voided' 
     AND invoice_id IS NULL 
@@ -110,23 +124,27 @@ select
     null as payment_detail,
     org.gx_provider_id,
     settlement.transaction_id as clover_transaction_id
-from gaia.settlement settlement
+from internal_gaia_hint.settlement settlement
 inner join 
-    gaia.gateway_transaction gt 
+    internal_gaia_hint.gateway_transaction gt 
         on gateway_transaction_id = gt.id 
 left outer join refund
         on gt.transaction_id = refund.gx_transaction_id
     LEFT JOIN 
-        gaia.invoice invoice 
+        internal_gaia_hint.invoice invoice 
             ON gt.invoice_id = invoice.id
     LEFT JOIN 
-        gaia.plan gplan 
+        internal_gaia_hint.plan gplan 
             ON invoice.plan_id = gplan.id
     inner join 
-        kronos.plan kplan 
+        internal_kronos_hint.plan kplan 
             on gplan.encrypted_ref_id = gx_plan_id
-left join kronos.users users on kplan.user_id  = users.id
-left join kronos.organization_data org on org.id = users.organization_id
+left join 
+    internal_kronos_hint.users users 
+        on kplan.user_id  = users.id
+left join 
+    internal_kronos_hint.organization_data org 
+        on org.id = users.organization_id
   where 
     settlement.settlement_status = 'Voided' 
     AND invoice_id IS NOT NULL 

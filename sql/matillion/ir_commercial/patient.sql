@@ -17,12 +17,12 @@ select
     add.state,
     customer_data.created_at,
     customer_data.deprecated_at
-from kronos.customer_data 
+from internal_kronos_hint.customer_data 
 inner join 
-    kronos.users 
+    internal_kronos_hint.users 
         on users.id = customer_data.user_id
 left join 
-    kronos.address add
+    internal_kronos_hint.address add
         on customer_data.billing_address_id = add.id
 )
 SELECT * FROM main

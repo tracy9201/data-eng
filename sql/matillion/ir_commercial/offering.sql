@@ -18,12 +18,12 @@ select
     round(cast(catalog_item.wholesale_price as numeric )/100,2) as catalog_wholesale_price, 
     catalog_item.bd_status, 
     brand.created_at as brand_created_at
-from  kronos.offering offering
+from  internal_kronos_hint.offering offering
 left join 
-    kronos.catalog_item catalog_item
+    internal_kronos_hint.catalog_item catalog_item
         on offering.catalog_item_id = catalog_item.id
 left join  
-    kronos.brand brand
+    internal_kronos_hint.brand brand
         on catalog_item.brand_id = brand.id
 )
 SELECT * FROM main
