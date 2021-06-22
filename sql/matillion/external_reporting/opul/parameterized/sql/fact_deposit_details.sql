@@ -7,10 +7,6 @@ SELECT
     ,ft.transaction_id
     ,ft.transaction_type
     ,ft.amount
-    ,case when ft.transaction_type = 'PAYMENT' then ft.amount  end as charges
-    ,case when ft.transaction_type = 'REFUND' then  coalesce(ft.amount,0)  end as refunds
-    ,case when ft.transaction_type = 'CHARGEBACK' then coalesce(ft.amount,0) end as chargebacks
-    ,case when ft.transaction_type = 'ADJUSTMENT' then  coalesce(ft.amount,0) end as adjustments
     ,ft.cp_or_cnp
     ,fi.created_at::date as funding_date
     ,ft.settled_at::date as settled_at_date
@@ -50,10 +46,6 @@ SELECT
     ,a.transaction_id
     ,a.transaction_type
     ,a.amount
-    ,a.charges
-    ,a.refunds
-    ,a.chargebacks
-    ,a.adjustments
     ,a.cp_or_cnp
     ,a.funding_date
     ,a.settled_at_date
@@ -69,7 +61,8 @@ LEFT JOIN
     and a.funding_instruction_id=b.funding_instruction_id 
 ),
 
-charges as
+
+all_transactions as
 (
 SELECT  
      merchant_id
@@ -84,65 +77,6 @@ SELECT
     ,card_brand
 FROM
     transaction_details_with_correct_fee
-WHERE 
-    transaction_type = 'PAYMENT'
-),
-
-refunds as
-(
-SELECT  
-     merchant_id
-    ,mid
-    ,funding_instruction_id
-    ,transaction_id
-    ,transaction_type
-    ,refunds as transaction_amount
-    ,cp_or_cnp
-    ,funding_date
-    ,settled_at_date
-    ,card_brand
-FROM
-    transaction_details_with_correct_fee
-WHERE 
-    transaction_type = 'REFUND'
-),
-
-chargebacks as
-(
-SELECT  
-     merchant_id
-    ,mid
-    ,funding_instruction_id
-    ,transaction_id
-    ,transaction_type
-    ,chargebacks as transaction_amount
-    ,cp_or_cnp
-    ,funding_date
-    ,settled_at_date
-    ,card_brand
-FROM
-    transaction_details_with_correct_fee
-WHERE 
-    transaction_type = 'CHARGEBACK'
-),
-
-adjustments as
-(
-SELECT  
-     merchant_id
-    ,mid
-    ,funding_instruction_id
-    ,transaction_id
-    ,transaction_type
-    ,adjustments as transaction_amount
-    ,cp_or_cnp
-    ,funding_date
-    ,settled_at_date
-    ,card_brand
-FROM
-    transaction_details_with_correct_fee
-WHERE 
-    transaction_type = 'ADJUSTMENT'
 ),
 
 fee as
@@ -166,13 +100,8 @@ WHERE
 
 main as 
 (
-    SELECT * FROM charges
-    UNION ALL
-    SELECT * FROM refunds
-    UNION ALL
-    SELECT * FROM chargebacks
-    UNION ALL
-    SELECT * FROM adjustments
+
+    SELECT * FROM all_transactions
     UNION ALL
     SELECT * FROM fee
 )
