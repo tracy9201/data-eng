@@ -111,4 +111,4 @@ SELECT
     extract(epoch from funding_date) as epoch_funding_date,
     extract(epoch from settled_at_date) as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
-FROM main;
+FROM main
