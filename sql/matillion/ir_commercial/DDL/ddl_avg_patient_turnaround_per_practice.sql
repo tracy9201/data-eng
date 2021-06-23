@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_commercial.AvgPatientTurnaround;
+DROP TABLE IF EXISTS ir_commercial.avg_patient_turnaround_per_practice;
 
-CREATE TABLE IF NOT EXISTS ir_commercial.AvgPatientTurnaround
+CREATE TABLE IF NOT EXISTS ir_commercial.avg_patient_turnaround_per_practice
 (
   business_name VARCHAR(256)    ENCODE raw,
   practice_id BIGINT ENCODE raw,
