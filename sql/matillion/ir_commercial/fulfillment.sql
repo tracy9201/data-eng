@@ -15,12 +15,12 @@ select
     ful.name, 
     sub.offering_id,
     plan.user_id
-from kronos.cached_gx_fulfillment ful
+from internal_kronos_hint.cached_gx_fulfillment ful
 left join 
-    kronos.subscription sub 
+    internal_kronos_hint.subscription sub 
         on ful.gx_subscription_id = sub.gx_subscription_id
 left join 
-    kronos.plan plan
+    internal_kronos_hint.plan plan
         on sub.plan_id = plan.id
 )
 SELECT * FROM main

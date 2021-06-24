@@ -34,10 +34,17 @@ WITH ful_sale as (
   left join 
     kronos_opul${environment}.organization_data org 
       on kuser.organization_id = org.id
+  inner join 
+    gaia_opul${environment}.invoice_item invi 
+      on sub.id = invi.subscription_id
+  inner join 
+    gaia_opul${environment}.invoice inv 
+      on inv.id = invi.invoice_id
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
-    and ful.quantity_rendered > 0 
+    and sub.offering_id is not null
+    and inv.status = 20
 ),
 ful_refund as (
   select
@@ -51,24 +58,34 @@ ful_refund as (
   inner join 
     gaia_opul${environment}.refund refund 
       on refund.subscription_id = sub.id
+  inner join 
+    gaia_opul${environment}.invoice_item invi 
+      on sub.id = invi.subscription_id
+  inner join 
+    gaia_opul${environment}.invoice inv 
+      on inv.id = invi.invoice_id
   where 
     sub.auto_renewal = 'false' 
     and ful.status = 0 
-    and ful.quantity_rendered > 0 
+    and sub.offering_id is not null 
     and refund.status =20
+    and inv.status =20
   group by 1,2
 ),
 offering as (
   select 
     distinct inv.subscription_id,
-    inv.offering_id as offering_id
+    inv.offering_id as offering_id,
+    round(cast(inv.quantity as numeric)/100,2) as inv_quantity,
+    round(cast(inv.total as numeric)/100,2) as inv_total
   from gaia_opul${environment}.invoice_item inv
   left join 
     gaia_opul${environment}.subscription sub
-      on sub.id = subscription_id
-  where inv.status = 20
+      on sub.id = inv.subscription_id
+  where inv.status in ( 20,1)
     and sub.auto_renewal = 'false' 
     and sub.status = 0
+    and sub.offering_id is not null
 ),
 main as (
   select 
@@ -102,10 +119,10 @@ main as (
     ful_sale.ful_name,
     'sales' as type,
     ful_sale.service_date, 
-    ful_quantity,
+    offering.inv_quantity as ful_quantity,
     ful_sale.unit_name,
     ful_sale.quantity,
-    ful_sale.total as total,
+    offering.inv_total as total,
     cast(offering_id as integer) as offering_id,
     ful_sale.ful_status, 
     ful_sale.ful_type,

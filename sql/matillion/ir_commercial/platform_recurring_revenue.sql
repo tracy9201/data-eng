@@ -7,15 +7,15 @@ select
      invoice.plan_id as plan_id1, 
      gt.type, 
      provider.id as provide_id
-from gaia.gateway_transaction gt
+from internal_gaia_hint.gateway_transaction gt
 inner join 
-    gaia.invoice 
+    internal_gaia_hint.invoice 
         on invoice.id = gt.invoice_id
 inner join 
-    gaia.authorisation 
+    internal_gaia_hint.authorisation 
         on gt.destination_object_id = authorisation.id
 inner join 
-    gaia.provider 
+    internal_gaia_hint.provider 
         on authorisation.object_id = provider.id
 where 
     gt.destination_object_name = 'authorisation' 
@@ -38,10 +38,10 @@ revenue as (
         customer.name as name
     from rev
     inner join 
-        gaia.plan 
+        internal_gaia_hint.plan 
             on rev.plan_id1 = plan.id
     inner join 
-        gaia.customer 
+        internal_gaia_hint.customer 
             on plan.customer_id = customer.id
 ),
 sub_revenue as (

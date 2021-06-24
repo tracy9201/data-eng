@@ -11,7 +11,7 @@ WITH subscription AS (
             ELSE (cast(to_char(deprecated_at,'MON-DD-YYYY') AS date)) 
             END AS deprecated_date,
         CASE WHEN (type=2 OR type=1) THEN 1 ELSE 0 END AS isMember
-    FROM kronos.subscription subscription
+    FROM internal_kronos_hint.subscription subscription
   )
   ,
 customer AS (  
@@ -30,9 +30,9 @@ customer AS (
               when ismember = 1 and deprecated_date is null then 1
               END AS isMember2,
             gx_customer_id
-        FROM kronos.customer_data customer
+        FROM internal_kronos_hint.customer_data customer
         JOIN 
-             kronos.plan plan 
+             internal_kronos_hint.plan plan 
                 ON customer.user_id = plan.user_id
         JOIN subscription 
             ON plan.id = subscription.plan_id
@@ -53,10 +53,10 @@ final as (
     gx_provider_id
   FROM customer
   JOIN 
-      kronos.users users
+      internal_kronos_hint.users users
         ON users.id = customer.user_id
   JOIN 
-      kronos.organization_data organization_data
+      internal_kronos_hint.organization_data organization_data
         ON users.organization_id = organization_data.id
   WHERE 
       (organization_data.name not like 'zz%' 
