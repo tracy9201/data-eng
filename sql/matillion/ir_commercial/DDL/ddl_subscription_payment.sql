@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_commerical.subscription_payment;
+DROP TABLE IF EXISTS ir_commercial.subscription_payment;
 
-CREATE TABLE IF NOT EXISTS ir_commerical.subscription_payment
+CREATE TABLE IF NOT EXISTS ir_commercial.subscription_payment
 (
   subscription_id bigint ENCODE raw
   ,units INTEGER ENCODE raw
