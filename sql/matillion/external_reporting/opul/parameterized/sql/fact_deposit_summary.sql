@@ -10,8 +10,8 @@ funding_instruction as
 (SELECT
     fi.id as funding_instruction_id,
     fi.mid as merchant_id,
-    fi.created_at AS funding_date,
-    ft.settled_at::date as settled_at_date,
+    CONVERT_TIMEZONE('UTC','America/Los_Angeles',fi.created_at) AS funding_date,
+    CONVERT_TIMEZONE('UTC','America/Los_Angeles',ft.settled_at)::date AS settled_at_date,
     0 as adjustments,
     coalesce(fi.fee,0) as fees,
     coalesce(fi.amount,0) as net_sales,
