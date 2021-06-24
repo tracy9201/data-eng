@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.subscription_payment
   ,price_unit NUMERIC(18,2)   ENCODE raw
   ,subscription_cycle INTEGER   ENCODE raw
   ,total_price INTEGER   ENCODE raw
-  ,recurring_type INTEGER   ENCODE raw
+  ,recurring_cycle INTEGER   ENCODE raw
   ,subscription_type INTEGER   ENCODE raw
   ,offering_id bigint   ENCODE raw
   ,subscription_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
