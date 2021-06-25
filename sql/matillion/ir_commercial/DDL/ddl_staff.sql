@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.staff (
     zendesk_user_id BIGINT   ENCODE raw   ,
     pricinple_epxert boolean   ENCODE raw   ,
     commssion_percentage NUMERIC(18,2)   ENCODE raw   ,
+    gx_provider_id VARCHAR(64)   ENCODE raw ,
     primary key(user_id) 
 )
 DISTSTYLE ALL
