@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.offering
   ,offering_pay_over_time_price NUMERIC(18,2)   ENCODE raw
   ,offering_service_tax NUMERIC(18,2)   ENCODE raw
   ,offering_status integer   ENCODE raw
-  ,organization_id BIGINT   ENCODE raw
+  ,gx_provider_id varchar(64)   ENCODE raw
   ,offering_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,catalog_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,catalog_status integer  ENCODE raw

@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS ir_commercial.fulfillment;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
 (
-  id  VARCHAR(64)  ENCODE raw
+  fulfillment_id varchar(64) ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,cancelled_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
   ,type VARCHAR(64)   ENCODE raw
   ,name VARCHAR(max)   ENCODE raw
   ,offering_id BIGINT  ENCODE raw
-  ,user_id BIGINT ENCODE raw
-  ,primary key(id)
+  ,gx_customer_id varchar(64) ENCODE raw
+  ,gx_provider_id varchar(64) ENCODE raw
+  ,primary key(fulfillment_id)
 )
 ;

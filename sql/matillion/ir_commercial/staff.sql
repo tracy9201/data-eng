@@ -1,6 +1,6 @@
 WITH main AS ( 
   SELECT 
-  users.id AS user_id,        
+  users.id AS staff_id,        
   CASE               
     WHEN users.status = 0 THEN 'active'               
     WHEN users.status = 1 THEN 'achived'              

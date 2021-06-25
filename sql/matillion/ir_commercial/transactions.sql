@@ -29,14 +29,14 @@ transaction AS (
 select 
     transactions.id as transaction_id,
     transactions.status, 
-    transactions.user_id, 
+    customer_data.gx_customer_id, 
     transactions.payment_method,
     transactions.transaction,
     round(cast(transactions.amount as numeric)/100,2) as amount , 
     transactions.device_id,
     transactions.created_at,
     transactions.updated_at, 
-    transactions.created_by,
+    transactions.created_by as staff_id,
     round(cast(transactions.gratuity_amount as numeric)/100,2) as gratuity_amount, 
     transactions.customer_type,
     transactions.payment_detail,
@@ -44,9 +44,12 @@ select
     transactions.transaction_id::varchar as clover_transaction_id
 from 
     internal_kronos_hint.transactions transactions
-left join 
+inner join 
     internal_kronos_hint.users users 
         on transactions.user_id  = users.id
+left join 
+    internal_kronos_hint.customer_data  
+        on users.id = customer_data.user_id
 left join 
     internal_kronos_hint.organization_data org 
         on org.id = users.organization_id
@@ -67,14 +70,14 @@ void1 as (
 select 
     'settle_'||settlement.id as transaction_id, 
     case when settlement.status = 1 then 'Active' else 'Inactive' end as status,
-    user_id,
+    customer_data.gx_customer_id,
     'Credit Card' as payment_method,
     'Void' as transaction,
     cast(settlement.tendered as numeric) as amount,
     null as device_id,
     settlement.created_at,
     settlement.updated_at,
-    null as created_by,
+    null as staff_id,
     0 as gratuity_amount,
     null as customer_type,
     null as payment_detail,
@@ -98,6 +101,9 @@ inner join
 left join 
     internal_kronos_hint.users users 
         on kplan.user_id  = users.id
+inner join 
+    internal_kronos_hint.customer_data 
+        on users.id = customer_data.user_id
 left join 
     internal_kronos_hint.organization_data org 
         on org.id = users.organization_id
@@ -111,14 +117,14 @@ void2 as (
 select 
     'settle_'||settlement.id as transaction_id, 
     case when settlement.status = 1 then 'Active' else 'Inactive' end as status,
-    user_id,
+    customer_data.gx_customer_id,
     'Credit Card' as payment_method,
     'Void' as transaction,
     cast(settlement.tendered as numeric) as amount,
     null as device_id,
     settlement.created_at,
     settlement.updated_at,
-    null as created_by,
+    null as staff_id,
     0 as gratuity_amount,
     null as customer_type,
     null as payment_detail,
@@ -142,6 +148,9 @@ left outer join refund
 left join 
     internal_kronos_hint.users users 
         on kplan.user_id  = users.id
+inner join 
+    internal_kronos_hint.customer_data 
+        on users.id = customer_data.user_id
 left join 
     internal_kronos_hint.organization_data org 
         on org.id = users.organization_id

@@ -33,8 +33,23 @@ where feature_flags_json like '%GRATUITY%'
 ),
 new_main as (
 select 
-  main.*,
-  gratuity
+    gx_provider_id,
+    created_at,
+    deprecated_at,
+    status, 
+    per_member_rate,
+    practice_rate,
+    timezone, 
+    activated_at,
+    practice_name,
+    live,
+    payfac,
+    organization_tax_percentage,
+    city,
+    state,
+    zip,
+    business_name,
+    tip.gratuity
 from main
 left join 
   tip

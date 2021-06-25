@@ -67,20 +67,19 @@ final as (
 ,
 finalstatus as (
 SELECT 
-    user_id, 
+    gx_customer_id,
     MIN(case when ISmember = 1 then created_date end) AS created_date, 
     CASE 
         WHEN ISmember3 = 0 THEN MAX(deprecated_date)
         WHEN ISmember3> 0 THEN NULL
     END AS updated_date,
     CASE WHEN ISmember3>0 THEN 'active' ELSE 'inactive' END AS status,
-    gx_customer_id,
     gx_provider_id
 FROM final
 GROUP BY 
+  gx_customer_id,
   user_id, 
   ismember3,
-  gx_customer_id,
   gx_provider_id
 ORDER BY
     created_date,

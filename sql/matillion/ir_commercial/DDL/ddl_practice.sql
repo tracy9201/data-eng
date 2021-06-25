@@ -1,12 +1,11 @@
-DROP TABLE IF EXISTS ir_commercial.practice
+DROP TABLE IF EXISTS ir_commercial.practice;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.practice
 (
-  practice_id BIGINT   ENCODE raw
+   gx_provider_id VARCHAR(64)   ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,status VARCHAR(255)   ENCODE raw
-  ,gx_provider_id VARCHAR(64)   ENCODE raw
   ,per_member_rate NUMERIC(18,2)   ENCODE raw
   ,practice_rate NUMERIC(18,2)   ENCODE raw
   ,timezone VARCHAR(64)   ENCODE raw 
@@ -18,6 +17,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial.practice
   ,state VARCHAR(64)   ENCODE raw
   ,zip VARCHAR(16) ENCODE raw
   ,business_name VARCHAR(MAX)   ENCODE raw
-  ,primary key(practice_id)
+  ,primary key(gx_provider_id)
 )
 ;

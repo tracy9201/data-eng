@@ -1,6 +1,6 @@
 WITH main as (
 select 
-    ful.id, 
+    ful.id as fulfillment_id, 
     ful.created_at, 
     ful.deprecated_at, 
     ful.cancelled_at, 
@@ -14,7 +14,8 @@ select
     ful.type, 
     ful.name, 
     sub.offering_id,
-    plan.user_id
+    cus.gx_customer_id,
+    org.gx_provider_id
 from internal_kronos_hint.cached_gx_fulfillment ful
 left join 
     internal_kronos_hint.subscription sub 
@@ -22,5 +23,14 @@ left join
 left join 
     internal_kronos_hint.plan plan
         on sub.plan_id = plan.id
+left join 
+    internal_kronos_hint.customer_data cus
+        on cus.user_id = plan.user_id
+left join 
+    internal_kronos_hint.users users
+        on plan.user_id = users.id
+left join 
+    internal_kronos_hint.organization_data org
+        on org.id = users.organization_id
 )
 SELECT * FROM main

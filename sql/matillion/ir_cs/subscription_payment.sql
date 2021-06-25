@@ -37,6 +37,8 @@
       ,subscription.created_at as subscription_created_at
       ,subscription.canceled_at as subscription_canceled_at
       ,subscription.updated_at as subscription_updated_at
+      ,o.offering_id
+      ,o.subscription_type
       FROM gaia.invoice invoice
       LEFT JOIN gaia.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
       LEFT JOIN gaia.subscription subscription on invoice_item.subscription_id = subscription.id
@@ -44,13 +46,14 @@
       LEFT JOIN gaia.plan plan on subscription.plan_id = plan.id
       LEFT JOIN gaia.customer customer on plan.customer_id = customer.id
       LEFT JOIN gaia.provider provider on customer.provider_id = provider.id
+      LEFT JOIN Offering o on o.gx_subscription_id = subscription.encrypted_ref_id
       WHERE invoice.status=20
   ),
-  subscription_payment_offering as(
+  subscription_payment_sum as(
   SELECT id
       ,pay_date
       ,invoice
-      ,subscription_id
+      ,gx_subscription_id
       ,units
       ,unit_type
       ,round(cast(price_unit as numeric),2)/100 as price_unit
@@ -60,21 +63,19 @@
       ,round(cast((case when id like '%sub%' then tax_charged else (sum(tax_charged) over (partition by invoice)) end) as numeric)/100,2) as tax_charged
       ,round(cast((case when id like '%sub%' then item_discount else (sum(item_discount) over (partition by invoice)) end) as numeric)/100,2) as item_discount
       ,round(cast((case when id like '%sub%' then grand_total else (sum(grand_total) over (partition by invoice)) end) as numeric)/100,2) as grand_total
-      ,subscription_payment.gx_subscription_id
       ,gx_customer_id
       ,gx_provider_id
-      ,o.offering_id
+      ,offering_id
       ,subscription_type
       ,subscription_created_at
       ,subscription_canceled_at
       ,subscription_updated_at
   FROM subscription_payment
-  LEFT JOIN Offering o on o.gx_subscription_id = subscription_payment.gx_subscription_id
   order by invoice,id
   ),
   main as
   (select 
-      subscription_id
+      gx_subscription_id
       ,units
       ,unit_type
       ,price_unit
@@ -86,10 +87,12 @@
       ,subscription_created_at
       ,subscription_canceled_at
       ,subscription_updated_at
+      ,gx_customer_id
+      ,gx_provider_id
       ,sum(tax_charged) as total_paid_tax
       ,sum(item_discount) as total_discounted
       ,sum(grand_total) as total_paid
-    from subscription_payment_offering
+    from subscription_payment_sum
     group by 
       1,
       2,
@@ -102,6 +105,8 @@
       9,
       10,
       11,
-      12
+      12,
+      13,
+      14
     )
     select * from main
