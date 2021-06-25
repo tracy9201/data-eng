@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_deposit_details
   ,funding_date  TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,settled_at_date  TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,card_brand  VARCHAR(255) ENCODE raw
+  ,subscriber  VARCHAR(255) ENCODE raw
+  ,gx_customer_id  VARCHAR(255) ENCODE raw
+  ,payment_id  VARCHAR(255) ENCODE raw
   ,epoch_funding_date BIGINT ENCODE raw
   ,epoch_settled_at_date BIGINT ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
