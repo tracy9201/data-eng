@@ -7,16 +7,16 @@ FROM odf${environment}.fiserv_transaction
 ),
 
 funding_instruction as
-(SELECT
+(
+SELECT
     fi.id as funding_instruction_id,
     fi.mid as merchant_id,
-    CONVERT_TIMEZONE('UTC','America/Los_Angeles',fi.created_at) AS funding_date,
-    CONVERT_TIMEZONE('UTC','America/Los_Angeles',ft.settled_at)::date AS settled_at_date,
+    fi.created_at AS funding_date,
+    ft.settled_at::date AS settled_at_date,
     0 as adjustments,
     coalesce(fi.fee,0) as fees,
     coalesce(fi.amount,0) as net_sales,
     0 as chargebacks,
-    extract(epoch from fi.created_at) as epoch_funding_date,
     current_timestamp::timestamp as dwh_created_at                           
 FROM
      odf${environment}.funding_instruction fi 
@@ -43,8 +43,8 @@ FROM funding_instruction
 main AS
 (
 SELECT *, 
-    extract(epoch from funding_date) as epoch_funding_date,
-    extract(epoch from settled_at_date) as epoch_settled_at_date,
+    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',funding_date)) as epoch_funding_date,
+    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
 FROM payfac
 )
