@@ -1,7 +1,7 @@
 WITH transaction_details as 
 (
 SELECT 
-    ft.merchant_id
+     ft.merchant_id
     ,fi.mid
     ,ft.funding_instruction_id
     ,ft.transaction_id
@@ -28,7 +28,7 @@ WHERE fi.status = 'SETTLED'
 last_trans_for_each_funding_id as
 (
 SELECT
-    funding_instruction_id
+     funding_instruction_id
     ,max(transaction_id) as last_transaction_id
 FROM
     transaction_details
@@ -54,11 +54,16 @@ SELECT
     ,a.fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then a.fi_fees END as correct_fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
+    ,'Non-Member' as subscriber
+    ,c.gx_customer_id
+    ,c.payment_id
 FROM
     transaction_details a
 LEFT JOIN
     last_trans_for_each_funding_id  b on a.transaction_id = b.last_transaction_id 
     and a.funding_instruction_id=b.funding_instruction_id 
+LEFT JOIN
+    dwh_opul.fact_batch_report_details c on a.transaction_id = c.transaction_id 
 ),
 
 
@@ -75,6 +80,9 @@ SELECT
     ,funding_date
     ,settled_at_date
     ,card_brand
+    ,subscriber
+    ,gx_customer_id
+    ,payment_id
 FROM
     transaction_details_with_correct_fee
 ),
@@ -92,6 +100,9 @@ SELECT
     ,funding_date
     ,settled_at_date
     ,card_brand
+    ,subscriber
+    ,gx_customer_id
+    ,payment_id
 FROM
     transaction_details_with_correct_fee
 WHERE 
