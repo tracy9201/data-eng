@@ -26,7 +26,8 @@ WITH main AS (
     WHEN expert_data.commission IS NOT NULL THEN round(cast(expert_data.commission as numeric)/100,2)         
     WHEN staff_data.commission IS NOT NULL THEN round(cast(staff_data.commission as numeric)/100,2)               
     ELSE NULL               
-    END AS commssion_percentage 
+    END AS commssion_percentage ,
+  org.gx_provider_id
   FROM internal_kronos_hint.users users   
   LEFT JOIN 
     internal_kronos_hint.expert_data expert_data      
@@ -36,6 +37,10 @@ WITH main AS (
     internal_kronos_hint.staff_data staff_data      
     ON 
       users.id = staff_data.user_id   
+  LEFT JOIN 
+    internal_kronos_hint.organization_data org      
+    ON 
+      users.organization_id = org.id  
   WHERE 
     users.role IN (1,2,4,5,6,10)  
 ) 
