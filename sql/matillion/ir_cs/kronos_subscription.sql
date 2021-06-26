@@ -23,11 +23,11 @@ select k_sub.id as subscription_id,
   g_sub.start_date as current_period_start_date,
   g_sub.end_date as current_period_end_date,
   k_sub.gx_subscription_id,
-  g_sub.offering_id, 
+  k_sub.offering_id, 
   g_sub.name as subscription_name,
-gaia_opul.subscription.status as g_status
-from gaia_opul.subscription g_sub
-join kronos_opul.subscription k_sub
+  g_sub.status as g_status
+from internal_gaia_hint.subscription g_sub
+join internal_kronos_hint.subscription k_sub
 on k_sub.gx_subscription_id = g_sub.encrypted_ref_id
 )
-select * from man
+select * from main

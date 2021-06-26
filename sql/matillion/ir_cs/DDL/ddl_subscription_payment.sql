@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS ir_commercial.subscription_payment;
+DROP TABLE IF EXISTS ir_cs.subscription_payment;
 
-CREATE TABLE IF NOT EXISTS ir_commercial.subscription_payment
+CREATE TABLE IF NOT EXISTS ir_cs.subscription_payment
 (
-  subscription_id bigint ENCODE raw
+  gx_subscription_id VARCHAR(64) ENCODE raw
   ,units INTEGER ENCODE raw
   ,unit_type VARCHAR(20) ENCODE raw
   ,price_unit NUMERIC(18,2)   ENCODE raw
@@ -14,9 +14,11 @@ CREATE TABLE IF NOT EXISTS ir_commercial.subscription_payment
   ,subscription_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,subscription_canceled_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,subscription_updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
+  ,gx_customer_id VARCHAR(64) ENCODE raw
+  ,gx_provider_id VARCHAR(64) ENCODE raw
   ,total_paid_tax  NUMERIC(18,2)    ENCODE raw
   ,total_discounted NUMERIC(18,2)    ENCODE raw
   ,total_paid  NUMERIC(18,2)    ENCODE raw
-  ,primary key(subscription_id)
+  ,primary key(gx_subscription_id)
 
 );

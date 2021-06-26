@@ -11,8 +11,8 @@ select plan_id,
             sum(case when sub.type in (1,2) then 1 else 0 end) as member_recoganize,
             count(sub.id) as num_of_subscription,
             min(case when sub.type in (1,2) then sub.created_at else null end) as on_boarding_date
-      from kronos.plan plan
-      join kronos.subscription sub
+      from internal_kronos_hint.plan plan
+      join internal_kronos_hint.subscription sub
       on sub.plan_id = plan.id
       group by 
         plan_id, 

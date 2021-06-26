@@ -28,11 +28,11 @@ WITH Invoice_level as
     	,cast('1' as INTEGER) as count_brand
       ,cast('1' as INTEGER) as count_product
       ,cast('1' as INTEGER) as count_sku
-      FROM gaia.invoice invoice
-      left join (select invoice_id, count(*) as count_of_invoice_item from gaia.invoice_item group by 1) invoice_item on invoice_id = invoice.id
-      LEFT JOIN gaia.plan plan on invoice.plan_id = plan.id
-      LEFT JOIN gaia.customer customer on plan.customer_id = customer.id
-      LEFT JOIN gaia.provider provider on customer.provider_id = provider.id
+      FROM internal_gaia_hint.invoice invoice
+      left join (select invoice_id, count(*) as count_of_invoice_item from internal_gaia_hint.invoice_item group by 1) invoice_item on invoice_id = invoice.id
+      LEFT JOIN internal_gaia_hint.plan plan on invoice.plan_id = plan.id
+      LEFT JOIN internal_gaia_hint.customer customer on plan.customer_id = customer.id
+      LEFT JOIN internal_gaia_hint.provider provider on customer.provider_id = provider.id
       WHERE  invoice.status=20
   ),
   Offering as
@@ -44,10 +44,10 @@ WITH Invoice_level as
       ,catalog_item.name as product_service
       ,brand.name as brand
       ,sku
-      FROM kronos.subscription subscription
-      LEFT JOIN kronos.offering offering on offering_id = offering.id
-      LEFT JOIN kronos.catalog_item catalog_item on catalog_item.id = catalog_item_id
-      left join kronos.brand brand on brand.id = brand_id
+      FROM internal_kronos_hint.subscription subscription
+      LEFT JOIN internal_kronos_hint.offering offering on offering_id = offering.id
+      LEFT JOIN internal_kronos_hint.catalog_item catalog_item on catalog_item.id = catalog_item_id
+      left join internal_kronos_hint.brand brand on brand.id = brand_id
       WHERE subscription.status in (0,7)
   ),
   Invoice_Item_level as
@@ -80,13 +80,13 @@ WITH Invoice_level as
     	,dense_rank()over(partition by invoice order by o.brand ) as count_brand
       ,dense_rank()over(partition by invoice order by o.product_service )  as count_product
       ,dense_rank()over(partition by invoice order by o.sku ) as count_sku
-      FROM gaia.invoice invoice
-      LEFT JOIN gaia.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
-      LEFT JOIN gaia.subscription subscription on invoice_item.subscription_id = subscription.id
-      LEFT JOIN gaia.discount discount on discount.subscription_id = subscription.id
-      LEFT JOIN gaia.plan plan on subscription.plan_id = plan.id
-      LEFT JOIN gaia.customer customer on plan.customer_id = customer.id
-      LEFT JOIN gaia.provider provider on customer.provider_id = provider.id
+      FROM internal_gaia_hint.invoice invoice
+      LEFT JOIN internal_gaia_hint.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
+      LEFT JOIN internal_gaia_hint.subscription subscription on invoice_item.subscription_id = subscription.id
+      LEFT JOIN internal_gaia_hint.discount discount on discount.subscription_id = subscription.id
+      LEFT JOIN internal_gaia_hint.plan plan on subscription.plan_id = plan.id
+      LEFT JOIN internal_gaia_hint.customer customer on plan.customer_id = customer.id
+      LEFT JOIN internal_gaia_hint.provider provider on customer.provider_id = provider.id
     	LEFT JOIN Offering o on o.gx_subscription_id = subscription.encrypted_ref_id
       WHERE invoice.status=20
   ) ,
