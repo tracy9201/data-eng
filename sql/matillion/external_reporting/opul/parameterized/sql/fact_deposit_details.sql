@@ -5,7 +5,11 @@ SELECT
     ,fi.mid
     ,ft.funding_instruction_id
     ,ft.transaction_id
-    ,ft.transaction_type
+    ,case when ft.transaction_type = 'PAYMENT' then 'Sales' 
+          when ft.transaction_type = 'REFUND' then  'Refunds'
+          when ft.transaction_type = 'CHARGEBACK' then 'Chargebacks'
+          when ft.transaction_type = 'ADJUSTMENT' then  'Adjustments'
+          end as transaction_type
     ,ft.amount
     ,ft.cp_or_cnp
     ,fi.created_at::date as funding_date
@@ -94,9 +98,10 @@ SELECT
     ,mid
     ,funding_instruction_id
     ,NULL AS transaction_id
-    ,'FEE' as transaction_type
+    ,case when cp_or_cnp = 'CP' then 'CP Fees'
+          when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,correct_fi_fees as transaction_amount
-    ,NULL AS cp_or_cnp
+    ,cp_or_cnp
     ,funding_date
     ,settled_at_date
     ,card_brand
