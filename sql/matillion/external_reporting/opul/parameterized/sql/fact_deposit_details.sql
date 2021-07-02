@@ -97,7 +97,7 @@ SELECT
      merchant_id
     ,mid
     ,funding_instruction_id
-    ,NULL AS transaction_id
+    ,'N/A' AS transaction_id
     ,case when cp_or_cnp = 'CP' then 'CP Fees'
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,correct_fi_fees as transaction_amount
