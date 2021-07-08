@@ -1,3 +1,4 @@
+With Monthly_Retention_Value as (
 select
    created,
    gx_customer_id,
@@ -72,17 +73,19 @@ from
                            ir_commercial.member_status.updated_date <= getdate() 
                            OR ir_commercial.member_status.updated_date IS NULL 
                      )
-                     table1 
+                  member_days 
                   group by
                      created,
                      cancelled_month,
                      gx_customer_id 
                )
-               table2 
+               Calculating_Member_days_By_Cancelle_Date
          )
-         table3 
+        Calculating_Retention_Values
    )
-   table4 
+   Monthly_Retention 
 order by
    created,
    cancelled_month
+)
+Select * from Monthly_Retention_Value
