@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.monthly_retention
   cancelled_month int   ENCODE raw,
   created_month TIMESTAMP WITHOUT TIME ZONE   ENCODE raw,
   total BIGINT ENCODE raw,
-  sum BIGINT ENCODE raw,
+  TotalCustomerPerDay BIGINT ENCODE raw,
   agg_total BIGINT ENCODE raw,
   primary key(gx_customer_id)
 )
