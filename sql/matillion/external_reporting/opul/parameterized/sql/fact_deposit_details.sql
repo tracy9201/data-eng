@@ -5,6 +5,7 @@ SELECT
     ,fi.mid
     ,ft.funding_instruction_id
     ,ft.transaction_id
+    ,pt.created_at as transaction_date
     ,case when ft.transaction_type = 'PAYMENT' then 'Sales' 
           when ft.transaction_type = 'REFUND' then  'Refunds'
           when ft.transaction_type = 'CHARGEBACK' then 'Chargebacks'
@@ -25,6 +26,8 @@ FROM
     odf${environment}.fiserv_transaction ft
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
+JOIN 
+    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id
 WHERE fi.status = 'SETTLED'
 
 ),
@@ -48,6 +51,7 @@ SELECT
     ,a.mid
     ,a.funding_instruction_id
     ,a.transaction_id
+    ,a.transaction_date
     ,a.transaction_type
     ,a.amount
     ,a.cp_or_cnp
@@ -78,6 +82,7 @@ SELECT
     ,mid
     ,funding_instruction_id
     ,transaction_id
+    ,transaction_date
     ,transaction_type
     ,amount as transaction_amount
     ,cp_or_cnp
@@ -98,6 +103,7 @@ SELECT
     ,mid
     ,funding_instruction_id
     ,'N/A' AS transaction_id
+    ,transaction_date
     ,case when cp_or_cnp = 'CP' then 'CP Fees'
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,correct_fi_fees as transaction_amount
@@ -123,8 +129,9 @@ main as
 )
 
 SELECT 
-    *,
-    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',funding_date)) as epoch_funding_date,
-    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date,
+    *
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',transaction_date)) as epoch_transaction_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',funding_date)) as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
     current_timestamp::timestamp as dwh_created_at
 FROM main
