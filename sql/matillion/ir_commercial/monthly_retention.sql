@@ -67,7 +67,7 @@ Monthly_Retention as
       created_month,
       (sum - (max(agg_total2) over (partition by created)))
       as total,
-      sum as TotalCustomerPerDay,
+      sum as TotalCustomerPerDay ,
       agg_total 
    from
       Cancelled_Month_filtering 
