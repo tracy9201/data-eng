@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_deposit_details
   ,epoch_settled_at_date BIGINT ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(transaction_id)
-  ,UNIQUE(mid,transaction_id,funding_instruction_id)  
+  ,UNIQUE(merchant_id,transaction_id,funding_instruction_id)  
 )
-DISTKEY(mid)  
-SORTKEY(mid, transaction_date, epoch_transaction_date, settled_at_date, epoch_funding_date);
+DISTKEY(merchant_id)  
+SORTKEY(merchant_id, transaction_date, epoch_transaction_date, settled_at_date, epoch_funding_date);
