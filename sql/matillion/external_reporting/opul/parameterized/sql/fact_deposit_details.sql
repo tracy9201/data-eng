@@ -108,10 +108,10 @@ SELECT
     ,cp_or_cnp
     ,funding_date
     ,settled_at_date
-    ,card_brand
-    ,subscriber
-    ,gx_customer_id
-    ,payment_id
+    ,'N/A' AS card_brand
+    ,'N/A' AS subscriber
+    ,'N/A' AS gx_customer_id
+    ,'N/A' AS payment_id
 FROM
     transaction_details_with_correct_fee
 WHERE 
