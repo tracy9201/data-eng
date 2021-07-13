@@ -26,7 +26,9 @@ FROM
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
 JOIN 
-    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id
+    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
+    and ft.transaction_type = pt.transaction_type
+  	and ft.amount = pt.amount
 WHERE fi.status = 'SETTLED'
 
 ),
