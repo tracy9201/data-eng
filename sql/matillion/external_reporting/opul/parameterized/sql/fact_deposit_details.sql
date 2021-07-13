@@ -28,7 +28,7 @@ JOIN
 JOIN 
     odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
-  	and ft.amount = pt.amount
+    and ft.amount = pt.amount
 WHERE fi.status = 'SETTLED'
 
 ),
