@@ -99,7 +99,7 @@ SELECT
      merchant_id
     ,funding_instruction_id
     ,'N/A' AS transaction_id
-    ,transaction_date
+    ,NULL AS transaction_date
     ,case when cp_or_cnp = 'CP' then 'CP Fees'
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,correct_fi_fees/100.0 as transaction_amount
@@ -120,7 +120,7 @@ main as
 (
 
     SELECT * FROM all_transactions
-    UNION ALL
+    UNION
     SELECT * FROM fee
 )
 
