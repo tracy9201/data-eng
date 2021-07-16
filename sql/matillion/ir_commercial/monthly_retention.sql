@@ -65,10 +65,8 @@ Monthly_Retention as
       gx_customer_id,
       cancelled_month,
       created_month,
-      (Total_Customer_Per_Month - (max(occurance_limitation) over (partition by created)))
-      as currently_remaning_customer,
-      Total_Customer_Per_Month ,
-      customer_index 
+      (Total_Customer_Per_Month - (max(occurance_limitation) over (partition by created))) as currently_remaning_customer,
+      Total_Customer_Per_Month ,customer_index 
    from
       Cancelled_Month_filtering 
    order by
