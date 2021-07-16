@@ -55,4 +55,3 @@ insert into dwh.dim_fed_res_bank_holidays values
   ('2025-11-27', 'Thanksgiving Day'),
   ('2025-12-25', 'Christmas Day')
 ;
-COMMIT;
