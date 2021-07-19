@@ -26,7 +26,9 @@ FROM
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
 JOIN 
-    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id
+    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
+    and ft.transaction_type = pt.transaction_type
+    and ft.amount = pt.amount
 WHERE fi.status = 'SETTLED'
 
 ),
@@ -99,17 +101,17 @@ SELECT
      merchant_id
     ,funding_instruction_id
     ,'N/A' AS transaction_id
-    ,transaction_date
+    ,NULL AS transaction_date
     ,case when cp_or_cnp = 'CP' then 'CP Fees'
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,correct_fi_fees/100.0 as transaction_amount
     ,cp_or_cnp
     ,funding_date
     ,settled_at_date
-    ,card_brand
-    ,subscriber
-    ,gx_customer_id
-    ,payment_id
+    ,'N/A' AS card_brand
+    ,'N/A' AS subscriber
+    ,'N/A' AS gx_customer_id
+    ,'N/A' AS payment_id
 FROM
     transaction_details_with_correct_fee
 WHERE 
@@ -120,7 +122,7 @@ main as
 (
 
     SELECT * FROM all_transactions
-    UNION ALL
+    UNION
     SELECT * FROM fee
 )
 
