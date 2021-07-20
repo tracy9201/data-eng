@@ -29,7 +29,7 @@ JOIN
     odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
-WHERE fi.status = 'SETTLED'
+WHERE (fi.status = 'SETTLED' or ft.status = 'SETTLED')
 
 ),
 
@@ -102,8 +102,7 @@ SELECT
     ,funding_instruction_id
     ,'N/A' AS transaction_id
     ,NULL AS transaction_date
-    ,case when cp_or_cnp = 'CP' then 'CP Fees'
-          when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
+    ,'Fees' as transaction_type
     ,correct_fi_fees/100.0 as transaction_amount
     ,cp_or_cnp
     ,funding_date
@@ -115,7 +114,7 @@ SELECT
 FROM
     transaction_details_with_correct_fee
 WHERE 
-    is_fee_record = 'Y'
+    is_fee_record = 'Y' and correct_fi_fees <> 0
 ),
 
 main as 
