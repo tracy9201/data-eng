@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS ir_commercial.fulfillment_patient;
 
 CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment_patient
 (
-  gx_customer_id BIGINT ENCODE raw,
+  gx_customer_id varchar(64) ENCODE raw,
   patient_type VARCHAR(255)   ENCODE raw,
-  gx_provider_id BIGINT ENCODE raw,
+  gx_provider_id varchar(64) ENCODE raw,
   patient_created DATE ENCODE raw,
   fulfillment_created_at DATE ENCODE raw,
   status VARCHAR(255)   ENCODE raw,
