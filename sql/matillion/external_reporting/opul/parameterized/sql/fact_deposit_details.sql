@@ -71,7 +71,7 @@ LEFT JOIN
     last_trans_for_each_funding_id  b on a.transaction_id = b.last_transaction_id 
     and a.funding_instruction_id=b.funding_instruction_id 
 LEFT JOIN
-    dwh_opul.fact_batch_report_details c on a.transaction_id = c.transaction_id 
+    dwh_opul${environment}.fact_batch_report_details c on a.transaction_id = c.transaction_id 
 ),
 
 
