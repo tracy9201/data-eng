@@ -23,7 +23,7 @@ FROM
 LEFT JOIN 
      fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    fi.status = 'SETTLED' 
+    (fi.status = 'SETTLED' or ft.status = 'SETTLED')
 ),
 
 payfac as
