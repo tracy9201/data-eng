@@ -136,31 +136,6 @@ FROM
     transaction_details_with_correct_fee
 ),
 
-/* 
--- One row for fee, instead of CP and CNP seperation
-
-fee as
-(
-SELECT  
-     merchant_id
-    ,funding_instruction_id
-    ,'N/A' AS transaction_id
-    ,NULL AS transaction_date
-    ,'Fees' as transaction_type
-    ,correct_fi_fees/100.0 as transaction_amount
-    ,cp_or_cnp
-    ,funding_date
-    ,settled_at_date
-    ,'N/A' AS card_brand
-    ,'N/A' AS subscriber
-    ,'N/A' AS gx_customer_id
-    ,'N/A' AS payment_id
-FROM
-    transaction_details_with_correct_fee
-WHERE 
-    is_fee_record = 'Y' and correct_fi_fees <> 0
-),
-*/
 
 fee_at_cp_cnp_level as
 (
