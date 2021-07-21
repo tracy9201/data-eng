@@ -2,6 +2,7 @@ with fiserv_transaction as
 (
 SELECT distinct
     funding_instruction_id,
+    status,
     settled_at
 FROM odf${environment}.fiserv_transaction
 ),
