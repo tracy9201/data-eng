@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_commercial.member_status;
+DROP TABLE IF EXISTS ir_commercial.membership_status;
 
-CREATE TABLE IF NOT EXISTS ir_commercial.member_status
+CREATE TABLE IF NOT EXISTS ir_commercial.membership_status
 (
   id bigint ENCODE raw
   ,created_date DATE   ENCODE raw
