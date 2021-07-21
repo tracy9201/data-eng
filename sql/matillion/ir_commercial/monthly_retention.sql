@@ -61,7 +61,6 @@ Cancelled_Month_filtering as
 Monthly_Retention as
 (
    select
-      created,
       gx_customer_id,
       cancelled_month,
       created_month,
@@ -72,7 +71,7 @@ Monthly_Retention as
    from
       Cancelled_Month_filtering
    order by
-      created, cancelled_month
+      created_month, cancelled_month
 )
 Select
    *
