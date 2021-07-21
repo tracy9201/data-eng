@@ -186,7 +186,7 @@ SELECT
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,transaction_amount
     ,cp_or_cnp
-    ,'N/A' AS funding_date
+    ,NULL AS funding_date
     ,settled_at_date
     ,'N/A' AS card_brand
     ,'N/A' AS subscriber
