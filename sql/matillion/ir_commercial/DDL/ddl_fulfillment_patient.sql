@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment_patient
   next_service_date DATE ENCODE raw,
   service_date DATE ENCODE raw,
   type VARCHAR(255)   ENCODE raw,
-  name VARCHAR(255)   ENCODE raw,
+  name VARCHAR(max)   ENCODE raw,
   fulfillment_id VARCHAR(255)   ENCODE raw,
   offering_id BIGINT ENCODE raw,
   days_since_patient_creation BIGINT ENCODE raw,
