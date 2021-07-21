@@ -187,4 +187,3 @@ SELECT
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
     ,current_timestamp::timestamp as dwh_created_at
 FROM main
-;
