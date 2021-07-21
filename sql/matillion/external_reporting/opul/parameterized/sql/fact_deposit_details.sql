@@ -1,4 +1,43 @@
-WITH transaction_details as 
+WITH refunds as
+(
+  SELECT *
+  FROM 
+      odf${environment}.fiserv_transaction
+  WHERE
+      transaction_type = 'REFUND'
+),
+
+payment as
+(
+  SELECT *
+  FROM 
+      odf${environment}.fiserv_transaction
+  WHERE
+      transaction_type = 'PAYMENT'
+),
+
+refund_fee as
+(
+  SELECT distinct a.*,b.percent_fee as percent_fee_calc
+  FROM
+      refunds a
+  JOIN 
+      payment b on a.transaction_id = b.transaction_id
+),
+
+calc_fee as
+(
+  SELECT * FROM refund_fee
+  UNION ALL
+  SELECT *, percent_fee as percent_fee_calc 
+  FROM 
+      odf${environment}.fiserv_transaction
+  WHERE
+      transaction_type <> 'REFUND'
+),
+
+
+transaction_details as 
 (
 SELECT 
     fi.mid as merchant_id
@@ -21,8 +60,10 @@ SELECT
           else 'Other' end as card_brand
     ,ft.percent_fee as ft_percent_fee
     ,fi.fee as fi_fees
+    ,case when ft.transaction_type = 'PAYMENT' then ft.percent_fee/10000.0*ft.amount/100.0
+          when ft.transaction_type = 'REFUND'  then 0 - ft.percent_fee_calc/10000.0*ft.amount/100.0  end as ft_fees
 FROM 
-    odf${environment}.fiserv_transaction ft
+    calc_fee ft
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
 JOIN 
@@ -95,6 +136,9 @@ FROM
     transaction_details_with_correct_fee
 ),
 
+/* 
+-- One row for fee, instead of CP and CNP seperation
+
 fee as
 (
 SELECT  
@@ -116,6 +160,42 @@ FROM
 WHERE 
     is_fee_record = 'Y' and correct_fi_fees <> 0
 ),
+*/
+
+fee_at_cp_cnp_level as
+(
+SELECT  
+     merchant_id
+    ,cp_or_cnp
+    ,settled_at_date
+    ,round(sum(ft_fees),2) as transaction_amount
+FROM
+    transaction_details
+GROUP BY 1,2,3
+),
+
+
+fee as
+(
+SELECT  
+     merchant_id
+    ,NULL AS funding_instruction_id
+    ,'N/A' AS transaction_id
+    ,NULL AS transaction_date
+    ,case when cp_or_cnp = 'CP' then 'CP Fees'
+          when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
+    ,transaction_amount
+    ,cp_or_cnp
+    ,'N/A' AS funding_date
+    ,settled_at_date
+    ,'N/A' AS card_brand
+    ,'N/A' AS subscriber
+    ,'N/A' AS gx_customer_id
+    ,'N/A' AS payment_id
+FROM
+    fee_at_cp_cnp_level
+WHERE transaction_amount <> 0 
+),
 
 main as 
 (
@@ -132,3 +212,4 @@ SELECT
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
     ,current_timestamp::timestamp as dwh_created_at
 FROM main
+;
