@@ -1,4 +1,16 @@
-WITH transaction_details as 
+WITH instruction_settled_date AS
+
+(
+
+   SELECT 
+     funding_instruction_id,
+     settled_at 
+   FROM odf.fiserv_transaction
+   WHERE settled_at is not null
+   GROUP BY 1,2
+),
+
+transaction_details as 
 (
 SELECT 
     ft.merchant_id
@@ -37,12 +49,53 @@ WHERE fi.status = 'SETTLED'
 
 ),
 
+device_fee AS
+(
+  SELECT   
+    fee.mid 
+    ,isd.settled_at
+    ,fee.funding_instruction_id
+    ,cast('N/A' as text) as cp_or_cnp
+    ,0 as percent_fee
+    ,to_date(isd.settled_at,'YYYY-MM-01') as settled_month
+    ,0 as charges
+    ,0 as refunds
+    ,0 as chargebacks
+    ,0 as adjustments
+    ,0 as ft_fees
+    ,fee.amount AS non_transaction_fee
+  FROM odf.non_transactional_fee fee
+  INNER JOIN
+      instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
+  WHERE fee.settlement_id is not null
+),
+
+device_fee_sum AS
+(
+  SELECT   
+    fee.mid
+    ,settled_at
+    ,funding_instruction_id
+    ,cp_or_cnp
+    ,percent_fee
+    ,settled_month
+    ,count(1) as transactions
+    ,sum(charges)/100.0 as charges
+    ,sum(refunds)/100.0 as refunds
+    ,sum(chargebacks)/100.0 as chargebacks
+    ,sum(adjustments)/100.0 as adjustments
+    ,sum(ft_fees)/100.0 AS ft_fees
+    ,sum(non_transaction_fee)/100.0 AS non_transaction_fee
+  FROM device_fee fee
+  GROUP BY 1,2,3,4,5,6
+),
+
 transaction_details_daily_summary as
 (
 SELECT
     mid
-    ,funding_instruction_id
     ,settled_at
+    ,funding_instruction_id
     ,cp_or_cnp
     ,percent_fee
     ,to_date(settled_at,'YYYY-MM-01') as settled_month
@@ -52,9 +105,18 @@ SELECT
     ,sum(chargebacks)/100.0 as chargebacks
     ,sum(adjustments)/100.0 as adjustments
     ,sum(fees)/100.0 AS ft_fees
+    ,0 as non_transaction_fee
 FROM
     transaction_details
 GROUP BY 1,2,3,4,5,6
+
+),
+
+transaction_details_daily_summary_new as
+(
+    SELECT * from transaction_details_daily_summary
+    UNION
+    SELECT * from device_fee_sum
 ),
 
 transaction_details_daily_summary_computed_fee as
@@ -90,13 +152,13 @@ SELECT
     ,coalesce(a.refunds,0) as refunds
     ,coalesce(a.chargebacks,0) as chargebacks
     ,coalesce(a.adjustments,0) as adjustments
-    ,coalesce(b.fee,0) as fees
+    ,coalesce(b.fee + a.non_transaction_fee,0) as fees
     ,coalesce(b.revenue,0) as revenue
     ,extract (epoch from settled_at) as epoch_funding_date
     ,extract (epoch from settled_month) as epoch_funding_month
     ,current_timestamp::timestamp as dwh_created_at
 FROM 
-    transaction_details_daily_summary a
+    transaction_details_daily_summary_new a
 JOIN 
     odf.funding_instruction b 
     on a.funding_instruction_id = b.id
