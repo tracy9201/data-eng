@@ -18,8 +18,8 @@ print(me)
 
 
 try: 
-    # Delete User
-    f = open("stage_users_to_disable_0608.txt", "r")
+    # Delete lis of Users in the file 
+    f = open("stage_users_to_disable.txt", "r")
     for x in f:
         print(x.rstrip())
         user_id = x.rstrip()
