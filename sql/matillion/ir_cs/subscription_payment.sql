@@ -5,7 +5,7 @@
     	,plan_id
       ,subscription.type as subscription_type
       ,subscription.offering_id
-      FROM kronos.subscription subscription
+      FROM internal_kronos_hint.subscription subscription
       WHERE subscription.status in (0,7)
   ),
   subscription_payment as
@@ -39,13 +39,13 @@
       ,subscription.updated_at as subscription_updated_at
       ,o.offering_id
       ,o.subscription_type
-      FROM gaia.invoice invoice
-      LEFT JOIN gaia.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
-      LEFT JOIN gaia.subscription subscription on invoice_item.subscription_id = subscription.id
-      LEFT JOIN gaia.discount discount on discount.subscription_id = subscription.id
-      LEFT JOIN gaia.plan plan on subscription.plan_id = plan.id
-      LEFT JOIN gaia.customer customer on plan.customer_id = customer.id
-      LEFT JOIN gaia.provider provider on customer.provider_id = provider.id
+      FROM internal_gaia_hint.invoice invoice
+      LEFT JOIN internal_gaia_hint.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
+      LEFT JOIN internal_gaia_hint.subscription subscription on invoice_item.subscription_id = subscription.id
+      LEFT JOIN internal_gaia_hint.discount discount on discount.subscription_id = subscription.id
+      LEFT JOIN internal_gaia_hint.plan plan on subscription.plan_id = plan.id
+      LEFT JOIN internal_gaia_hint.customer customer on plan.customer_id = customer.id
+      LEFT JOIN internal_gaia_hint.provider provider on customer.provider_id = provider.id
       LEFT JOIN Offering o on o.gx_subscription_id = subscription.encrypted_ref_id
       WHERE invoice.status=20
   ),
@@ -93,6 +93,7 @@
       ,sum(item_discount) as total_discounted
       ,sum(grand_total) as total_paid
     from subscription_payment_sum
+    where gx_subscription_id is not null
     group by 
       1,
       2,
@@ -110,3 +111,4 @@
       14
     )
     select * from main
+    
