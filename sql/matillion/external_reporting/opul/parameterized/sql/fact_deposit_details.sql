@@ -36,6 +36,35 @@ calc_fee as
       transaction_type <> 'REFUND'
 ),
 
+instruction_settled_date AS
+(
+   SELECT 
+     funding_instruction_id,
+     settled_at AS settled_at_date
+   FROM odf${environment}.fiserv_transaction
+   GROUP BY 1,2
+),
+
+device_fee AS
+(
+  SELECT 
+    fee.mid AS merchant_id
+    , fee.funding_instruction_id
+    , NULL AS transaction_id
+    , NULL AS transaction_date
+    ,'Equipment' AS transaction_type
+    ,fee.amount/100.0 AS transaction_amount
+    ,'N/A' cp_or_cnp
+    , NULL funding_date
+    , isd.settled_at_date
+    ,'N/A' card_brand
+    ,'N/A' subscriber
+    ,'N/A' gx_customer_id
+    ,'N/A' payment_id
+  FROM odf${environment}.non_transactional_fee fee
+  INNER JOIN
+      instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
+),
 
 transaction_details as 
 (
@@ -178,6 +207,8 @@ main as
     SELECT * FROM all_transactions
     UNION
     SELECT * FROM fee
+	UNION 
+    SELECT * FROM device_fee
 )
 
 SELECT 
