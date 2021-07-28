@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS dwh_hint.gaia_status_hint;
+
+CREATE TABLE IF NOT EXISTS dwh_hint.gaia_status_hint 
+(
+    status_key BIGINT ENCODE raw,
+    status_definition VARCHAR(255) ENCODE raw,
+    UNIQUE(gx_customer_id)
+);
