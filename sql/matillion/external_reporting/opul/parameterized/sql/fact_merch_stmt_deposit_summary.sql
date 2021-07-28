@@ -22,7 +22,7 @@ SELECT
 	,sum(coalesce(b.refunds,0)) as Refunds
 	,sum(coalesce(b.chargebacks,0)) as Chargebacks
 	,sum(coalesce(b.adjustments,0)) as Adjustments
-	,sum(coalesce(b.fees,0)) as total_fees
+	,sum(coalesce(b.fees + b.non_transaction_fee,0)) as total_fees
 	,sum(coalesce(b.revenue,0)) as revenue
 	,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.funding_month))::bigint * 1000 as epoch_funding_month
 	,current_timestamp::timestamp as dwh_created_at
