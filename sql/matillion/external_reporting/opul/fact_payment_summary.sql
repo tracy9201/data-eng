@@ -29,7 +29,7 @@ LEFT JOIN
         ON sub.id = c.subscription_id
 WHERE
     c.id IS NOT NULL
-    AND c.status  in (1,-3)
+    AND c.status  in (1,-3,-4)
 ),
 payment as
 (   SELECT distinct
@@ -40,7 +40,7 @@ payment as
     p.status AS sales_status,
     p.created_at AS sales_created_at,
     p.plan_id,
-    p.transaction_id,
+    p.external_id as transaction_id,
     CASE
         WHEN p.type ='credit_card' THEN account_number
         ELSE p.name

@@ -17,12 +17,42 @@ SELECT
     address.state,
     address.zip,
     provider.name AS business_name
-FROM kronos.organization_data org 
+FROM internal_kronos_hint.organization_data org 
 LEFT JOIN 
-    kronos.address address 
+    internal_kronos_hint.address address 
         ON address.id = address_id
 LEFT JOIN 
-    gaia.provider provider 
+    internal_gaia_hint.provider provider 
         ON provider.encrypted_ref_id = gx_provider_id
+),
+tip as (
+SELECT 
+  id, 'yes' as gratuity
+FROM internal_kronos_hint.organization_data 
+where feature_flags_json like '%GRATUITY%'
+),
+new_main as (
+select 
+    gx_provider_id,
+    created_at,
+    deprecated_at,
+    status, 
+    per_member_rate,
+    practice_rate,
+    timezone, 
+    activated_at,
+    practice_name,
+    live,
+    payfac,
+    organization_tax_percentage,
+    city,
+    state,
+    zip,
+    business_name,
+    tip.gratuity
+from main
+left join 
+  tip
+    on practice_id = id
 )
-SELECT * FROM main
+SELECT * FROM new_main
