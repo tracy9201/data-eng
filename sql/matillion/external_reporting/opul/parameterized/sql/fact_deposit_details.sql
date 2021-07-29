@@ -103,7 +103,7 @@ SELECT
     ,a.fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then a.fi_fees END as correct_fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
-    ,'Non-Member' as subscriber
+    ,'Non-Member'::varchar as subscriber
     ,c.gx_customer_id
     ,c.payment_id
 FROM
@@ -118,7 +118,7 @@ LEFT JOIN
 
 all_transactions as
 (
-SELECT  
+SELECT  DISTINCT
      merchant_id
     ,funding_instruction_id
     ,transaction_id
@@ -141,12 +141,13 @@ fee_at_cp_cnp_level as
 (
 SELECT  
      merchant_id
+    ,funding_instruction_id
     ,cp_or_cnp
     ,settled_at_date
     ,round(sum(ft_fees),2) as transaction_amount
 FROM
     transaction_details
-GROUP BY 1,2,3
+GROUP BY 1,2,3,4
 ),
 
 
@@ -176,7 +177,7 @@ main as
 (
 
     SELECT * FROM all_transactions
-    UNION
+    UNION ALL
     SELECT * FROM fee
 )
 
