@@ -36,6 +36,35 @@ calc_fee as
       transaction_type <> 'REFUND'
 ),
 
+instruction_settled_date AS
+(
+   SELECT 
+     funding_instruction_id,
+     settled_at AS settled_at_date
+   FROM odf${environment}.fiserv_transaction
+   GROUP BY 1,2
+),
+
+device_fee AS
+(
+  SELECT 
+    fee.mid AS merchant_id
+    , fee.funding_instruction_id
+    , NULL AS transaction_id
+    , NULL AS transaction_date
+    ,'Equipment' AS transaction_type
+    ,fee.amount/100.0 AS transaction_amount
+    ,'N/A' cp_or_cnp
+    , NULL batch_date
+    , isd.settled_at_date
+    ,'N/A' card_brand
+    ,'N/A' subscriber
+    ,'N/A' gx_customer_id
+    ,'N/A' payment_id
+  FROM odf${environment}.non_transactional_fee fee
+  INNER JOIN
+      instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
+),
 
 transaction_details as 
 (
@@ -103,7 +132,7 @@ SELECT
     ,a.fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then a.fi_fees END as correct_fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
-    ,'Non-Member' as subscriber
+    ,'Non-Member'::varchar as subscriber
     ,c.gx_customer_id
     ,c.payment_id
 FROM
@@ -118,7 +147,7 @@ LEFT JOIN
 
 all_transactions as
 (
-SELECT  
+SELECT  DISTINCT
      merchant_id
     ,funding_instruction_id
     ,transaction_id
@@ -141,12 +170,13 @@ fee_at_cp_cnp_level as
 (
 SELECT  
      merchant_id
+    ,funding_instruction_id
     ,cp_or_cnp
     ,settled_at_date
     ,round(sum(ft_fees),2) as transaction_amount
 FROM
     transaction_details
-GROUP BY 1,2,3
+GROUP BY 1,2,3,4
 ),
 
 
@@ -176,8 +206,10 @@ main as
 (
 
     SELECT * FROM all_transactions
-    UNION
+    UNION ALL
     SELECT * FROM fee
+    UNION 
+    SELECT * FROM device_fee
 )
 
 SELECT 
