@@ -27,7 +27,7 @@ device_fee AS
     , CAST(fee.amount /100.0 as decimal(10,2)) AS fees
     , 0.0 AS net_sales
     , 0.0 as chargebacks
-  FROM odf_qe.non_transactional_fee fee
+  FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
   WHERE fee.settlement_id is not null
