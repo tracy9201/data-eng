@@ -23,11 +23,11 @@ device_fee AS
     ,isd.settled_at_date as funding_date
     , isd.settled_at_date
     , fee.mid AS merchant_id
-    , 0 as adjustments
-    , fee.amount /100.0 AS fees
-    , 0 AS net_sales
-    , 0 as chargebacks
-  FROM odf${environment}.non_transactional_fee fee
+    , 0.0 as adjustments
+    , CAST(fee.amount /100.0 as decimal(10,2)) AS fees
+    , 0.0 AS net_sales
+    , 0.0 as chargebacks
+  FROM odf_qe.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
   WHERE fee.settlement_id is not null
@@ -60,10 +60,10 @@ SELECT
     funding_date,
     settled_at_date,
     merchant_id,
-    adjustments/100.0 as adjustments,
-    fees/100.0 AS fees,
-    net_sales/100.0 AS net_sales,
-    chargebacks/100.0 as chargebacks
+    CAST(adjustments/100.0 as decimal(10,2)) as adjustments,
+    CAST(fees/100.0 as decimal(10,2)) AS fees,
+    CAST(net_sales/100.0 as decimal(10,2)) AS net_sales,
+    CAST(chargebacks/100.0 as decimal(10,2)) as chargebacks
 FROM funding_instruction
 ),
 
