@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS ${schema}${environment}.funding
+(
+id                      bigint NOT NULL,
+name                    varchar(65535),
+payment_gateway_id      bigint,
+authorisation_id        bigint,
+funding_master_id       varchar(255),
+funding_id              varchar(255),
+net_sales               varchar(1024),
+third_party             varchar(1024),
+adjustment              varchar(1024),
+interchange_fee         varchar(1024),
+service_charge          varchar(1024),
+fee                     varchar(1024),
+reversal                varchar(1024),
+other_adjustment        varchar(1024),
+total_funding           varchar(1024),
+funding_date            timestamp without time zone,
+currency                varchar(8),
+dda_number              varchar(255),
+aba_number              varchar(255),
+date_changed            timestamp without time zone,
+date_added              timestamp without time zone,
+deposit_trancode        varchar(255),
+deposit_ach_tracenumber varchar(255),
+status                  smallint,
+created_at              timestamp without time zone,
+updated_at              timestamp without time zone,
+canceled_a              timestamp without time zone,
+deleted_at              timestamp without time zone,
+encrypted_ref_id        varchar(65535)
+) DISTKEY(id)
+;
