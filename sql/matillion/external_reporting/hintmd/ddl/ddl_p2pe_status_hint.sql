@@ -6,4 +6,5 @@ CREATE TABLE IF NOT EXISTS dwh_hint.p2pe_status_hint
     status VARCHAR(255) ENCODE raw,
     Description VARCHAR(255) ENCODE raw,
     UNIQUE(ID)
-);
+)
+diststyle all;
