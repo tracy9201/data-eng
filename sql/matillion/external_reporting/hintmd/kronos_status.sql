@@ -1,4 +1,5 @@
-INSERT INTO dwh_hint.ddl_kronos_status VALUES (0, 'Active', '');
+INSERT INTO dwh_hint.ddl_kronos_status VALUES 
+ (0, 'Active', ''),
  (1, 'Archived', ''),
  (2, 'Pending', ''),
  (3, 'Default', ''),
@@ -20,5 +21,3 @@ INSERT INTO dwh_hint.ddl_kronos_status VALUES (0, 'Active', '');
  (19, 'Submitted', ''),
  (20, 'Boarded', ''),
  (21, 'Canceled', '');
- 
- --need to come back here and finalize these defintions once I have a better understanding
