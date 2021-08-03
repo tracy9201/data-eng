@@ -1,23 +1,23 @@
-CREATE TABLE IF NOT EXISTS $schema}$environment}.subscription
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.subscription
 (
-id bigint NOT NULL,
-created_at timestamp without time zone,
-updated_at timestamp without time zone,
-deprecated_at timestamp without time zone,
-status integer,
-cycles integer,
-quantity integer,
+id bigint NOT NULL ENCODE az64,
+created_at timestamp without time zone ENCODE az64,
+updated_at timestamp without time zone ENCODE az64,
+deprecated_at timestamp without time zone ENCODE az64,
+status integer ENCODE az64,
+cycles integer ENCODE az64,
+quantity integer ENCODE az64,
 is_subscription boolean,
-period_unit integer,
-period integer,
-gx_subscription_id varchar(32),
-plan_id bigint,
-offering_id bigint,
-type integer,
-ad_hoc_offering_id bigint,
-amount_off integer,
-percentage_off integer,
-discount_note varchar(256),
-tax_percentage integer
+period_unit integer ENCODE az64,
+period integer ENCODE az64,
+gx_subscription_id varchar(32) ENCODE lzo,
+plan_id bigint ENCODE az64,
+offering_id bigint ENCODE az64,
+type integer ENCODE az64,
+ad_hoc_offering_id bigint ENCODE az64,
+amount_off integer ENCODE az64,
+percentage_off integer ENCODE az64,
+discount_note varchar(256) ENCODE lzo,
+tax_percentage integer ENCODE az64
 ) DISTKEY(id)
 ;
