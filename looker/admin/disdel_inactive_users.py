@@ -22,6 +22,7 @@ from os import path
 from looker_sdk import models
 from operator import itemgetter, attrgetter
 from typing import Sequence, Optional, List
+from collections import defaultdict
 
 from pprint import pprint
 from dotenv import load_dotenv
@@ -121,7 +122,7 @@ class my_looker_sdk(object):
         for i,u in enumerate(cohort_list):
             
             logger.warning(f'{action} user:{u}')
-            
+
             if action=='delete':
                try:
                     get_user = self.sdk.user(u['user.id'])
@@ -141,15 +142,38 @@ class my_looker_sdk(object):
                     action_cnt += 1
         logger.info(f'total users {action}:{action_cnt}')
 
-
+    def create_cohort_from_file(self,filename:str)->list:
  
+        ids_from_file_list = []
+         
+        try:
+            f = open(filename)
+            ids_from_file_list = json.load(f)
+ 
+                
+        except Exception as e:
+            logger.error(f'error:{e}')   
+            
+        else:
+            logger.info(f'{len(ids_from_file_list)}:line(s) in file:{filename}' )
+            logger.debug(f' ids_from_file_list:{ ids_from_file_list }')
+ 
+        return  ids_from_file_list    
+
 
 
 def main():
 
-    parser = argparse.ArgumentParser(description='disable or delete inactive looker users via looker sdk by running a look for inactivity')
+    parser = argparse.ArgumentParser(description='disable or delete inactive looker users via looker sdk by running a look OR using a .txt file of user ids')
+ 
+    group = parser.add_mutually_exclusive_group(required=True)
+ 
     parser.add_argument('--e', nargs=1, type=str, choices=['qa','stage','prod'], help='the looker environment, the default is qa',default=['qa'])
-    parser.add_argument('--l','--look', nargs=1, type=str, help='the look that produces the cohort, the default is Inactive_Users_to_be_disabled',default = ['Inactive_Users_to_be_disabled'])
+    
+    group.add_argument('--l','--look', nargs=1,  help='the look that produces the cohort, mutally exclusive from the -f option')
+    group.add_argument('--f','--file', nargs=1, help='the file that produces the cohort, mutally exclusive from the -l option')
+    
+    
     parser.add_argument('--a','--act','--action', nargs=1, type=str, choices=['disable','delete'], help='the action to perform on the user, the default is disable',default=['disable'])
  
     parser.add_argument('--dryrun', '--dry-run','--dry',help='if present will only perform read level operations' ,action='store_true')
@@ -165,16 +189,23 @@ def main():
     logger.info(f'currdir:{dir_abs} app name:{_appname}')
     
     looker_sdk = my_looker_sdk(args.e[0])
-    look = looker_sdk.get_look(args.l[0])
-    if look:
-        user_cohort = looker_sdk.run_look(look)
-        if not args.dryrun  and len(user_cohort)>0:
-            logger.warning(f'action={args.a[0]} {len(user_cohort)} users')
-            looker_sdk.user_action(user_cohort,args.a[0])
-        elif args.dryrun:
-            logger.info('--dryrun read only actions performed')
-        elif len(user_cohort)==0:    
-            logger.info(f'Users Selected is {len(user_cohort)}')
+    
+    if args.l:
+        look = looker_sdk.get_look(args.l[0])
+        if look:
+            user_cohort = looker_sdk.run_look(look)
+    else:
+        user_cohort = looker_sdk.create_cohort_from_file(args.f[0])
+        
+    logger.debug(f'user_cohort:{user_cohort }')
+
+    if not args.dryrun  and len(user_cohort)>0:
+        logger.warning(f'action={args.a[0]} {len(user_cohort)} users')
+        looker_sdk.user_action(user_cohort,args.a[0])
+    elif args.dryrun:
+        logger.info('--dryrun read only actions performed')
+    elif len(user_cohort)==0:    
+        logger.info(f'Users Selected is {len(user_cohort)}')
 
     
 
