@@ -19,9 +19,9 @@ SELECT
   firstname,
   lastname
 FROM
-  ${schema}${environment}.users
-  JOIN customer_data ON users.id = user_id
-  LEFT JOIN plan ON plan.user_id = users.id
+  kronos_hint${environment}.users
+  JOIN kronos_hint${environment}.customer_data ON users.id = user_id
+  LEFT JOIN kronos_hint${environment}.plan ON plan.user_id = users.id
   LEFT JOIN (
     SELECT
       plan_id,
@@ -38,13 +38,13 @@ FROM
         'yyyy-mm-dd'
       ) AS member_cancel_date
     FROM
-      ${schema}${environment}.subscription
+      kronos_hint${environment}.subscription
     WHERE
       subscription.status = 0
     GROUP BY
       plan_id
   ) AS sub ON plan_id = plan.id
-  LEFT JOIN address ON billing_address_id = address.id
+  LEFT JOIN kronos_hint${environment}.address ON billing_address_id = address.id
 WHERE
   role = 8
   AND users.status = 0

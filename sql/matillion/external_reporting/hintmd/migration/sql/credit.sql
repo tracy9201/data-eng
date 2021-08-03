@@ -56,11 +56,11 @@ FROM
           NULL :: NUMERIC(20, 9) AS g_a,
           NULL :: TEXT AS is_voided
         FROM
-          ${schema}${environment}.credit c
-          LEFT JOIN subscription sub ON sub.id = c.subscription_id
-          LEFT JOIN plan pl ON c.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
+          gaia_hint${environment}.credit c
+          LEFT JOIN gaia_hint${environment}.subscription sub ON sub.id = c.subscription_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON c.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
         WHERE
           c.id IS NOT NULL
           AND c.status = 1
@@ -83,15 +83,15 @@ FROM
           gr.amount AS g_a,
           NULL :: TEXT AS is_voided
         FROM
-          ${schema}${environment}.payment p
-          LEFT JOIN subscription sub ON sub.id = p.subscription_id
-          LEFT JOIN gratuity gr ON gr.id = p.gratuity_id
-          LEFT JOIN plan pl ON p.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN gateway_transaction gt ON gt.payment_id = p.id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
-          LEFT JOIN card ON cpg.card_id = card.id
+          gaia_hint${environment}.payment p
+          LEFT JOIN gaia_hint${environment}.subscription sub ON sub.id = p.subscription_id
+          LEFT JOIN gaia_hint${environment}.gratuity gr ON gr.id = p.gratuity_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON p.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON gt.payment_id = p.id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          LEFT JOIN gaia_hint${environment}.card ON cpg.card_id = card.id
         WHERE
           p.id IS NOT NULL
           AND p.status = 1
@@ -114,15 +114,15 @@ FROM
           gr.amount as g_a,
           NULL :: VARCHAR AS is_voided
         FROM
-          ${schema}${environment}.refund r
-          LEFT JOIN gratuity gr ON gr.id = r.gratuity_id
-          LEFT JOIN subscription sub ON subscription_id = sub.id
-          LEFT JOIN plan pl ON sub.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN gateway_transaction gt ON r.gateway_transaction_id = gt.id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
-          LEFT JOIN card ON cpg.card_id = card.id
+          gaia_hint${environment}.refund r
+          LEFT JOIN gaia_hint${environment}.gratuity gr ON gr.id = r.gratuity_id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON subscription_id = sub.id
+          LEFT JOIN gaia_hint${environment}.plan pl ON sub.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON r.gateway_transaction_id = gt.id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          LEFT JOIN gaia_hint${environment}.card ON cpg.card_id = card.id
         WHERE
           subscription_id IS NOT NULL
           AND r.status = 20
@@ -146,16 +146,16 @@ FROM
           gr.amount as g_a,
           null :: TEXT as is_voided
         FROM
-          ${schema}${environment}.refund r
-          LEFT JOIN gratuity gr ON gr.id = r.gratuity_id
-          LEFT JOIN gateway_transaction gt ON gateway_transaction_id = gt.id
-          LEFT JOIN payment p ON gt.payment_id = p.id
-          LEFT JOIN plan pl ON p.plan_id = pl.id
-          LEFT JOIN subscription sub ON p.subscription_id = sub.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
-          LEFT JOIN card ON cpg.card_id = card.id
+          gaia_hint${environment}.refund r
+          LEFT JOIN gaia_hint${environment}.gratuity gr ON gr.id = r.gratuity_id
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON gateway_transaction_id = gt.id
+          LEFT JOIN gaia_hint${environment}.payment p ON gt.payment_id = p.id
+          LEFT JOIN gaia_hint${environment}.plan pl ON p.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON p.subscription_id = sub.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          LEFT JOIN gaia_hint${environment}.card ON cpg.card_id = card.id
         WHERE
           r.subscription_id IS NULL
           AND gt.invoice_item_id IS NULL
@@ -181,15 +181,15 @@ FROM
           gt.gratuity_amount as g_a,
           NULL :: text AS is_voided
         FROM
-          ${schema}${environment}.gateway_transaction gt
-          LEFT JOIN invoice inv ON invoice_id = inv.id
-          LEFT JOIN invoice_item ivi ON invoice_item_id = ivi.id
-          LEFT JOIN subscription sub ON sub.id = ivi.subscription_id
-          LEFT JOIN plan pl ON inv.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
-          LEFT JOIN card ON cpg.card_id = card.id
+          gaia_hint${environment}.gateway_transaction gt
+          LEFT JOIN gaia_hint${environment}.invoice inv ON invoice_id = inv.id
+          LEFT JOIN gaia_hint${environment}.invoice_item ivi ON invoice_item_id = ivi.id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON sub.id = ivi.subscription_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON inv.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          LEFT JOIN gaia_hint${environment}.card ON cpg.card_id = card.id
         WHERE
           source_object_name = 'card_payment_gateway'
           AND gt.status = 20
@@ -214,20 +214,20 @@ FROM
           gt.gratuity_amount as g_a,
           gt.is_voided :: text AS is_voided
         FROM
-          ${schema}${environment}.settlement s
-          LEFT JOIN gateway_transaction gt ON gt.id = gateway_transaction_id
-          LEFT JOIN invoice inv ON gt.invoice_id = inv.id
-          LEFT JOIN invoice_item ivi ON ivi.id = gt.invoice_item_id
-          LEFT JOIN subscription sub ON sub.id = ivi.subscription_id
-          LEFT JOIN plan pl ON inv.plan_id = pl.id
-          LEFT JOIN customer ct ON customer_id = ct.id
-          LEFT JOIN provider pr ON provider_id = pr.id
+          gaia_hint${environment}.settlement s
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON gt.id = gateway_transaction_id
+          LEFT JOIN gaia_hint${environment}.invoice inv ON gt.invoice_id = inv.id
+          LEFT JOIN gaia_hint${environment}.invoice_item ivi ON ivi.id = gt.invoice_item_id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON sub.id = ivi.subscription_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON inv.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON customer_id = ct.id
+          LEFT JOIN gaia_hint${environment}.provider pr ON provider_id = pr.id
           LEFT JOIN (
             SELECT
               CASE WHEN re.id IS NOT NULL THEN gt.transaction_id END as t_id
             FROM
-              ${schema}${environment}.refund re
-              LEFT JOIN gateway_transaction gt ON re.gateway_transaction_id = gt.id
+              gaia_hint${environment}.refund re
+              LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON re.gateway_transaction_id = gt.id
             WHERE
               re.status = 20
               AND re.is_void = 't'
@@ -256,19 +256,19 @@ FROM
           gt.gratuity_amount as g_a,
           gt.is_voided :: text AS is_voided
         FROM
-          ${schema}${environment}.settlement s
-          LEFT JOIN gateway_transaction gt ON gt.id = gateway_transaction_id
-          LEFT JOIN payment p ON payment_id = p.id
-          LEFT JOIN subscription sub ON sub.id = p.subscription_id
-          LEFT JOIN plan pl ON p.plan_id = pl.id
-          LEFT JOIN customer ct ON customer_id = ct.id
-          LEFT JOIN provider pr ON provider_id = pr.id
+          gaia_hint${environment}.settlement s
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON gt.id = gateway_transaction_id
+          LEFT JOIN gaia_hint${environment}.payment p ON payment_id = p.id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON sub.id = p.subscription_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON p.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON customer_id = ct.id
+          LEFT JOIN gaia_hint${environment}.provider pr ON provider_id = pr.id
           LEFT JOIN (
             SELECT
               CASE WHEN re.id IS NOT NULL THEN gt.transaction_id END as t_id
             FROM
-              ${schema}${environment}.refund re
-              LEFT JOIN gateway_transaction gt ON re.gateway_transaction_id = gt.id
+              gaia_hint${environment}.refund re
+              LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON re.gateway_transaction_id = gt.id
             WHERE
               re.status = 20
               AND re.is_void = 't'
@@ -297,15 +297,15 @@ FROM
           gr.amount as g_a,
           r.is_void :: text AS is_voided
         FROM
-          ${schema}${environment}.refund r
-          LEFT JOIN gratuity gr ON gr.id = r.gratuity_id
-          LEFT JOIN gateway_transaction gt ON r.gateway_transaction_id = gt.id
-          LEFT JOIN invoice_item ivi ON gt.invoice_item_id = ivi.id
-          LEFT JOIN subscription sub ON ivi.subscription_id = sub.id
-          LEFT JOIN plan pl ON sub.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          gaia_hint${environment}.refund r
+          LEFT JOIN gaia_hint${environment}.gratuity gr ON gr.id = r.gratuity_id
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON r.gateway_transaction_id = gt.id
+          LEFT JOIN gaia_hint${environment}.invoice_item ivi ON gt.invoice_item_id = ivi.id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON ivi.subscription_id = sub.id
+          LEFT JOIN gaia_hint${environment}.plan pl ON sub.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
         WHERE
           r.status = 20
           AND r.is_void = 't'
@@ -329,15 +329,15 @@ FROM
           gr.amount as g_a,
           r.is_void :: text AS is_voided
         FROM
-          ${schema}${environment}.refund r
-          LEFT JOIN gratuity gr ON gr.id = r.gratuity_id
-          LEFT JOIN subscription sub ON r.subscription_id = sub.id
-          LEFT JOIN gateway_transaction gt ON r.gateway_transaction_id = gt.id
-          LEFT JOIN payment p ON p.id = payment_id
-          LEFT JOIN plan pl ON p.plan_id = pl.id
-          LEFT JOIN customer ct ON ct.id = pl.customer_id
-          LEFT JOIN provider pr ON pr.id = provider_id
-          LEFT JOIN card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
+          gaia_hint${environment}.refund r
+          LEFT JOIN gaia_hint${environment}.gratuity gr ON gr.id = r.gratuity_id
+          LEFT JOIN gaia_hint${environment}.subscription sub ON r.subscription_id = sub.id
+          LEFT JOIN gaia_hint${environment}.gateway_transaction gt ON r.gateway_transaction_id = gt.id
+          LEFT JOIN gaia_hint${environment}.payment p ON p.id = payment_id
+          LEFT JOIN gaia_hint${environment}.plan pl ON p.plan_id = pl.id
+          LEFT JOIN gaia_hint${environment}.customer ct ON ct.id = pl.customer_id
+          LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = provider_id
+          LEFT JOIN gaia_hint${environment}.card_payment_gateway cpg ON cpg.id = gt.card_payment_gateway_id
         WHERE
           r.status = 20
           AND r.is_void = 't'

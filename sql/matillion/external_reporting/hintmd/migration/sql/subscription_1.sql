@@ -11,4 +11,4 @@ SELECT
   offering_id,
   type AS subscription_type
 FROM
-  ${schema}${environment}.subscription;
+  kronos_hint${environment}.subscription;

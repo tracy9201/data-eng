@@ -11,7 +11,7 @@ SELECT
   deprecated_at,
   updated_at
 FROM
-  ${schema}${environment}.users u
+  kronos_hint${environment}.users u
 WHERE
   role IN (1, 2, 4, 6, 10)
 ;

@@ -47,9 +47,9 @@ FROM
                   gateway_transaction.created_at AS transaction_created_at,
                   provider.encrypted_ref_id AS gx_provider_id
                 FROM
-                  ${schema}${environment}.gateway_transaction
-                  JOIN authorisation ON destination_object_id = authorisation.id
-                  JOIN provider ON object_id = provider.id
+                  gaia_hint${environment}.gateway_transaction
+                  JOIN gaia_hint${environment}.authorisation ON destination_object_id = authorisation.id
+                  JOIN gaia_hint${environment}.provider ON object_id = provider.id
                 WHERE
                   source_object_name = 'card_payment_gateway'
                   AND gateway_transaction.status = 20
@@ -61,9 +61,9 @@ FROM
                   settlement.settlement_date AS transaction_created_at,
                   provider.encrypted_ref_id AS gx_provider_id
                 FROM
-                  ${schema}${environment}.settlement
-                  JOIN authorisation ON authorisation_id = authorisation.id
-                  JOIN provider ON object_id = provider.id
+                  gaia_hint${environment}.settlement
+                  JOIN gaia_hint${environment}.authorisation ON authorisation_id = authorisation.id
+                  JOIN gaia_hint${environment}.provider ON object_id = provider.id
                 WHERE
                   gateway_transaction_id IS NULL
               ) ts
@@ -85,9 +85,9 @@ FROM
                   funding_date,
                   total_funding
                 FROM
-                  ${schema}${environment}.funding
-                  JOIN authorisation ON authorisation_id = authorisation.id
-                  JOIN provider ON object_id = provider.id
+                  gaia_hint${environment}.funding
+                  JOIN gaia_hint${environment}.authorisation ON authorisation_id = authorisation.id
+                  JOIN gaia_hint${environment}.provider ON object_id = provider.id
                 WHERE
                   object = 'provider'
               ) tsf

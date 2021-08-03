@@ -8,8 +8,8 @@ SELECT
   state AS practice_state,
   zip AS practice_zip
 FROM
-  ${schema}${environment}.organization_data
-  JOIN users ON organization_data.id = organization_id
-  JOIN address ON address.id = address_id
+  kronos_hint${environment}.organization_data
+  JOIN kronos_hint${environment}.users ON organization_data.id = organization_id
+  JOIN kronos_hint${environment}.address ON address.id = address_id
 WHERE
   role = 7

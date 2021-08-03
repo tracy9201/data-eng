@@ -25,9 +25,9 @@ WITH CTE_Adj AS (
     CASE WHEN adjustment.id IS NOT NULL THEN 'XXXXYYYY' END AS gx_customer_id,
     pr.encrypted_ref_id AS gx_provider_id
   FROM
-    ${schema}${environment}.adjustment
-    JOIN authorisation authorisation ON authorisation.id = authorisation_id
-    JOIN provider pr ON object_id = pr.id
+    gaia_hint${environment}.adjustment
+    JOIN gaia_hint${environment}.authorisation authorisation ON authorisation.id = authorisation_id
+    JOIN gaia_hint${environment}.provider pr ON object_id = pr.id
 ),
 CTE_Settlement AS (
   (
@@ -82,7 +82,7 @@ CTE_Settlement AS (
               interchange_unit_fee,
               interchange_percentage_fee
             FROM
-              ${schema}${environment}.settlement
+              gaia_hint${environment}.settlement
             WHERE
               (
                 (
@@ -120,7 +120,7 @@ CTE_Settlement AS (
           authorisation_id,
           CASE WHEN settlement_status = 'Amount Under Review' THEN tendered ELSE amount END AS settlement_amount
         FROM
-          ${schema}${environment}.settlement
+          gaia_hint${environment}.settlement
         WHERE
           (
             external_id IS NULL
@@ -144,11 +144,11 @@ CTE_Settlement AS (
               cg.encrypted_ref_id AS gx_customer_id,
               pr.encrypted_ref_id AS gx_provider_id
             FROM
-              ${schema}${environment}.gateway_transaction gt
-              LEFT JOIN invoice inv ON inv.id = gt.invoice_id
-              LEFT JOIN plan pl ON pl.id = inv.plan_id
-              LEFT JOIN customer cg ON cg.id = pl.customer_id
-              LEFT JOIN provider pr ON pr.id = cg.provider_id
+              gaia_hint${environment}.gateway_transaction gt
+              LEFT JOIN gaia_hint${environment}.invoice inv ON inv.id = gt.invoice_id
+              LEFT JOIN gaia_hint${environment}.plan pl ON pl.id = inv.plan_id
+              LEFT JOIN gaia_hint${environment}.customer cg ON cg.id = pl.customer_id
+              LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = cg.provider_id
             WHERE
               gt.settlement_id IS NOT NULL
               AND gt.invoice_id IS NOT null
@@ -170,11 +170,11 @@ CTE_Settlement AS (
               cg.encrypted_ref_id AS gx_customer_id,
               pr.encrypted_ref_id AS gx_provider_id
             FROM
-              ${schema}${environment}.gateway_transaction gt
-              LEFT JOIN payment pt ON pt.id = gt.payment_id
-              LEFT JOIN plan pl ON pl.id = pt.plan_id
-              LEFT JOIN customer cg ON cg.id = pl.customer_id
-              LEFT JOIN provider pr ON pr.id = cg.provider_id
+              gaia_hint${environment}.gateway_transaction gt
+              LEFT JOIN gaia_hint${environment}.payment pt ON pt.id = gt.payment_id
+              LEFT JOIN gaia_hint${environment}.plan pl ON pl.id = pt.plan_id
+              LEFT JOIN gaia_hint${environment}.customer cg ON cg.id = pl.customer_id
+              LEFT JOIN gaia_hint${environment}.provider pr ON pr.id = cg.provider_id
             WHERE
               gt.invoice_id IS NULL
           ) Y

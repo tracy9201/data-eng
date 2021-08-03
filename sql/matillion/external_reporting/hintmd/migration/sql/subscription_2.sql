@@ -37,10 +37,10 @@ from
       provider.encrypted_ref_id AS k_provider_id,
       now()
     FROM
-      ${schema}${environment}.subscription
-      JOIN plan ON plan_id = plan.id
-      JOIN customer ON customer.id = customer_id
-      JOIN provider ON provider.id = provider_id
+      gaia_hint${environment}.subscription
+      JOIN gaia_hint${environment}.plan ON plan_id = plan.id
+      JOIN gaia_hint${environment}.customer ON customer.id = customer_id
+      JOIN gaia_hint${environment}.provider ON provider.id = provider_id
     WHERE
       subscription.status = 1
       and subscription.auto_renewal = 't'
@@ -80,11 +80,11 @@ from
       provider.encrypted_ref_id AS k_provider_id,
       now()
     FROM
-      ${schema}${environment}.subscription
-      JOIN plan ON plan_id = plan.id
-      join invoice on subscription.plan_id = invoice.plan_id
-      JOIN customer ON customer.id = customer_id
-      JOIN provider ON provider.id = provider_id
+      gaia_hint${environment}.subscription
+      JOIN gaia_hint${environment}.plan ON plan_id = plan.id
+      join gaia_hint${environment}.invoice on subscription.plan_id = invoice.plan_id
+      JOIN gaia_hint${environment}.customer ON customer.id = customer_id
+      JOIN gaia_hint${environment}.provider ON provider.id = provider_id
     WHERE
       subscription.status = 1
       and subscription.auto_renewal = 'f'
