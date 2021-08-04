@@ -1,23 +1,24 @@
+DROP TABLE IF EXISTS dwh_hint${environment}.credit;
+
 CREATE TABLE IF NOT EXISTS dwh_hint${environment}.credit
 (
-  id                bigint NOT NULL ENCODE az64,
-  plan_id           bigint ENCODE az64,
-  subscription_id   bigint ENCODE az64,
-  fulfillment_id    bigint ENCODE az64,
-  amount            integer ENCODE az64,
-  balance           integer ENCODE az64,
-  currency          varchar(8) ENCODE lzo,
-  name              varchar(65535) ENCODE lzo,
-  type              varchar(125) ENCODE lzo,
-  use_type          varchar(125) ENCODE lzo,
-  canceled_at       timestamp without time zone ENCODE az64,
-  deleted_at        timestamp without time zone ENCODE az64,
-  status            smallint ENCODE az64,
-  created_at        timestamp without time zone ENCODE az64,
-  updated_at        timestamp without time zone ENCODE az64,
-  encrypted_ref_id  varchar(65535) ENCODE lzo,
-  created_by        varchar(255) ENCODE lzo,
-  updated_by        varchar(255) ENCODE lzo,
-  card_brand        varchar(255) ENCODE lzo
+  id                bigint NOT NULL  ENCODE RAW,
+  plan_id           bigint  ENCODE RAW,
+  subscription_id   bigint  ENCODE RAW,
+  fulfillment_id    bigint  ENCODE RAW,
+  amount            integer  ENCODE RAW,
+  balance           integer  ENCODE RAW,
+  currency          varchar(8) ENCODE  RAW,
+  name              varchar(65535) ENCODE  RAW,
+  type              varchar(125) ENCODE  RAW,
+  use_type          varchar(125) ENCODE  RAW,
+  canceled_at       timestamp without time zone  ENCODE RAW,
+  deleted_at        timestamp without time zone  ENCODE RAW,
+  status            smallint  ENCODE RAW,
+  created_at        timestamp without time zone  ENCODE RAW,
+  updated_at        timestamp without time zone  ENCODE RAW,
+  encrypted_ref_id  varchar(65535) ENCODE  RAW,
+  created_by        varchar(255) ENCODE  RAW,
+  updated_by        varchar(255) ENCODE  RAW,
+  card_brand        varchar(255) ENCODE  RAW
 ) DISTKEY(id)
-;

@@ -54,7 +54,7 @@ FROM
                   source_object_name = 'card_payment_gateway'
                   AND gateway_transaction.status = 20
                   AND destination_object_name = 'authorisation'
-                UNION ALL
+                UNION
                 SELECT
                   settlement.id AS tran_id,
                   settlement.amount * 100 AS tran_tenderd,

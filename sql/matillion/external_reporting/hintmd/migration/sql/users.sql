@@ -14,4 +14,3 @@ FROM
   kronos_hint${environment}.users u
 WHERE
   role IN (1, 2, 4, 6, 10)
-;
