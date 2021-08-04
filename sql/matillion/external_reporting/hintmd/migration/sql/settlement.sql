@@ -155,7 +155,7 @@ CTE_Settlement AS (
           ) X
         WHERE
           X.row_num = 1
-
+        UNION
         SELECT
           Y.*
         FROM

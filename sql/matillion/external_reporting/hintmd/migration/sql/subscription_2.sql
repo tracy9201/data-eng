@@ -44,7 +44,7 @@ from
     WHERE
       subscription.status = 1
       and subscription.auto_renewal = 't'
-     UNION ALL
+    UNION
     SELECT
       subscription.id AS subscription_id,
       subscription.encrypted_ref_id AS k_subscirption_id,
@@ -123,4 +123,4 @@ group by
   30,
   31,
   32,
-  33;
+  33
