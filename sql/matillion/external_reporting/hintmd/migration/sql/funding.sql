@@ -32,4 +32,4 @@ FROM
       gaia_hint${environment}.funding
       JOIN gaia_hint${environment}.authorisation ON authorisation_id = authorisation.id
       JOIN gaia_hint${environment}.provider ON object_id = provider.id
-  ) table2;
+  ) table2
