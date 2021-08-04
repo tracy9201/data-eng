@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.funding
+(
+id                      bigint NOT NULL ENCODE az64,
+name                    varchar(65535) ENCODE lzo,
+payment_gateway_id      bigint ENCODE az64,
+authorisation_id        bigint ENCODE az64,
+funding_master_id       varchar(255) ENCODE lzo,
+funding_id              varchar(255) ENCODE lzo,
+net_sales               varchar(1024) ENCODE lzo,
+third_party             varchar(1024) ENCODE lzo,
+adjustment              varchar(1024) ENCODE lzo,
+interchange_fee         varchar(1024) ENCODE lzo,
+service_charge          varchar(1024) ENCODE lzo,
+fee                     varchar(1024) ENCODE lzo,
+reversal                varchar(1024) ENCODE lzo,
+other_adjustment        varchar(1024) ENCODE lzo,
+total_funding           varchar(1024) ENCODE lzo,
+funding_date            timestamp without time zone ENCODE az64,
+currency                varchar(8) ENCODE lzo,
+dda_number              varchar(255) ENCODE lzo,
+aba_number              varchar(255) ENCODE lzo,
+date_changed            timestamp without time zone ENCODE az64,
+date_added              timestamp without time zone ENCODE az64,
+deposit_trancode        varchar(255) ENCODE lzo,
+deposit_ach_tracenumber varchar(255) ENCODE lzo,
+status                  smallint ENCODE az64,
+created_at              timestamp without time zone ENCODE az64,
+updated_at              timestamp without time zone ENCODE az64,
+canceled_a              timestamp without time zone ENCODE az64,
+deleted_at              timestamp without time zone ENCODE az64,
+encrypted_ref_id        varchar(65535) ENCODE lzo
+) DISTKEY(id)
+;
