@@ -35,4 +35,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.gateway_transaction
   is_voided	               boolean,
   gratuity_amount	         bigint  ENCODE RAW,
   credit_id	               bigint ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);

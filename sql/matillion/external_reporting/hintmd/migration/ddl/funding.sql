@@ -31,4 +31,4 @@ updated_at              timestamp without time zone ENCODE RAW,
 canceled_a              timestamp without time zone ENCODE RAW,
 deleted_at              timestamp without time zone ENCODE RAW,
 encrypted_ref_id        varchar(65535) ENCODE  RAW
-) DISTKEY(id)
+) DISTKEY(id);

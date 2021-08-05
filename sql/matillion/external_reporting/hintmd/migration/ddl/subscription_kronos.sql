@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.subscription
   percentage_off      integer ENCODE RAW,
   discount_note       varchar(256) ENCODE RAW,
   tax_percentage      integer ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);

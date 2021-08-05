@@ -38,4 +38,4 @@ updated_at              timestamp without time zone ENCODE RAW,
 encrypted_ref_id         varchar(65535) ENCODE RAW,
 external_subscription_id varchar(65535) ENCODE RAW,
 offering_id              varchar(65535)  ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);

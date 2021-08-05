@@ -15,4 +15,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.customer
   deleted_at	         timestamp without time zone ENCODE RAW,
   shipping_address_id  bigint ENCODE RAW,
   encrypted_ref_id     varchar(27) ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);
