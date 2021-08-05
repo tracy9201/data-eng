@@ -26,4 +26,4 @@ payfac                      boolean,
 organization_tax_percentage integer ENCODE RAW,
 onboarding_page_status      varchar(255) ENCODE RAW,
 owner_option                varchar(10) ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);

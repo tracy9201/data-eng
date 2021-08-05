@@ -25,4 +25,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.users
   deactivated_date	    timestamp without time zone ENCODE RAW,
   activated_date	      timestamp without time zone ENCODE RAW,
   zendesk_user_id	      bigint	 ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);

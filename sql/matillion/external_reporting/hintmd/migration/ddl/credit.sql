@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.credit
   created_by        varchar(255) ENCODE  RAW,
   updated_by        varchar(255) ENCODE  RAW,
   card_brand        varchar(255) ENCODE  RAW
-) DISTKEY(id)
+) DISTKEY(id);

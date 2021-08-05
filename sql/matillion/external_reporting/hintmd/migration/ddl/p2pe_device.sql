@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.p2pe_device
   status_changed_at	    timestamp without time zone ENCODE RAW,
   device_uuid	          varchar(65535) ENCODE RAW,
   deprecated_at	        timestamp without time zone ENCODE RAW
-) DISTKEY(id)
+) DISTKEY(id);
