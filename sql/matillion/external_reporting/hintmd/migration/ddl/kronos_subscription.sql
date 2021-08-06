@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.subscription;
+DROP TABLE IF EXISTS dwh_hint${environment}.kronos_subscription;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.subscription
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.kronos_subscription
 (
   id                  bigint NOT NULL ENCODE RAW,
   created_at          timestamp without time zone ENCODE RAW,

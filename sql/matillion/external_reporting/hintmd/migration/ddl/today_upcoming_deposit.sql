@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.gateway_transaction;
+DROP TABLE IF EXISTS dwh_hint${environment}.today_upcoming_deposit;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.gateway_transaction
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.today_upcoming_deposit
 (
   id	                     bigint ENCODE RAW,
   name	                   varchar(65535) ENCODE RAW,

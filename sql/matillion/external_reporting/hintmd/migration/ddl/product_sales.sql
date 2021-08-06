@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.subscription;
+DROP TABLE IF EXISTS dwh_hint${environment}.product_sales;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.subscription
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.product_sales
 (
 id                      bigint NOT NULL ENCODE RAW,
 plan_id                 bigint ENCODE RAW,

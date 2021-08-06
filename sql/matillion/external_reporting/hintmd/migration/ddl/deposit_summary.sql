@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.funding;
+DROP TABLE IF EXISTS dwh_hint${environment}.deposit_summary;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.funding
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.deposit_summary
 (
 id                      bigint NOT NULL ENCODE RAW,
 name                    varchar(65535) ENCODE  RAW,

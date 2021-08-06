@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.organization_data;
+DROP TABLE IF EXISTS dwh_hint${environment}.practice;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.organization_data
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.practice
 (
 id                          bigint NOT NULL ENCODE RAW,
 created_at                  timestamp without time zone ENCODE RAW,

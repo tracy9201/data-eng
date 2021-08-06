@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.p2pe_device;
+DROP TABLE IF EXISTS dwh_hint${environment}.device_data;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.p2pe_device
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.device_data
 (
   id	                  bigint ENCODE RAW,
   organization_id	      bigint ENCODE RAW,

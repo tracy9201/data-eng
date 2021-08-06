@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dwh_hint${environment}.credit;
+DROP TABLE IF EXISTS dwh_hint${environment}.payment_summary;
 
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.credit
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.payment_summary
 (
   id                bigint NOT NULL  ENCODE RAW,
   plan_id           bigint  ENCODE RAW,
