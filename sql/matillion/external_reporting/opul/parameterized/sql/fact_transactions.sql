@@ -34,9 +34,9 @@ LEFT JOIN
   gt.invoice_id, 
   gt.source_object_id,
   invoice.status as invoice_status
-FROM  gaia_opul.gateway_transaction gt
+FROM  gaia_opul${environment}.gateway_transaction gt
 inner join 
-  gaia_opul.invoice on gt.invoice_id = invoice.id
+  gaia_opul${environment}.invoice on gt.invoice_id = invoice.id
 WHERE 
   source_object_name = 'credit' 
   ) gt
@@ -51,7 +51,7 @@ payment_void as
     gt.payment_id, 
     CASE WHEN gt.is_voided = 't' then 't'::varchar END AS is_voided
   FROM  
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
   WHERE 
     card_payment_gateway_id IS NOT NULL 
     and card_payment_gateway_id != 0
@@ -82,12 +82,12 @@ payment_data as
     card.card_holder_name,
     pv.is_voided
 FROM
-    gaia_opul.payment p
+    gaia_opul${environment}.payment p
 LEFT JOIN
  (SELECT distinct 
   gt.payment_id, 
   gt.card_payment_gateway_id
-FROM  gaia_opul.gateway_transaction gt
+FROM  gaia_opul${environment}.gateway_transaction gt
 WHERE 
   card_payment_gateway_id IS NOT NULL and card_payment_gateway_id != 0
   and gt.payment_id is not null) gt
@@ -97,18 +97,18 @@ LEFT JOIN
   gt.invoice_id, 
   gt.source_object_id,
   invoice.status as invoice_status
-FROM  gaia_opul.gateway_transaction gt
+FROM  gaia_opul${environment}.gateway_transaction gt
 inner join 
-  gaia_opul.invoice on gt.invoice_id = invoice.id
+  gaia_opul${environment}.invoice on gt.invoice_id = invoice.id
 WHERE 
   source_object_name = 'payment' 
   ) gt2
          ON gt2.source_object_id = p.id   
 LEFT JOIN
-    gaia_opul.card_payment_gateway cpg
+    gaia_opul${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul.card card
+    gaia_opul${environment}.card card
         ON cpg.card_id = card.id
 left join 
     payment_void pv
@@ -138,24 +138,24 @@ refund1 as
     card.card_holder_name AS card_holder_name,
     NULL::text AS is_voided
 FROM
-    gaia_opul.refund r
+    gaia_opul${environment}.refund r
 LEFT JOIN
-    gaia_opul.gratuity gratuity
+    gaia_opul${environment}.gratuity gratuity
         ON gratuity.id = r.gratuity_id
 LEFT JOIN
-    gaia_opul.subscription sub
+    gaia_opul${environment}.subscription sub
         ON subscription_id = sub.id
 LEFT JOIN
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
         ON r.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul.card_payment_gateway cpg
+    gaia_opul${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul.card card
+    gaia_opul${environment}.card card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul.invoice invoice
+    gaia_opul${environment}.invoice invoice
         ON r.invoice_id = invoice.id
 WHERE
     subscription_id IS NOT NULL
@@ -182,24 +182,24 @@ refund2 as
     card.card_holder_name AS card_holder_name,
     NULL::text AS is_voided
 FROM
-    gaia_opul.refund r
+    gaia_opul${environment}.refund r
 LEFT JOIN
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
         ON gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul.payment  payment
+    gaia_opul${environment}.payment  payment
         ON gt.payment_id = payment.id
 LEFT JOIN
-    gaia_opul.subscription sub
+    gaia_opul${environment}.subscription sub
         ON payment.subscription_id = sub.id
 LEFT JOIN
-    gaia_opul.card_payment_gateway cpg
+    gaia_opul${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul.card
+    gaia_opul${environment}.card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul.invoice invoice
+    gaia_opul${environment}.invoice invoice
         ON r.invoice_id = invoice.id
 WHERE
     r.subscription_id IS NULL
@@ -229,24 +229,24 @@ void1 as
     CASE WHEN r.is_void = 't' then 't'::varchar 
          WHEN r.is_void = 'f' then 'f'::varchar else NULL::VARCHAR  END AS is_voided
 FROM
-    gaia_opul.refund r
+    gaia_opul${environment}.refund r
 LEFT JOIN
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
         ON r.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul.invoice_item ivi
+    gaia_opul${environment}.invoice_item ivi
         ON gt.invoice_item_id = ivi.id
 LEFT JOIN
-    gaia_opul.subscription sub
+    gaia_opul${environment}.subscription sub
         ON ivi.subscription_id = sub.id
 LEFT JOIN
-    gaia_opul.card_payment_gateway cpg
+    gaia_opul${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul.card
+    gaia_opul${environment}.card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul.invoice invoice
+    gaia_opul${environment}.invoice invoice
         ON r.invoice_id = invoice.id
 WHERE
     r.status  in (20,-3)
@@ -274,28 +274,28 @@ void2 as
     CASE WHEN r.is_void = 't' then 't'::varchar 
          WHEN r.is_void = 'f' then 'f'::varchar else NULL::VARCHAR END AS is_voided
 FROM
-    gaia_opul.refund r
+    gaia_opul${environment}.refund r
 
 LEFT JOIN
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
         ON r.gateway_transaction_id = gt.id
 LEFT JOIN
-    gaia_opul.payment payment
+    gaia_opul${environment}.payment payment
         ON payment.id = payment_id
 LEFT JOIN
-    gaia_opul.card_payment_gateway cpg
+    gaia_opul${environment}.card_payment_gateway cpg
         ON cpg.id = gt.card_payment_gateway_id
 LEFT JOIN
-    gaia_opul.card
+    gaia_opul${environment}.card
         ON cpg.card_id = card.id
 LEFT JOIN
-    gaia_opul.invoice invoice
+    gaia_opul${environment}.invoice invoice
         ON r.invoice_id = invoice.id
 LEFT JOIN
-    gaia_opul.invoice_item ivi
+    gaia_opul${environment}.invoice_item ivi
         ON gt.invoice_item_id = ivi.id
 LEFT JOIN
-    gaia_opul.subscription sub
+    gaia_opul${environment}.subscription sub
         ON ivi.subscription_id = sub.id
 WHERE
     r.status in (20,-3)
@@ -312,9 +312,9 @@ invoice_data as (
       when gt.source_object_name = 'wallet payment' then 'payment_'||gt.payment_id::varchar
       else null
       end AS sale_id
-  from gaia_opul.invoice inv
+  from gaia_opul${environment}.invoice inv
   left join
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
       on inv.id = gt.invoice_id
   where inv.status = -3 and source_object_name in ('payment', 'credit', 'wallet payment')
 ),
@@ -322,9 +322,9 @@ invoice_data2 as (
   select distinct 
     inv.id::varchar as inv_id2,
     inv.status as inv_status2
-  from gaia_opul.invoice inv
+  from gaia_opul${environment}.invoice inv
   left join
-    gaia_opul.gateway_transaction gt
+    gaia_opul${environment}.gateway_transaction gt
       on inv.id = gt.invoice_id
   where inv.status = -3 and source_object_name in ('payment', 'credit', 'wallet payment')
 ),
@@ -368,16 +368,16 @@ payment_summary as
     provider.encrypted_ref_id as gx_provider_id
     FROM all_data a
     LEFT JOIN
-    gaia_opul.plan plan
+    gaia_opul${environment}.plan plan
         ON a.plan_id = plan.id
     LEFT JOIN
-    gaia_opul.customer customer
+    gaia_opul${environment}.customer customer
         ON customer.id = plan.customer_id
     LEFT JOIN
-    gaia_opul.provider provider
+    gaia_opul${environment}.provider provider
         ON provider.id = provider_id
     LEFT JOIN
-    kronos_opul.organization_data org
+    kronos_opul${environment}.organization_data org
         ON provider.encrypted_ref_id = org.gx_provider_id
     LEFT JOIN
     invoice_data inv
@@ -410,16 +410,16 @@ payment_summary as
     provider.encrypted_ref_id as gx_provider_id
     FROM all_data a
     LEFT JOIN
-    gaia_opul.plan plan
+    gaia_opul${environment}.plan plan
         ON a.plan_id = plan.id
     LEFT JOIN
-    gaia_opul.customer customer
+    gaia_opul${environment}.customer customer
         ON customer.id = plan.customer_id
     LEFT JOIN
-    gaia_opul.provider provider
+    gaia_opul${environment}.provider provider
         ON provider.id = provider_id
     LEFT JOIN
-    kronos_opul.organization_data org
+    kronos_opul${environment}.organization_data org
         ON provider.encrypted_ref_id = org.gx_provider_id
     LEFT JOIN
     invoice_data2 inv2
@@ -433,18 +433,18 @@ sub_cus as
     customer.encrypted_ref_id AS gx_cus_id,
     count(subscription.created_at) over (partition by customer.encrypted_ref_id order by subscription.created_at desc rows between unbounded preceding and unbounded following) as sub_created
 FROM
-    gaia_opul.subscription subscription
+    gaia_opul${environment}.subscription subscription
 JOIN
-    gaia_opul.plan plan
+    gaia_opul${environment}.plan plan
         ON plan_id = plan.id
 JOIN
-    gaia_opul.customer customer
+    gaia_opul${environment}.customer customer
         ON customer.id = customer_id
 JOIN
-    gaia_opul.invoice
+    gaia_opul${environment}.invoice
         ON subscription.plan_id = invoice.plan_id
 join 
-    kronos_opul.customer_data customer2 on customer.encrypted_ref_id = customer2.gx_customer_id
+    kronos_opul${environment}.customer_data customer2 on customer.encrypted_ref_id = customer2.gx_customer_id
 WHERE
     subscription.status in (-1,0,1,20)
     AND invoice.status = 20
@@ -514,9 +514,9 @@ customer AS
     case when customer_data.type = 1 then 'Guest' else 'Patient' end AS user_type,
     users.firstname,
     users.lastname
-FROM kronos_opul.users  users
-JOIN kronos_opul.customer_data customer_data ON users.id = customer_data.user_id  
-LEFT JOIN gaia_opul.customer g_customer ON g_customer.encrypted_ref_id = customer_data.gx_customer_id  
+FROM kronos_opul${environment}.users  users
+JOIN kronos_opul${environment}.customer_data customer_data ON users.id = customer_data.user_id  
+LEFT JOIN gaia_opul${environment}.customer g_customer ON g_customer.encrypted_ref_id = customer_data.gx_customer_id  
 LEFT JOIN sub_plan ON sub_plan.customer_id = g_customer.id  
 ),
 
@@ -535,7 +535,7 @@ staff as
       when users.role=2 then 'curator'
       when users.role=1 then 'sys_admin'
     end as role_name
-    FROM kronos_opul.users 
+    FROM kronos_opul${environment}.users 
     where users.role in (1,2,6,10)
 ),
 
