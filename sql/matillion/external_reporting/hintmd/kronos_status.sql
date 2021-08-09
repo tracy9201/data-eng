@@ -1,4 +1,4 @@
-INSERT INTO dwh_hint.kronos_status VALUES 
+INSERT INTO dwh_hint${environment.kronos_status_hint VALUES 
  (0, 'Active', ''),
  (1, 'Archived', ''),
  (2, 'Pending', ''),
