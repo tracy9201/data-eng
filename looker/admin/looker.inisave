@@ -4,9 +4,9 @@ api_version = 4.0
 # Base URL for API. Do not include /api/* in the url
 base_url = https://hintmdqa.looker.com:19999/
 # API 3 client id
-client_id = 7m4xkPQ9RRqHWGN8kbth
+client_id = redacted
 # API 3 client secret
-client_secret = sBjrPBJskmshC6Nz6SGXFzS5
+client_secret = redacted
 # Set to false only if testing locally against self-signed certs. Defaults to true if not specified
 verify_ssl = true
 # Timeout in seconds for requests. Defaults to 2 minutes (120) seconds if not specified.
