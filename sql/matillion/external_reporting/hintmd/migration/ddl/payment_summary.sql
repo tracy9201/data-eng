@@ -1,24 +1,19 @@
 DROP TABLE IF EXISTS dwh_hint${environment}.payment_summary;
-
-CREATE TABLE IF NOT EXISTS dwh_hint${environment}.payment_summary
-(
-  id                bigint NOT NULL  ENCODE RAW,
-  plan_id           bigint  ENCODE RAW,
-  subscription_id   bigint  ENCODE RAW,
-  fulfillment_id    bigint  ENCODE RAW,
-  amount            integer  ENCODE RAW,
-  balance           integer  ENCODE RAW,
-  currency          varchar(8) ENCODE  RAW,
-  name              varchar(65535) ENCODE  RAW,
-  type              varchar(125) ENCODE  RAW,
-  use_type          varchar(125) ENCODE  RAW,
-  canceled_at       timestamp without time zone  ENCODE RAW,
-  deleted_at        timestamp without time zone  ENCODE RAW,
-  status            smallint  ENCODE RAW,
-  created_at        timestamp without time zone  ENCODE RAW,
-  updated_at        timestamp without time zone  ENCODE RAW,
-  encrypted_ref_id  varchar(65535) ENCODE  RAW,
-  created_by        varchar(255) ENCODE  RAW,
-  updated_by        varchar(255) ENCODE  RAW,
-  card_brand        varchar(255) ENCODE  RAW
+CREATE TABLE IF NOT EXISTS dwh_hint${environment}.payment_summary (
+  sales_id varchar(255) ENCODE RAW,
+  sales_name varchar(65535) ENCODE RAW,
+  sales_amount numeric ENCODE RAW,
+  sales_type varchar(16) ENCODE RAW,
+  sales_status bigint ENCODE RAW,
+  sales_created_at timestamp without time zone ENCODE RAW,
+  gx_customer_id varchar(64) ENCODE RAW,
+  gx_provider_id varchar(64) ENCODE RAW,
+  transaction_id varchar(255) ENCODE RAW,
+  payment_id varchar(255) ENCODE RAW,
+  tokenization varchar(255) ENCODE RAW,
+  gx_subscription_id varchar(64) ENCODE RAW,
+  staff_user_id varchar(64) ENCODE RAW,
+  device_id varchar(255) ENCODE RAW,
+  gratuity_amount numeric ENCODE RAW,
+  is_voided varchar(10) ENCODE RAW
 ) DISTKEY(id);
