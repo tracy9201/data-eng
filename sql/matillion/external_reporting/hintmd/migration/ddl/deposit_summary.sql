@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS dwh_hint${environment}.deposit_summary (
   chargebacks numeric ENCODE RAW,
   status integer ENCODE RAW,
   funding_id bigint ENCODE RAW
-) DISTKEY (gx_provider_id);
+) DISTKEY(gx_provider_id);
