@@ -15,7 +15,8 @@ select
     ful.name, 
     sub.offering_id,
     cus.gx_customer_id,
-    org.gx_provider_id
+    org.gx_provider_id,
+    sub.gx_subscription_id
 from internal_kronos_hint.cached_gx_fulfillment ful
 left join 
     internal_kronos_hint.subscription sub 
