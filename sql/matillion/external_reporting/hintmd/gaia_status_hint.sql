@@ -1,4 +1,4 @@
-INSERT INTO dwh_hint.ddl_gaia_status VALUES
+INSERT INTO dwh_hint${environment}.gaia_status_hint VALUES
 (-1, 'UPDATED',''),
 (-2, 'TO_BE_CANCELLED',''),
 (-3, 'CANCELLED',''),
