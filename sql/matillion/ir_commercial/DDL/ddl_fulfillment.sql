@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
   ,offering_id BIGINT  ENCODE raw
   ,gx_customer_id varchar(64) ENCODE raw
   ,gx_provider_id varchar(64) ENCODE raw
+  ,gx_subscription_id varchar(64) ENCODE raw
   ,primary key(fulfillment_id)
 )
 ;
