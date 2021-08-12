@@ -1,6 +1,8 @@
+
 DROP TABLE IF EXISTS dwh_opul${environment}.fact_batch_deposit_details;   
 
 CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_batch_deposit_details
+
 (  merchant_id VARCHAR(255) ENCODE raw
   ,funding_instruction_id VARCHAR(255) ENCODE raw
   ,transaction_id VARCHAR(255) ENCODE raw
