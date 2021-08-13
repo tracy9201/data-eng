@@ -539,6 +539,7 @@ transaction as
     case when (a.sales_id like 'void1%' or a.sales_id like 'void2%') and a.is_voided = 'Yes' then 'BAD'
        when a.inv_status2 = -3 and a.transaction_type != 'credit_card' then 'BAD'
        when a.inv_status2 = -3 and a.transaction_type = 'credit_card' and a.is_voided = 't' then 'BAD'
+       when a.transaction_id is null then 'BAD'
        else 'GOOD' end  category
   from payment_summary a
   left join (select * from sub_cus where sub_created = 1) as sc on a.gx_customer_id = sc.gx_cus_id
