@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_metadata.p2pe_status_hint;
+DROP TABLE IF EXISTS dwh_utility.p2pe_status_hint;
 
-CREATE TABLE IF NOT EXISTS ir_metadata.p2pe_status_hint 
+CREATE TABLE IF NOT EXISTS dwh_utility.p2pe_status_hint 
 (
     id BIGINT ENCODE raw,
     status VARCHAR(255) ENCODE raw,

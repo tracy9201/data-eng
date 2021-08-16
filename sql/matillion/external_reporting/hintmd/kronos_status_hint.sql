@@ -1,4 +1,4 @@
-INSERT INTO ir_metadata.kronos_status_hint VALUES 
+INSERT INTO dwh_utility.kronos_status_hint VALUES 
  (0, 'Active', ''),
  (1, 'Archived', ''),
  (2, 'Pending', ''),

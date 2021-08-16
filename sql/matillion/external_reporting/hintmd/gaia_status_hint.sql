@@ -1,4 +1,4 @@
-INSERT INTO ir_metadata.gaia_status_hint VALUES
+INSERT INTO dwh_utility.gaia_status_hint VALUES
 (-1, 'UPDATED',''),
 (-2, 'TO BE CANCELLED',''),
 (-3, 'CANCELLED',''),
