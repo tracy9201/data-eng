@@ -248,7 +248,7 @@ union
 SELECT 
   ntf.chained_mid as merchant_id,
   ntf.funding_instruction_id,
-  payment.transaction_id,
+  ptt.order_id as transaction_id,
   ntf.created_at as transaction_date,
   'chargeback' as transaction_type,
   round(cast(ntf.deduction_amount as numeric)/100,2) as transaction_amount,
@@ -272,6 +272,9 @@ left join
 inner join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
+left JOIN 
+    payment${environment}.payment_transaction ptt
+      on ptt.id = dt.transaction_id
 inner join 
   gaia_opul${environment}.payment payment
     on dt.transaction_id = payment.external_id
