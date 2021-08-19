@@ -30,6 +30,7 @@ device_fee AS
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
+  WHERE fee.settlement_id is not null
 ),
 
 funding_instruction as
@@ -42,7 +43,7 @@ SELECT
     0 as adjustments,
     coalesce(fi.fee,0) as fees,
     coalesce(fi.amount,0) as net_sales,
-    0 as chargebacks,
+    coalesce(fi.chargeback_amount,0) as chargebacks,
     ft.status as status,
     current_timestamp::timestamp as dwh_created_at                           
 FROM
