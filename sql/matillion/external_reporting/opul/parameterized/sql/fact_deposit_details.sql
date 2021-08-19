@@ -1,4 +1,4 @@
-WITH refunds as
+ WITH refunds as
 (
   SELECT *
   FROM 
@@ -75,7 +75,6 @@ SELECT
     ,pt.created_at as transaction_date
     ,case when ft.transaction_type = 'PAYMENT' then 'Sales' 
           when ft.transaction_type = 'REFUND' then  'Refunds'
-          when ft.transaction_type = 'CHARGEBACK' then 'Chargebacks'
           when ft.transaction_type = 'ADJUSTMENT' then  'Adjustments'
           end as transaction_type
     ,ft.amount
@@ -202,14 +201,113 @@ FROM
 WHERE transaction_amount <> 0 
 ),
 
+chargeback as 
+(
+SELECT 
+  ntf.chained_mid as merchant_id,
+  ntf.funding_instruction_id,
+  case 
+    when mid_type ='CARD_PRESENT' then payment.transaction_id
+    when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
+    end as transaction_id,
+  ntf.created_at as transaction_date,
+  'chargeback_fee' as transaction_type,
+  round(cast(ntf.deduction_amount as numeric)/100,2) as transaction_amount,
+  case 
+    when mid_type ='CARD_PRESENT' then 'CP' 
+    when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
+    end as cp_or_cnp,
+  fi.created_at::date as funding_date,
+  ft.settled_at::date as settled_at_date,
+  payment.card_brand,
+  'Non-Member' as subscriber,
+  customer.encrypted_ref_id as gx_customer_id,
+  payment.account_number as payment_id
+FROM odf${environment}.non_transactional_fee ntf
+left JOIN 
+    odf${environment}.funding_instruction fi 
+      on ntf.funding_instruction_id = fi.id
+left join
+    odf${environment}.fiserv_transaction ft
+      on ntf.funding_instruction_id = ft.funding_instruction_id
+inner join
+  chargeback${environment}.dispute_transactions dt
+    on ntf.external_id = dt.id
+left JOIN 
+    payment${environment}.payment_transaction ptt
+      on ptt.id = dt.transaction_id
+inner join 
+  gaia_opul${environment}.payment payment
+    on dt.transaction_id = payment.external_id
+inner join 
+  gaia_opul${environment}.plan plan
+    on payment.plan_id = plan.id
+inner join 
+  gaia_opul${environment}.customer customer
+    on plan.customer_id = customer.id
+where ntf.funding_instruction_id is not null
+),
+
+chargeback_fee as
+(
+SELECT 
+  ntf.chained_mid as merchant_id,
+  ntf.funding_instruction_id,
+  case 
+    when mid_type ='CARD_PRESENT' then payment.transaction_id
+    when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
+    end as transaction_id,
+  ntf.created_at as transaction_date,
+  'chargeback_fee' as transaction_type,
+  round(cast(ntf.amount as numeric)/100,2) as transaction_amount,
+  case 
+    when mid_type ='CARD_PRESENT' then 'CP' 
+    when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
+    end as cp_or_cnp,
+  fi.created_at::date as funding_date,
+  ft.settled_at::date as settled_at_date,
+  payment.card_brand,
+  'Non-Member' as subscriber,
+  customer.encrypted_ref_id as gx_customer_id,
+  payment.account_number as payment_id
+FROM odf${environment}.non_transactional_fee ntf
+left JOIN 
+    odf${environment}.funding_instruction fi 
+      on ntf.funding_instruction_id = fi.id
+left join
+    odf${environment}.fiserv_transaction ft
+      on ntf.funding_instruction_id = ft.funding_instruction_id
+inner join
+  chargeback${environment}.dispute_transactions dt
+    on ntf.external_id = dt.id
+left JOIN 
+    payment${environment}.payment_transaction ptt
+      on ptt.id = dt.transaction_id
+inner join 
+  gaia_opul${environment}.payment payment
+    on dt.transaction_id = payment.external_id
+inner join 
+  gaia_opul${environment}.plan plan
+    on payment.plan_id = plan.id
+inner join 
+  gaia_opul${environment}.customer customer
+    on plan.customer_id = customer.id
+where ntf.funding_instruction_id is not null
+),
+
+
 main as 
 (
 
     SELECT * FROM all_transactions
     UNION ALL
     SELECT * FROM fee
-	UNION 
+      UNION 
     SELECT * FROM device_fee
+    UNION 
+    SELECT * FROM chargeback
+    UNION 
+    SELECT * FROM chargeback_fee
 )
 
 SELECT 
