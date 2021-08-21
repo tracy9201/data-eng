@@ -215,7 +215,7 @@ def main():
     parser.add_argument('--dryrun', '--dry-run','--dry',help='if present will only perform read level operations' ,action='store_true')
     parser.add_argument('--e', nargs=1, type=str, choices=['qa','stage'], help='the redshift environment, the default is qa',default=['qa'])
     parser.add_argument('--p', nargs=1, type=str, help='the redshift cluster password' )
-    parser.add_argument('--k', nargs='+', type=str, required=True, help="the encryption keys(s), at least one is required, eg. -k 'mykey'" )
+    parser.add_argument('--k', nargs=1, type=str, required=True, help="the aes encryption key" )
     
    
     args = parser.parse_args()
