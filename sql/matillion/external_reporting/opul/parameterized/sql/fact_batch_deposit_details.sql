@@ -215,7 +215,7 @@ SELECT
     when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
     end as transaction_id,
   ntf.created_at as transaction_date,
-  'chargeback_fee' as transaction_type,
+  'chargeback' as transaction_type,
   round(cast(ntf.deduction_amount as numeric)/100,2) as transaction_amount,
   case 
     when mid_type ='CARD_PRESENT' then 'CP' 
