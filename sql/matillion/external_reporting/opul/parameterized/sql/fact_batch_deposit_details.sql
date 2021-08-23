@@ -55,7 +55,7 @@ device_fee AS
     ,'Equipment' AS transaction_type
     ,fee.amount/100.0 AS transaction_amount
     ,'N/A' cp_or_cnp
-    , NULL batch_date
+    , fi.created_at::date as batch_date
     , isd.settled_at_date
     ,'N/A' card_brand
     ,'N/A' subscriber
@@ -64,6 +64,9 @@ device_fee AS
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
+  INNER JOIN
+       odf${environment}.funding_instruction fi on isd.funding_instruction_id = fi.id
+
 ),
 
 transaction_details as 
@@ -171,11 +174,12 @@ SELECT
      merchant_id
     ,funding_instruction_id
     ,cp_or_cnp
+    ,batch_date
     ,settled_at_date
     ,round(sum(ft_fees),2) as transaction_amount
 FROM
     transaction_details
-GROUP BY 1,2,3,4
+GROUP BY 1,2,3,4,5
 ),
 
 
@@ -190,7 +194,7 @@ SELECT
           when cp_or_cnp = 'CNP' then 'CNP Fees' end as transaction_type
     ,transaction_amount
     ,cp_or_cnp
-    ,NULL AS batch_date
+    ,batch_date
     ,settled_at_date
     ,'N/A' AS card_brand
     ,'N/A' AS subscriber
@@ -211,13 +215,13 @@ SELECT
     when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
     end as transaction_id,
   ntf.created_at as transaction_date,
-  'chargeback_fee' as transaction_type,
+  'chargeback' as transaction_type,
   round(cast(ntf.deduction_amount as numeric)/100,2) as transaction_amount,
   case 
     when mid_type ='CARD_PRESENT' then 'CP' 
     when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
     end as cp_or_cnp,
-  fi.created_at::date as funding_date,
+  fi.created_at::date as batch_date,
   ft.settled_at::date as settled_at_date,
   payment.card_brand,
   'Non-Member' as subscriber,
@@ -264,7 +268,7 @@ SELECT
     when mid_type ='CARD_PRESENT' then 'CP' 
     when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
     end as cp_or_cnp,
-  fi.created_at::date as funding_date,
+  fi.created_at::date as batch_date,
   ft.settled_at::date as settled_at_date,
   payment.card_brand,
   'Non-Member' as subscriber,
