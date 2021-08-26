@@ -50,7 +50,7 @@ device_fee AS
   SELECT 
     fee.mid AS merchant_id
     , fee.funding_instruction_id
-    , NULL AS transaction_id
+    , fee.id:: VARCHAR(255) AS transaction_id
     , NULL AS transaction_date
     ,'Equipment' AS transaction_type
     ,fee.amount/100.0 AS transaction_amount
@@ -66,6 +66,8 @@ device_fee AS
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
   INNER JOIN
        odf${environment}.funding_instruction fi on isd.funding_instruction_id = fi.id
+  WHERE
+      fee.transaction_type = 'DEVICE_ORDER'
 
 ),
 
@@ -101,7 +103,7 @@ JOIN
     odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
-WHERE (ft.status != 'FAILED')
+WHERE (ft.status != 'FAILED' OR ft.status is null)
 
 ),
 
@@ -249,7 +251,8 @@ inner join
 inner join 
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
-where ntf.funding_instruction_id is not null
+where ntf.funding_instruction_id is not null 
+AND  ntf.transaction_type = 'CHARGEBACK'
 ),
 
 chargeback_fee as
@@ -297,6 +300,7 @@ inner join
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
+AND  ntf.transaction_type = 'CHARGEBACK'
 ),
 
 main as 
