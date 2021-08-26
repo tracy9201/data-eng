@@ -30,7 +30,7 @@ device_fee AS
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
-  WHERE fee.settlement_id is not null
+  WHERE fee.settlement_id is not null AND fee.transaction_type = 'DEVICE_ORDER'
 ),
 
 funding_instruction as

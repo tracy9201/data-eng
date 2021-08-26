@@ -20,7 +20,7 @@ device_fee AS
 (
   SELECT 
     fee.funding_instruction_id  as reference_id
-    ,isd.settled_at_date as funding_date
+    ,isd.settled_at_date as batch_date
     , isd.settled_at_date
     , fee.mid AS merchant_id
     , 0.0 as adjustments
@@ -30,7 +30,7 @@ device_fee AS
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
-  WHERE fee.settlement_id is not null
+  WHERE fee.transaction_type = 'DEVICE_ORDER'
 ),
 
 funding_instruction as
@@ -51,7 +51,7 @@ FROM
 LEFT JOIN 
      fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    (ft.status != 'FAILED')
+    (ft.status != 'FAILED' or ft.status is null)
 ),
 
 payfac as
