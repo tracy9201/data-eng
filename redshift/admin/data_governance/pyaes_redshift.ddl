@@ -1,3 +1,4 @@
+--Create library
 CREATE OR REPLACE LIBRARY pyaes
 LANGUAGE plpythonu
 FROM 'https://tinyurl.com/redshift-udfs/pyaes.zip?raw=true';
@@ -7,6 +8,7 @@ FROM 'https://tinyurl.com/redshift-udfs/pyaes.zip?raw=true';
 CREATE SCHEMA udf_enc;
 
 --- Create UDF
+--- Create encrypt function
 CREATE OR REPLACE FUNCTION udf_enc.aes_encrypt(input VARCHAR(max), vKey VARCHAR(256))
 RETURNS VARCHAR STABLE AS $$
   import pyaes
@@ -24,6 +26,7 @@ $$ LANGUAGE plpythonu ;
 CREATE SCHEMA udf_dec;
 
 --- Create UDF
+--- Create decrypt function
 CREATE OR REPLACE FUNCTION 
 udf_dec.aes_decrypt(encrypted_msg varchar(max), vKey VARCHAR(256))
 RETURNS VARCHAR STABLE AS $$
