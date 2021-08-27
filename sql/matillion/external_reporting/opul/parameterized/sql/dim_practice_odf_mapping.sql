@@ -8,7 +8,8 @@ WITH dim_practice_odf_mapping as
 	od.gx_provider_id,
 	od.created_at,
 	od.updated_at,
-	current_timestamp::timestamp as dwh_created_at
+	current_timestamp::timestamp as dwh_created_at,
+	timezone AS practice_time_zone
 	FROM merchant${environment}.card_processing cp 
 	JOIN kronos_opul${environment}.organization_merchant om on cp.merchant_id = om.payfac_merchant_id
 	JOIN kronos_opul${environment}.organization_data od on od.merchant_id = om.id
