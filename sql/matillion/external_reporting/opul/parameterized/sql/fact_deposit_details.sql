@@ -231,19 +231,19 @@ left JOIN
 left join
     odf${environment}.fiserv_transaction ft
       on ntf.funding_instruction_id = ft.funding_instruction_id
-inner join
+left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
     payment${environment}.payment_transaction ptt
       on ptt.id = dt.transaction_id
-inner join 
+left join 
   gaia_opul${environment}.payment payment
     on dt.transaction_id = payment.external_id
-inner join 
+left join 
   gaia_opul${environment}.plan plan
     on payment.plan_id = plan.id
-inner join 
+left join 
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
@@ -279,19 +279,19 @@ left JOIN
 left join
     odf${environment}.fiserv_transaction ft
       on ntf.funding_instruction_id = ft.funding_instruction_id
-inner join
+left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
     payment${environment}.payment_transaction ptt
       on ptt.id = dt.transaction_id
-inner join 
+left join 
   gaia_opul${environment}.payment payment
     on dt.transaction_id = payment.external_id
-inner join 
+left join 
   gaia_opul${environment}.plan plan
     on payment.plan_id = plan.id
-inner join 
+left join 
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
