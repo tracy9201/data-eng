@@ -22,7 +22,7 @@ device_fee AS
     fee.funding_instruction_id  as reference_id
     ,isd.settled_at_date as batch_date
     , isd.settled_at_date
-    , fee.mid AS merchant_id
+    , fee.chained_mid AS merchant_id
     , 0.0 as adjustments
     , CAST(fee.amount /100.0 as decimal(10,2)) AS fees
     , 0.0 AS net_sales

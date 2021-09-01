@@ -48,7 +48,7 @@ instruction_settled_date AS
 device_fee AS
 (
   SELECT 
-    fee.mid AS merchant_id
+    fee.chained_mid AS merchant_id
     , fee.funding_instruction_id
     , fee.id:: VARCHAR(255) AS transaction_id
     , NULL AS transaction_date
