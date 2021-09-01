@@ -16,7 +16,8 @@ SELECT
     address.city,
     address.state,
     address.zip,
-    provider.name AS business_name
+    provider.name AS business_name,
+    'ORGANIZATION_'||org.id as org_id
 FROM internal_kronos_hint.organization_data org 
 LEFT JOIN 
     internal_kronos_hint.address address 
@@ -49,7 +50,8 @@ select
     state,
     zip,
     business_name,
-    tip.gratuity
+    tip.gratuity,
+    org_id
 from main
 left join 
   tip
