@@ -49,8 +49,6 @@ Active_Members AS
       DATEDIFF(day, created_date, getdate()) as days_since_creation
    FROM
       ir_commercial.member_status
-  -- WHERE
-  --    status = 'active'
 )
 ,
 Active_Membership_length As
