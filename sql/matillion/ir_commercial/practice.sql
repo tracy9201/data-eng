@@ -56,5 +56,15 @@ from main
 left join 
   tip
     on practice_id = id
+where practice_name not like 'zz%' 
+  and practice_name not like '%hint%'
+  and practice_name not like '%HINT%'
+  and practice_name not like 'ZZ%'
+  and practice_name not like '%Hint%' 
+  and practice_name not like '%Zz%'
+  and practice_name not like '%zZ%'
+  and practice_name not like '%canceled%'
+  and practice_name not like '%deactivated%'
+  and practice_name not like '%Duplicate%'
 )
 SELECT * FROM new_main

@@ -270,7 +270,7 @@ SELECT
   ft.settled_at::date as settled_at_date,
   payment.card_brand,
   'Non-Member' as subscriber,
-  customer.encrypted_ref_id as gx_customer_id,
+  'N/A' AS gx_customer_id,
   payment.account_number as payment_id
 FROM odf${environment}.non_transactional_fee ntf
 left JOIN 
