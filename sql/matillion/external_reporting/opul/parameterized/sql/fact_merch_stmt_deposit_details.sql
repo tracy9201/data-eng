@@ -115,7 +115,7 @@ SELECT
     ,0 as transactions
     ,0 as charges
     ,0 as refunds
-    ,fi.chargeback_amount/100.0 as chargebacks
+    ,(fi.chargeback_amount + fi.chargeback_reversal_amount)/100.0 as chargebacks
     ,0 as adjustments
     ,0 AS ft_fees
   	,0 as non_transaction_fee  
