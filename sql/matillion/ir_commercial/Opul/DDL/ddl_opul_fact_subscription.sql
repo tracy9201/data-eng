@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial_opul.opul_fact_subscription
   ,subscription_updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,gx_customer_id varchar(64) ENCODE raw
   ,gx_provider_id varchar(64) ENCODE raw
+  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(gx_subscription_id)
 
 );

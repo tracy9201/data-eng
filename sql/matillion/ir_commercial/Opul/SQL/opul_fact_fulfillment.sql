@@ -16,7 +16,8 @@ select
     sub.offering_id,
     cus.gx_customer_id,
     org.gx_provider_id,
-    sub.encrypted_ref_id as gx_subscription_id
+    sub.encrypted_ref_id as gx_subscription_id,
+    current_timestamp::timestamp as dwh_created_at
 from internal_gaia_opul.fulfillment ful
 left join 
     internal_gaia_opul.subscription sub 

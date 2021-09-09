@@ -27,7 +27,8 @@ WITH main AS (
     WHEN staff_data.commission IS NOT NULL THEN round(cast(staff_data.commission as numeric)/100,2)               
     ELSE NULL               
     END AS commssion_percentage ,
-  org.gx_provider_id
+  org.gx_provider_id ,
+  current_timestamp::timestamp as dwh_created_at
   FROM internal_kronos_opul.users users   
   LEFT JOIN 
     internal_kronos_opul.expert_data expert_data      

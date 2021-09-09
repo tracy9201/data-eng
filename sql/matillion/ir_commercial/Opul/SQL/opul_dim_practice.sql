@@ -49,7 +49,8 @@ select
     state,
     zip,
     business_name,
-    tip.gratuity
+    tip.gratuity,
+    current_timestamp::timestamp as dwh_created_at
 from main
 left join 
   tip

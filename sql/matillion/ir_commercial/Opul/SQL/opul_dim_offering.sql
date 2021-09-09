@@ -17,7 +17,8 @@ select
     catalog_item.status as catalog_status, 
     round(cast(catalog_item.wholesale_price as numeric )/100,2) as catalog_wholesale_price, 
     catalog_item.bd_status, 
-    brand.created_at as brand_created_at
+    brand.created_at as brand_created_at,
+    current_timestamp::timestamp as dwh_created_at
 from  internal_kronos_opul.offering offering
 left join 
     internal_kronos_opul.catalog_item catalog_item

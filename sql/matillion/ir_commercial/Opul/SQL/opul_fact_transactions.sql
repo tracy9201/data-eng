@@ -128,14 +128,13 @@ main as
 (
   select 
   sales_id as transaction_id,
-  sales_status as status, -- 1 active, else inactive?
+  sales_status as status,
   gx_customer_id,
   coalesce(payment_method,'N/A') as payment_method,
   transaction,
   sales_amount as amount,
   device_id,
   created_at,
- -- original_sales_created_at, -- not sure if needed
   updated_at,
   staff_user_id as staff_id,
   gratuity_amount,
@@ -145,7 +144,8 @@ main as
        when payment_detail is NULL  then 'N/A'
        else payment_detail  end as payment_detail,
   gx_provider_id,
-  transaction_id as clover_transaction_id
+  transaction_id as clover_transaction_id,
+  current_timestamp::timestamp as dwh_created_at
   from batch_report_details_formatting
 )
 select * from main

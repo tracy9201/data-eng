@@ -9,8 +9,8 @@
       ,subscription.quantity/100 as units
       ,subscription.end_count as subscription_cycle
       ,subscription.unit_name as unit_type
-      ,round(cast((subscription.subtotal+ invoice_item.discounts)/subscription.quantity*100.0 as numeric),2)/100 as price_unit 
-      ,(subscription.subtotal+ invoice_item.discounts) as total_price
+      ,0 as price_unit 
+      ,0 as total_price
       ,renewal_count as recurring_cycle
       ,subscription.encrypted_ref_id as gx_subscription_id
       ,customer.encrypted_ref_id as gx_customer_id
@@ -19,11 +19,9 @@
       ,subscription.canceled_at as subscription_canceled_at
       ,subscription.updated_at as subscription_updated_at
       ,subscription.offering_id
-      --,o.subscription_type
       FROM internal_gaia_opul.invoice invoice
       LEFT JOIN internal_gaia_opul.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
       LEFT JOIN internal_gaia_opul.subscription subscription on invoice_item.subscription_id = subscription.id
-      LEFT JOIN internal_gaia_opul.discount discount on discount.subscription_id = subscription.id
       LEFT JOIN internal_gaia_opul.plan plan on subscription.plan_id = plan.id
       LEFT JOIN internal_gaia_opul.customer customer on plan.customer_id = customer.id
       LEFT JOIN internal_gaia_opul.provider provider on customer.provider_id = provider.id
@@ -38,13 +36,14 @@
       ,subscription_cycle
       ,total_price
       ,recurring_cycle
-      ,0 as subscription_type -- have to fix this
+      ,0 as subscription_type
       ,offering_id
       ,subscription_created_at
       ,subscription_canceled_at
       ,subscription_updated_at
       ,gx_customer_id
       ,gx_provider_id
+      ,current_timestamp::timestamp as dwh_created_at
     from subscription_payment
     group by 
     1,
@@ -59,7 +58,7 @@
     10,
     11,
     12,
-    13
-  --  14
+    13,
+    14
     )
     select * from main

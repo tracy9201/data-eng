@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial_opul.opul_dim_practice
   ,zip VARCHAR(16) ENCODE raw
   ,business_name VARCHAR(MAX)   ENCODE raw
   ,gratuity VARCHAR(16) ENCODE raw
+  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(gx_provider_id)
 )
 ;
