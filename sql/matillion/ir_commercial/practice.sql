@@ -16,7 +16,8 @@ SELECT
     address.city,
     address.state,
     address.zip,
-    provider.name AS business_name
+    provider.name AS business_name,
+    'ORGANIZATION_'||org.id as org_id
 FROM internal_kronos_hint.organization_data org 
 LEFT JOIN 
     internal_kronos_hint.address address 
@@ -49,10 +50,21 @@ select
     state,
     zip,
     business_name,
-    tip.gratuity
+    tip.gratuity,
+    org_id
 from main
 left join 
   tip
     on practice_id = id
+where practice_name not like 'zz%' 
+  and practice_name not like '%hint%'
+  and practice_name not like '%HINT%'
+  and practice_name not like 'ZZ%'
+  and practice_name not like '%Hint%' 
+  and practice_name not like '%Zz%'
+  and practice_name not like '%zZ%'
+  and practice_name not like '%canceled%'
+  and practice_name not like '%deactivated%'
+  and practice_name not like '%Duplicate%'
 )
 SELECT * FROM new_main

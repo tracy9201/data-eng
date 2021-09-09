@@ -59,6 +59,7 @@ device_fee AS
     ,0 as adjustments
     ,0 as ft_fees
     ,fee.amount AS non_transaction_fee
+    ,0 as chargeback_fees
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
@@ -79,6 +80,7 @@ device_fee_sum AS
     ,sum(adjustments)/100.0 as adjustments
     ,sum(ft_fees)/100.0 AS ft_fees
     ,sum(non_transaction_fee)/100.0 AS non_transaction_fee
+    ,sum(chargeback_fees)/100.0 as chargeback_fees
   FROM device_fee fee
   GROUP BY 1,2,3,4
 ),
@@ -97,16 +99,44 @@ SELECT
     ,sum(adjustments)/100.0 as adjustments
     ,sum(fees)/100.0 AS ft_fees
 	,0 as non_transaction_fee
+    ,0 as chargeback_fees
 FROM
     transaction_details
 GROUP BY 1,2,3,4
 ),
+
+chargebacks as
+(
+SELECT
+    fi.mid
+    ,fi.id as funding_instruction_id
+    ,ft.settled_at::date AS settled_at
+    ,to_date(ft.settled_at,'YYYY-MM-01') as settled_month
+    ,0 as transactions
+    ,0 as charges
+    ,0 as refunds
+    ,fi.chargeback_amount/100.0 as chargebacks
+    ,0 as adjustments
+    ,0 AS ft_fees
+  	,0 as non_transaction_fee  
+    ,fi.chargeback_fee as chargeback_fees
+FROM
+     odf${environment}.funding_instruction fi 
+LEFT JOIN 
+     odf${environment}.fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
+WHERE 
+    (fi.status = 'SETTLED' or ft.status = 'SETTLED') and 
+    fi.chargeback_amount > 0
+)
+,
 
 transaction_details_daily_summary_new as
 (
     SELECT * from transaction_details_daily_summary
     UNION
     SELECT * from device_fee_sum
+    UNION
+    SELECT * from chargebacks
 ),
 
 
@@ -122,7 +152,7 @@ SELECT
     ,coalesce(a.refunds,0) as refunds
     ,coalesce(a.chargebacks,0) as chargebacks
     ,coalesce(a.adjustments,0) as adjustments
-    ,coalesce((b.fee+non_transaction_fee)/100.0,0) as fees
+    ,coalesce((b.fee + non_transaction_fee + chargeback_fee)/100.0,0) as fees
     ,coalesce(b.revenue,0) as revenue
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at))::bigint * 1000 as epoch_funding_date
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month))::bigint * 1000 as epoch_funding_month

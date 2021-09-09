@@ -1,0 +1,5 @@
+pytz==2021.1
+python-dotenv==0.19.0
+psycopg2_binary==2.8.6
+dataclasses==0.8
+psycopg2==2.9.1
