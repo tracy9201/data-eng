@@ -219,7 +219,7 @@ def main():
     parser.add_argument('--p', nargs=1, type=str, help='the redshift cluster password' )
     parser.add_argument('--k', nargs=1, type=str, required=True, help="the aes encryption key" )
     parser.add_argument('--c', nargs=1, type=str, required=True, help="aes encryption key lpad filler character" )
-    parser.add_argument('--l', nargs=1, type=int, choices=[16,32,64], help='encryption level, the default is 16',default=[16])
+    parser.add_argument('--l', nargs=1, type=int, choices=[16,24,32], help='encryption key length, the default is 16',default=[16])
    
     args = parser.parse_args()
     # comment in for development only
