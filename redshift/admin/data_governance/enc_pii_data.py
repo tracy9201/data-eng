@@ -185,7 +185,7 @@ class Sensitive_olap_data(object):
         cnt = 0
         try:
             cur = self.conn.cursor()  
-            sql = f"UPDATE {schema}.{table} SET {column} = udf_enc.aes_encrypt({column}, LPAD('{enckey}', {level}, '{lpad_fill_char}')) WHERE TRIM({column}) !='N/A'"
+            sql = f"UPDATE {schema}.{table} SET {column} = udf_enc.aes_encrypt({column}, LPAD('{enckey}', {level}, '{lpad_fill_char}'))"
             cur.execute(sql)
             cnt = cur.rowcount
             self.conn.commit()
@@ -193,6 +193,8 @@ class Sensitive_olap_data(object):
             logger.error(f"error try to update {schema}{table}{column}:{e}")
         else:
             logger.info(f"{schema}.{table}.{column} {cnt} row(s) updated") 
+        finally:
+            logger.info(f"finally for try encrypt_column.")
         return cnt 
 
 
@@ -217,7 +219,7 @@ def main():
     parser.add_argument('--p', nargs=1, type=str, help='the redshift cluster password' )
     parser.add_argument('--k', nargs=1, type=str, required=True, help="the aes encryption key" )
     parser.add_argument('--c', nargs=1, type=str, required=True, help="aes encryption key lpad filler character" )
-    
+    parser.add_argument('--l', nargs=1, type=int, choices=[16,32,64], help='encryption level, the default is 16',default=[16])
    
     args = parser.parse_args()
     # comment in for development only
@@ -256,6 +258,7 @@ def main():
         ekeys = [k for k in args.k[0].split(',')]
         key_count = sensitive_olap_data.get_key_cnt(ekeys)
         lpad_fill_char = args.c[0]
+        enc_level = args.l[0]
 
         
     if args.dryrun:       
@@ -276,7 +279,7 @@ def main():
                     _column = row[3]
                     update_cnt = sensitive_olap_data.update_control_table_for_start_enc(lt._get_now(),id )
                     # run enc.....
-                    cnt = sensitive_olap_data.encrypt_column(_schema,_table,_column,ekeys[0],lpad_fill_char)
+                    cnt = sensitive_olap_data.encrypt_column(_schema,_table,_column,ekeys[0],lpad_fill_char, enc_level)
                     update_cnt = sensitive_olap_data.update_control_table_for_end_enc(lt._get_now(), cnt, id )
 
 
