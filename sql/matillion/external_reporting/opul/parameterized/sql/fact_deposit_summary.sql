@@ -26,7 +26,7 @@ SELECT
     0 as adjustments,
     coalesce(fi.fee,0) as fees,
     coalesce(fi.amount,0) as net_sales,
-    coalesce(fi.chargeback_amount,0) as chargebacks,
+    coalesce(fi.chargeback_amount + chargeback_reversal_amount,0) as chargebacks,
     current_timestamp::timestamp as dwh_created_at                           
 FROM
      odf${environment}.funding_instruction fi 
