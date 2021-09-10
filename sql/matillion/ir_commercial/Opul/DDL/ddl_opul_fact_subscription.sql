@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial_opul.opul_fact_subscription
   ,total_price INTEGER   ENCODE raw
   ,recurring_cycle INTEGER   ENCODE raw
   ,subscription_type INTEGER   ENCODE raw
-  ,offering_id bigint   ENCODE raw
+  ,offering_id varchar(64) ENCODE raw
   ,subscription_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,subscription_canceled_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,subscription_updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
