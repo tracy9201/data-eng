@@ -4,7 +4,7 @@
 
 -- DROP TABLE public.encrypt_sensitive_data;
 
-DROP TABLE public.encrypt_sensitive_data;
+
 CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data
 (
 	id INTEGER  DEFAULT "identity"(8548400, 0, '0,1'::text) ENCODE az64
