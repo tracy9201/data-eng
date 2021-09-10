@@ -55,5 +55,6 @@ from main
 left join 
   tip
     on practice_id = id
+where gx_provider_id is not null
 )
 SELECT * FROM new_main
