@@ -1,17 +1,155 @@
-WITH refunds as
+WITH last_revised_record_fiserv_transaction_per_day as
+(
+
+    SELECT id, max(rev) as last_revised_record_id
+    FROM 
+      odf${environment}.fiserv_transaction_aud
+    GROUP BY id, created_at::date
+),
+
+last_revised_record_payment_transaction_per_day as
+(
+
+    SELECT id, max(rev) as last_revised_record_id
+    FROM 
+      odf${environment}.payment_transaction_aud
+    GROUP BY id, created_at::date
+),
+
+last_revised_record_non_transactional_fee_per_day as
+(
+
+    SELECT id, max(rev) as last_revised_record_id
+    FROM 
+      odf${environment}.non_transactional_fee_aud
+    GROUP BY id, created_at::date
+),
+
+fiserv_transaction_with_history as 
+(
+
+    SELECT *
+    FROM 
+      odf${environment}.fiserv_transaction
+
+    UNION 
+
+    SELECT 
+      a.id
+      , a.merchant_id
+      , a.transaction_id
+      , a.transaction_type
+      , a.transaction_status
+      , a.amount
+      , a.cp_or_cnp
+      , a.api_response
+      , a.transaction_date
+      , a.transaction_time
+      , a.card_brand
+      , a.card_identifier
+      , a.expiry
+      , a.invoice_id
+      , a.exchange_added_date
+      , a.created_at
+      , a.updated_at
+      , a.percent_fee
+      , a.fixed_fee
+      , a.total_fee
+      , a.funding_instruction_id
+      , a.settled_at
+      , a.status
+      , a.fiserv_id
+      , a.computed_fee
+    FROM 
+      odf${environment}.fiserv_transaction_aud a    
+    JOIN
+      last_revised_record_fiserv_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+),
+
+payment_transaction_with_history as 
+(
+
+    SELECT *
+    FROM 
+      odf${environment}.payment_transaction
+
+    UNION 
+
+    SELECT 
+      a.id 
+      , a.created_at
+      , a.updated_at
+      , a.deprecated_at
+      , a.processed_at
+      , a.transaction_id
+      , a.transaction_type
+      , a.cp_or_cnp
+      , a.merchant_id
+      , a.amount
+      , a.currency
+      , a.status
+      , a.issuer
+      , a.percent_fee
+      , a.fixed_fee
+      , a.total_fee
+      , a.funding_instruction_id
+      , a.settled_at
+      , a.external_id
+      , a.computed_fee
+      , a.transaction_time
+    FROM 
+      odf${environment}.payment_transaction_aud a    
+    JOIN
+      last_revised_record_payment_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+),
+
+non_transactional_fee_with_history as 
+(
+
+    SELECT *
+    FROM 
+      odf${environment}.non_transactional_fee
+
+    UNION 
+
+    SELECT 
+      a.id 
+      , a.external_id
+      , a.funding_instruction_id
+      , a.settlement_id
+      , a.mid 
+      , a.chained_mid 
+      , a.currency
+      , a.amount
+      , a.funding_type
+      , a.transaction_type
+      , a.transaction_date
+      , a.scheduled_funding_date
+      , a.created_at
+      , a.updated_at
+      , a.deprecated_at
+      , a.deduction_amount
+    FROM 
+      odf${environment}.non_transactional_fee_aud a    
+    JOIN
+      last_revised_record_non_transactional_fee_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+),
+
+refunds as
 (
   SELECT *
   FROM 
-      odf${environment}.fiserv_transaction
+      fiserv_transaction_with_history
   WHERE
       transaction_type = 'REFUND'
 ),
+
 
 payment as
 (
   SELECT *
   FROM 
-      odf${environment}.fiserv_transaction
+      fiserv_transaction_with_history
   WHERE
       transaction_type = 'PAYMENT'
 ),
@@ -31,7 +169,7 @@ calc_fee as
   UNION ALL
   SELECT *, percent_fee as percent_fee_calc 
   FROM 
-      odf${environment}.fiserv_transaction
+      fiserv_transaction_with_history
   WHERE
       transaction_type <> 'REFUND'
 ),
@@ -41,7 +179,7 @@ instruction_settled_date AS
    SELECT 
      funding_instruction_id,
      settled_at AS settled_at_date
-   FROM odf${environment}.fiserv_transaction
+   FROM fiserv_transaction_with_history
    GROUP BY 1,2
 ),
 
@@ -61,7 +199,7 @@ device_fee AS
     ,'N/A' subscriber
     ,'N/A' gx_customer_id
     ,'N/A' payment_id
-  FROM odf${environment}.non_transactional_fee fee
+  FROM non_transactional_fee_with_history fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
   INNER JOIN
@@ -100,7 +238,7 @@ FROM
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
 JOIN 
-    odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
+    payment_transaction_with_history pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
 WHERE (ft.status != 'FAILED' OR ft.status is null)
@@ -229,18 +367,18 @@ SELECT
   'Non-Member' as subscriber,
   customer.encrypted_ref_id as gx_customer_id,
   payment.account_number as payment_id
-FROM odf${environment}.non_transactional_fee ntf
+FROM non_transactional_fee_with_history ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
       on ntf.funding_instruction_id = fi.id
 left join
-    odf${environment}.fiserv_transaction ft
+    fiserv_transaction_with_history ft
       on ntf.funding_instruction_id = ft.funding_instruction_id
 left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
-    payment${environment}.payment_transaction ptt
+    payment_transaction_with_history ptt
       on ptt.id = dt.transaction_id
 left join 
   gaia_opul${environment}.payment payment
@@ -277,18 +415,18 @@ SELECT
   'Non-Member' as subscriber,
   'N/A' AS gx_customer_id,
   payment.account_number as payment_id
-FROM odf${environment}.non_transactional_fee ntf
+FROM non_transactional_fee_with_history ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
       on ntf.funding_instruction_id = fi.id
 left join
-    odf${environment}.fiserv_transaction ft
+    fiserv_transaction_with_history ft
       on ntf.funding_instruction_id = ft.funding_instruction_id
 left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
-    payment${environment}.payment_transaction ptt
+    payment_transaction_with_history ptt
       on ptt.id = dt.transaction_id
 left join 
   gaia_opul${environment}.payment payment
