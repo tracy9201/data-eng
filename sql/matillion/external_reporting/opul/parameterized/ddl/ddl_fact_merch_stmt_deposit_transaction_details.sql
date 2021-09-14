@@ -19,6 +19,7 @@ merchant_id VARCHAR(256)   ENCODE raw
 ,ft_percent_fee NUMERIC(18,2)   ENCODE raw
 ,funding_date DATE ENCODE RAW
 ,funding_month DATE ENCODE RAW
+,last4 VARCHAR(20)   ENCODE raw
 ,epoch_funding_date  BIGINT   ENCODE raw
 ,epoch_funding_month  BIGINT  ENCODE raw
 ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw 
