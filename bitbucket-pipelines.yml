@@ -8,7 +8,6 @@ image: atlassian/default-image:2
 pipelines:
   branches:
     development:
-      - parallel:
         - step:
             name: 'Build and sync with DEV S3'
             script:
