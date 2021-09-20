@@ -42,7 +42,7 @@ FROM
     odf${environment}.fiserv_transaction ft
 JOIN 
     odf${environment}.funding_instruction fi on ft.funding_instruction_id = fi.id
-WHERE fi.status = 'SETTLED'
+WHERE  (fi.status = 'SETTLED' or ft.status = 'SETTLED')
 
 ),
 
@@ -63,7 +63,7 @@ device_fee AS
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
-  WHERE fee.settlement_id is not null
+  WHERE fee.transaction_type = 'DEVICE_ORDER'
 ),
 
 device_fee_sum AS
@@ -125,8 +125,7 @@ FROM
 LEFT JOIN 
      odf${environment}.fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    (fi.status = 'SETTLED' or ft.status = 'SETTLED') and 
-    fi.chargeback_amount > 0
+    (fi.status = 'SETTLED' or ft.status = 'SETTLED') 
 )
 ,
 

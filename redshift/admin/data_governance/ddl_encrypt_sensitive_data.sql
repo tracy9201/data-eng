@@ -4,15 +4,16 @@
 
 -- DROP TABLE public.encrypt_sensitive_data;
 
---DROP TABLE public.encrypt_sensitive_data;
+
 CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data
 (
 	id INTEGER  DEFAULT "identity"(8548400, 0, '0,1'::text) ENCODE az64
-	,_host VARCHAR(1000) NOT NULL  ENCODE lzo
+	,_host VARCHAR(1000) NOT NULL DEFAULT 'qa-reporting-cluster.cmmotnszowfl.us-east-1.redshift.amazonaws.com'::CHARACTER varying  ENCODE lzo
 	,_database VARCHAR(64) NOT NULL DEFAULT 'reportingdb'::character varying ENCODE lzo
 	,_schema VARCHAR(127) NOT NULL  ENCODE lzo
 	,_table VARCHAR(127) NOT NULL  ENCODE lzo
 	,_column VARCHAR(127) NOT NULL  ENCODE lzo
+	,sensitive_data_type VARCHAR(1000) not null DEFAULT 'PII'::character varying  ENCODE lzo
 	,is_ready_for_encryption BOOLEAN NOT NULL DEFAULT true ENCODE RAW
 	,is_encrypted BOOLEAN NOT NULL DEFAULT false ENCODE RAW
 	,encryption_start TIMESTAMP WITH TIME ZONE   ENCODE az64
@@ -35,3 +36,6 @@ ALTER TABLE public.encrypt_sensitive_data owner to qadbadmin;
 
 GRANT INSERT, SELECT, UPDATE, DELETE, RULE, REFERENCES, TRIGGER ON TABLE public.encrypt_sensitive_data TO qadbadmin;
 GRANT SELECT ON TABLE public.encrypt_sensitive_data TO looker;
+
+
+

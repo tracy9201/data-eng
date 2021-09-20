@@ -90,7 +90,7 @@ SELECT
     ,ft.percent_fee as ft_percent_fee
     ,fi.fee as fi_fees
     ,case when ft.transaction_type = 'PAYMENT' then ft.percent_fee/10000.0*ft.amount/100.0
-          when ft.transaction_type = 'REFUND'  then 0 - ft.percent_fee_calc/10000.0*ft.amount/100.0  end as ft_fees
+          when ft.transaction_type = 'REFUND'  then 0  end as ft_fees
 FROM 
     calc_fee ft
 JOIN 
