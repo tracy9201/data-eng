@@ -253,6 +253,7 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null 
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
 chargeback_fee as
@@ -301,6 +302,7 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
 main as 
