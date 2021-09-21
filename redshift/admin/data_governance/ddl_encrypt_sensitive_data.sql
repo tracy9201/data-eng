@@ -2,12 +2,13 @@
 
 -- Drop table
 
--- DROP TABLE public.encrypt_sensitive_data;
+DROP TABLE public.encrypt_sensitive_data;
 
 
 CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data
 (
 	id INTEGER  DEFAULT "identity"(8548400, 0, '0,1'::text) ENCODE az64
+	,_env_dw VARCHAR(64) NOT NULL DEFAULT 'qa'::character varying ENCODE lzo
 	,_host VARCHAR(1000) NOT NULL DEFAULT 'qa-reporting-cluster.cmmotnszowfl.us-east-1.redshift.amazonaws.com'::CHARACTER varying  ENCODE lzo
 	,_database VARCHAR(64) NOT NULL DEFAULT 'reportingdb'::character varying ENCODE lzo
 	,_schema VARCHAR(127) NOT NULL  ENCODE lzo
