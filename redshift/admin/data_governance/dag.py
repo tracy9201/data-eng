@@ -273,14 +273,14 @@ def main():
         key_count = sensitive_olap_data.get_key_cnt(ek)
         """ comment out before PR
         """
-        logger.debug(f'password:{ek}')
+        #logger.debug(f'password:{ek}')
         if not args.c:
             lpad_fill_char = random.choice(string.ascii_letters)
         else:
             lpad_fill_char = args.c
         """ comment out before PR
         """
-        logger.debug(f'pad_fill_char:{lpad_fill_char}')
+        #logger.debug(f'pad_fill_char:{lpad_fill_char}')
         enc_level = args.l[0]
 
         
