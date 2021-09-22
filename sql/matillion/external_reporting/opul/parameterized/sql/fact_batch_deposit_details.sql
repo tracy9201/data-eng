@@ -67,7 +67,7 @@ device_fee AS
   INNER JOIN
        odf${environment}.funding_instruction fi on isd.funding_instruction_id = fi.id
   WHERE
-      fee.transaction_type = 'DEVICE_ORDER'
+      fee.transaction_type = 'DEVICE_ORDER' AND fi.status !='FAILED'
 
 ),
 
@@ -103,7 +103,7 @@ JOIN
     odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
-WHERE (ft.status != 'FAILED' OR ft.status is null)
+WHERE (ft.status != 'FAILED' OR ft.status is null) AND fi.status !='FAILED'
 
 ),
 
@@ -254,6 +254,7 @@ left join
 where ntf.funding_instruction_id is not null 
 AND  ntf.transaction_type = 'CHARGEBACK'
 AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
+AND fi.status !='FAILED'
 ),
 
 chargeback_fee as
@@ -303,6 +304,7 @@ left join
 where ntf.funding_instruction_id is not null
 AND  ntf.transaction_type = 'CHARGEBACK'
 AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
+AND fi.status !='FAILED'
 ),
 
 main as 
