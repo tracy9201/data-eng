@@ -35,7 +35,7 @@ FROM
 LEFT JOIN 
      fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    (ft.status != 'FAILED' or ft.status is null)
+    (ft.status != 'FAILED' or ft.status is null) AND fi.status !='FAILED'
 ),
 
 payfac as
