@@ -184,7 +184,7 @@ fee as
 (
 SELECT  
      merchant_id
-    ,funding_instruction_id
+    ,NULL AS funding_instruction_id
     ,'N/A' AS transaction_id
     ,NULL AS transaction_date
     ,case when cp_or_cnp = 'CP' then 'CP Fees'
