@@ -10,13 +10,13 @@ JOIN provider pr ON object_id = pr.id
 CTE_Settlement AS
 (
 (
-SELECT 'settlement_'||cast(settlement.settlement_id AS text) AS settlement_id, funding_txn_id, settlement_type, settlement_date, interchange_unit_fee, interchange_percentage_fee, card_brand, last_four, settlement_status, gateway_transaction_id, authorisation_id, settlement_amount, A.gx_customer_id, A.gx_provider_id  FROM
+SELECT 'settlement_'||cast(settlement.settlement_id AS text) AS settlement_id, funding_txn_id, settlement_type, settlement_date, interchange_unit_fee, interchange_percentage_fee, card_brand, last_four::varchar, settlement_status, gateway_transaction_id, authorisation_id, settlement_amount, A.gx_customer_id, A.gx_provider_id  FROM
 (
 SELECT  settlement_id, funding_txn_id, settlement_type, settlement_date, interchange_unit_fee, interchange_percentage_fee, card_brand, last_four, settlement_status, gateway_transaction_id, authorisation_id, settlement_amount
       FROM (
           SELECT settlement.id  AS settlement_id, settlement.funding_txn_id, settlement.type AS settlement_type, settlement.settlement_date, settlement.card_brand, settlement.last_four, settlement.settlement_status AS settlement_status, gateway_transaction_id, CASE WHEN settlement_status = 'Amount Under Review' THEN tendered ELSE amount END AS settlement_amount, count(id) OVER (PARTITION by external_id ORDER BY gateway_transaction_id) AS order_id, authorisation_id, interchange_unit_fee, interchange_percentage_fee
           FROM settlement
-          WHERE ((settlement.type='Sale' AND settlement.reason = 'Approval') OR (settlement.type='Refund' AND external_id IS NOT null)) OR (gateway_transaction_id IS NULL AND external_id IS NOT NULL AND reason IS NULL AND token IS null)
+          WHERE ((settlement.type='Sale' AND settlement.reason = 'Approval') OR (settlement.type='Sale' AND settlement.reason is null AND settlement_date < current_date) OR (settlement.type='Refund' AND external_id IS NOT null)) OR (gateway_transaction_id IS NULL AND external_id IS NOT NULL AND reason IS NULL AND token IS null)
           ORDER BY funding_txn_id
       ) settlement1 WHERE order_id =1
       UNION ALL
