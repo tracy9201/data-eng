@@ -95,6 +95,7 @@ SELECT
     ,fi.fee as fi_fees
     ,case when ft.transaction_type = 'PAYMENT' then ft.percent_fee/10000.0*ft.amount/100.0
           when ft.transaction_type = 'REFUND'  then 0  end as ft_fees
+    ,right(ft.card_identifier,4) as payment_id
 FROM 
     calc_fee ft
 JOIN 
@@ -103,7 +104,7 @@ JOIN
     odf${environment}.payment_transaction pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
-WHERE (ft.status != 'FAILED' OR ft.status is null) AND fi.status !='FAILED'
+WHERE (ft.status != 'FAILED' OR ft.status is null) AND fi.status !='FAILED' 
 
 ),
 
@@ -119,7 +120,7 @@ GROUP BY
 ),
 
 
-transaction_details_with_correct_fee as 
+transaction_details_with_correct_fee_cnp as 
 (
 SELECT
      a.merchant_id
@@ -137,17 +138,62 @@ SELECT
     ,CASE WHEN b.last_transaction_id IS NOT NULL then a.fi_fees END as correct_fi_fees
     ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
     ,'Non-Member'::varchar as subscriber
-    ,c.gx_customer_id
-    ,c.payment_id
+    ,customer.encrypted_ref_id as gx_customer_id
+    ,a.payment_id
 FROM
     transaction_details a
 LEFT JOIN
     last_trans_for_each_funding_id  b on a.transaction_id = b.last_transaction_id 
     and a.funding_instruction_id=b.funding_instruction_id 
 LEFT JOIN
-    dwh_opul${environment}.fact_batch_report_details c on a.transaction_id = c.transaction_id 
+    payment${environment}.payment_transaction pt on pt.order_id = a.transaction_id
+left join 
+    gaia_opul${environment}.invoice on pt.invoice_id = invoice.encrypted_ref_id
+left join 
+    gaia_opul${environment}.plan on invoice.plan_id = plan.id
+left join 
+    gaia_opul${environment}.customer on plan.customer_id = customer.id
+where  a.cp_or_cnp = 'CNP'
 ),
 
+transaction_details_with_correct_fee_cp as 
+(
+SELECT
+     a.merchant_id
+    ,a.funding_instruction_id
+    ,a.transaction_id
+    ,a.transaction_date
+    ,a.transaction_type
+    ,a.amount
+    ,a.cp_or_cnp
+    ,a.batch_date
+    ,a.settled_at_date
+    ,a.card_brand
+    ,a.ft_percent_fee
+    ,a.fi_fees
+    ,CASE WHEN b.last_transaction_id IS NOT NULL then a.fi_fees END as correct_fi_fees
+    ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
+    ,'Non-Member'::varchar as subscriber
+    ,cd.gx_customer_id
+    ,a.payment_id
+FROM
+    transaction_details a
+LEFT JOIN
+    last_trans_for_each_funding_id  b on a.transaction_id = b.last_transaction_id 
+    and a.funding_instruction_id=b.funding_instruction_id 
+LEFT JOIN
+    p2pe_opul${environment}.p2pe_transaction pt on pt.external_id = a.transaction_id
+left join 
+    kronos_opul${environment}.customer_data cd on pt.user_id = cd.user_id
+where  a.cp_or_cnp = 'CP'
+),
+
+transaction_details_with_correct_fee as
+(
+select * from transaction_details_with_correct_fee_cnp
+union all
+select * from transaction_details_with_correct_fee_cp
+),
 
 all_transactions as
 (
