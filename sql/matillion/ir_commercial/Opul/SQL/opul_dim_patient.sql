@@ -16,6 +16,7 @@ select
     add.state,
     customer_data.created_at,
     customer_data.deprecated_at,
+    least(customer_data.updated_at,users.updated_at,add.updated_at,org.updated_at) as updated_at,
     current_timestamp::timestamp as dwh_created_at
 from internal_kronos_opul.customer_data 
 inner join 
