@@ -57,7 +57,7 @@ device_fee AS
     ,0 as refunds
     ,0 as chargebacks
     ,0 as adjustments
-    ,0 as ft_fees
+    ,0 as fees
     ,fee.amount AS non_transaction_fee
     ,0 as chargeback_fees
   FROM odf${environment}.non_transactional_fee fee
@@ -78,9 +78,7 @@ device_fee_sum AS
     ,sum(refunds)/100.0 as refunds
     ,sum(chargebacks)/100.0 as chargebacks
     ,sum(adjustments)/100.0 as adjustments
-    ,sum(ft_fees)/100.0 AS ft_fees
-    ,sum(non_transaction_fee)/100.0 AS non_transaction_fee
-    ,sum(chargeback_fees)/100.0 as chargeback_fees
+    ,sum(non_transaction_fee)/100.0 AS fees
   FROM device_fee fee
   GROUP BY 1,2,3,4
 ),
@@ -88,22 +86,22 @@ device_fee_sum AS
 transaction_details_daily_summary as
 (
 SELECT
-    mid
-    ,funding_instruction_id
-    ,settled_at
-    ,to_date(settled_at,'YYYY-MM-01') as settled_month
+    a.mid
+    ,a.funding_instruction_id
+    ,a.settled_at
+    ,to_date(a.settled_at,'YYYY-MM-01') as settled_month
     ,count(1) as transactions
-    ,sum(charges)/100.0 as charges
-    ,sum(refunds)/100.0 as refunds
-    ,sum(chargebacks)/100.0 as chargebacks
-    ,sum(adjustments)/100.0 as adjustments
-    ,sum(fees)/100.0 AS ft_fees
-	,0 as non_transaction_fee
-    ,0 as chargeback_fees
+    ,sum(a.charges)/100.0 as charges
+    ,sum(a.refunds)/100.0 as refunds
+    ,sum(a.chargebacks)/100.0 as chargebacks
+    ,sum(a.adjustments)/100.0 as adjustments
+    ,sum(fi.transactional_fee)/100.0 AS fees
 FROM
-    transaction_details
+    transaction_details a
+JOIN odf${environment}.funding_instruction fi on a.funding_instruction_id = fi.id
 GROUP BY 1,2,3,4
 ),
+
 
 chargebacks as
 (
@@ -117,9 +115,7 @@ SELECT
     ,0 as refunds
     ,fi.chargeback_amount/100.0 as chargebacks
     ,0 as adjustments
-    ,0 AS ft_fees
-  	,0 as non_transaction_fee  
-    ,fi.chargeback_fee as chargeback_fees
+    ,fi.chargeback_fee/100.0  AS fees
 FROM
      odf${environment}.funding_instruction fi 
 LEFT JOIN 
@@ -151,7 +147,7 @@ SELECT
     ,coalesce(a.refunds,0) as refunds
     ,coalesce(a.chargebacks,0) as chargebacks
     ,coalesce(a.adjustments,0) as adjustments
-    ,coalesce((b.fee + non_transaction_fee + chargeback_fee)/100.0,0) as fees
+    ,coalesce(a.fees) as fees
     ,coalesce(b.revenue,0) as revenue
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at))::bigint * 1000 as epoch_funding_date
     ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_month))::bigint * 1000 as epoch_funding_month
