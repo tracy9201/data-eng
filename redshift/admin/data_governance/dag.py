@@ -8,6 +8,9 @@ import pytz
 import argparse
 import psycopg2
 import functools
+import string 
+import random
+import secrets
 
 
 from time import localtime
@@ -23,10 +26,10 @@ from dotenv import load_dotenv
 from dotenv import dotenv_values
 
 LOGGER_NAME = 'logging.ini'
-_myloggername = 'enc_pii_data'
+_myloggername = 'dag'
 
-app_name_long = 'encrypt pii/pci data on aws redshift'
-app_name_short = 'enc_pii_data'
+app_name_long = 'encrypt sensitive data on aws redshift'
+app_name_short = 'dag'
 
 dir_abs = os.path.dirname(path.abspath(__file__))
 _appname = os.path.basename(__file__)
@@ -149,6 +152,14 @@ class Sensitive_olap_data(object):
         return key_cnt
     
     
+    def generate_random_password(self,minlen:Optional[int]=12,maxlen:Optional[int]=30)->str:
+        logger.info(f'generating random k')
+        i = random.randint(minlen,maxlen)
+        characters = string.ascii_letters + string.digits + "!@#$%&-."
+        k = ''.join(secrets.choice(characters) for l in range(i))
+        return k
+        
+    
     def update_control_table_for_start_enc(self,utc_dt,id)->int:
 
         sql = f'update {self.control_audit_table} set encryption_start = %s  where id = %s'
@@ -180,12 +191,12 @@ class Sensitive_olap_data(object):
         return cnt   
 
     
-    def encrypt_column(self,schema,table,column,enckey,lpad_fill_char, level:Optional[int]=16)->int:
-        level = level if level in (16,24,32) else 16
+    def encrypt_column(self,schema,table,column,enckey,lpad_fill_char, level:Optional[int]=32)->int:
+        level = level if level in (16,24,32) else 32
         cnt = 0
         try:
             cur = self.conn.cursor()  
-            sql = f"UPDATE {schema}.{table} SET {column} = udf_enc.aes_encrypt({column}, LPAD('{enckey}', {level}, '{lpad_fill_char}')) WHERE TRIM({column}) !='N/A'"
+            sql = f"UPDATE {schema}.{table} SET {column} = udf_enc.aes_encrypt({column}, LPAD('{enckey}', {level}, '{lpad_fill_char}'))"
             cur.execute(sql)
             cnt = cur.rowcount
             self.conn.commit()
@@ -193,6 +204,8 @@ class Sensitive_olap_data(object):
             logger.error(f"error try to update {schema}{table}{column}:{e}")
         else:
             logger.info(f"{schema}.{table}.{column} {cnt} row(s) updated") 
+        finally:
+            logger.info(f"finally for try encrypt_column.")
         return cnt 
 
 
@@ -214,14 +227,14 @@ def main():
  
     parser.add_argument('--dryrun', '--dry-run','--dry',help='if present will only perform read level operations' ,action='store_true')
     parser.add_argument('--e', nargs=1, type=str, choices=['qa','stage'], help='the redshift environment, the default is qa',default=['qa'])
-    parser.add_argument('--p', nargs=1, type=str, help='the redshift cluster password' )
-    parser.add_argument('--k', nargs=1, type=str, required=True, help="the aes encryption key" )
-    parser.add_argument('--c', nargs=1, type=str, required=True, help="aes encryption key lpad filler character" )
-    
+    parser.add_argument('--p', nargs=1, type=str, help='the dw cluster p' )
+    parser.add_argument('--k',  type=str,default=None, help="the encryption secret k, optional" )
+    parser.add_argument('--c',  type=str,default=None, help="k lpad filler character, optional" )
+    parser.add_argument('--l', nargs=1, type=int, choices=[16,24,32], help='encryption key length, the default is 32',default=[32])
    
     args = parser.parse_args()
     # comment in for development only
-    #logger.debug(f' aruments passed:{args}')
+    logger.debug(f' comment in for development,comment out for checkin:aruments passed:{args}')
 
     tic = time.perf_counter()
     lt = Logtime(f'{_myloggername}')
@@ -253,9 +266,22 @@ def main():
         control_audit_row_cnt = sensitive_olap_data.get_control_audit_table_cnt()
         logger.info(f"sensitive_olap_data.nested_list:{sensitive_olap_data.nested_list}")
         logger.info(f"control_audit_row_cnt:{control_audit_row_cnt[0]}")
-        ekeys = [k for k in args.k[0].split(',')]
-        key_count = sensitive_olap_data.get_key_cnt(ekeys)
-        lpad_fill_char = args.c[0]
+        k = args.k
+        if not  k:
+            k = sensitive_olap_data.generate_random_password()
+        ek = [x for x in k.split(',')]
+        key_count = sensitive_olap_data.get_key_cnt(ek)
+        """ comment out before PR
+        """
+        #logger.debug(f'password:{ek}')
+        if not args.c:
+            lpad_fill_char = random.choice(string.ascii_letters)
+        else:
+            lpad_fill_char = args.c
+        """ comment out before PR
+        """
+        #logger.debug(f'pad_fill_char:{lpad_fill_char}')
+        enc_level = args.l[0]
 
         
     if args.dryrun:       
@@ -276,7 +302,7 @@ def main():
                     _column = row[3]
                     update_cnt = sensitive_olap_data.update_control_table_for_start_enc(lt._get_now(),id )
                     # run enc.....
-                    cnt = sensitive_olap_data.encrypt_column(_schema,_table,_column,ekeys[0],lpad_fill_char)
+                    cnt = sensitive_olap_data.encrypt_column(_schema,_table,_column,ek[0],lpad_fill_char, enc_level)
                     update_cnt = sensitive_olap_data.update_control_table_for_end_enc(lt._get_now(), cnt, id )
 
 
