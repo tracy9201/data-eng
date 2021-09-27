@@ -73,7 +73,7 @@ device_fee_sum AS
     ,funding_instruction_id
     ,settled_at
     ,settled_month
-    ,count(1) as transactions
+    ,0 as transactions
     ,sum(charges)/100.0 as charges
     ,sum(refunds)/100.0 as refunds
     ,sum(chargebacks)/100.0 as chargebacks
