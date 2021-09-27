@@ -49,7 +49,7 @@ WHERE  (fi.status = 'SETTLED' or ft.status = 'SETTLED')
 device_fee AS
 (
   SELECT   
-    fee.mid 
+    fee.chained_mid as mid
     ,isd.settled_at
     ,fee.funding_instruction_id
     ,to_date(isd.settled_at,'YYYY-MM-01') as settled_month
