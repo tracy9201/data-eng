@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS ir_commercial_opul.opul_dim_staff (
     pricinple_epxert boolean   ENCODE raw   ,
     commssion_percentage NUMERIC(18,2)   ENCODE raw   ,
     gx_provider_id VARCHAR(64)   ENCODE raw ,
-    updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw ,
     dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw ,
     primary key(staff_id) 
 )

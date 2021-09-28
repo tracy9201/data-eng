@@ -16,7 +16,6 @@ SELECT
     address.city,
     address.state,
     address.zip,
-    least(org.updated_at,address.updated_at,provider.updated_at) as updated_at,
     provider.name AS business_name
 FROM internal_kronos_opul.organization_data org 
 LEFT JOIN 
@@ -51,12 +50,10 @@ select
     zip,
     business_name,
     tip.gratuity,
-    updated_at,
     current_timestamp::timestamp as dwh_created_at
 from main
 left join 
   tip
     on practice_id = id
-where gx_provider_id is not null
 )
 SELECT * FROM new_main

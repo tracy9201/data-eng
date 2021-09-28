@@ -17,7 +17,6 @@ select
     cus.gx_customer_id,
     org.gx_provider_id,
     sub.encrypted_ref_id as gx_subscription_id,
-    least(ful.updated_at,sub.updated_at,plan.updated_at,cus.updated_at,users.updated_at,org.updated_at) as updated_at,
     current_timestamp::timestamp as dwh_created_at
 from internal_gaia_opul.fulfillment ful
 left join 
