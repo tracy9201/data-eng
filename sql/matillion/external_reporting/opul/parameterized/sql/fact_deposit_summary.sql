@@ -53,8 +53,8 @@ FROM funding_instruction
 main AS
 (
 SELECT a.*, 
-    extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.funding_date)) as epoch_funding_date,
-    extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.settled_at_date))  as epoch_settled_at_date,
+    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.funding_date)) as epoch_funding_date,
+    extract (epoch from a.settled_at_date) as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
 FROM payfac a
 JOIN dwh_opul${environment}.dim_practice_odf_mapping b on a.merchant_id = b.card_processing_mid
