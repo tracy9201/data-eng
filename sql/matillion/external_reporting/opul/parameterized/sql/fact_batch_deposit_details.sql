@@ -322,9 +322,10 @@ main as
 )
 
 SELECT 
-    *
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',transaction_date)) as epoch_transaction_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',batch_date)) as epoch_batch_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
+    a.*
+    ,extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.transaction_date)) as epoch_transaction_date
+    ,extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.batch_date)) as epoch_batch_date
+    ,extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.settled_at_date))  as epoch_settled_at_date
     ,current_timestamp::timestamp as dwh_created_at
-FROM main
+FROM main a
+JOIN dwh_opul${environment}.dim_practice_odf_mapping b on a.merchant_id = b.card_processing_mid
