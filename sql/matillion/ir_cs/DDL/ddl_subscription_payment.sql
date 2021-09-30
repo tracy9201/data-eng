@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS ir_cs.subscription_payment
   ,subscription_updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,gx_customer_id VARCHAR(64) ENCODE raw
   ,gx_provider_id VARCHAR(64) ENCODE raw
+  ,invoice_pay_date date ENCODE raw
+  ,ad_hoc_offering_id bigint ENCODE raw
   ,total_paid_tax  NUMERIC(18,2)    ENCODE raw
   ,total_discounted NUMERIC(18,2)    ENCODE raw
   ,total_paid  NUMERIC(18,2)    ENCODE raw
