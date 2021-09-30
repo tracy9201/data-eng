@@ -40,7 +40,7 @@ payment as
     p.status AS sales_status,
     p.created_at AS sales_created_at,
     p.plan_id,
-    p.external_id AS transaction_id,
+    case when p.device_id is null and p.type ='credit_card' then paytra.order_id else p.external_id end AS transaction_id,
     CASE
         WHEN p.type ='credit_card' THEN account_number
         ELSE p.name
@@ -80,6 +80,9 @@ LEFT JOIN
 LEFT JOIN
     gaia_opul${environment}.card card
         ON cpg.card_id = card.id
+LEFT JOIN 
+    payment${environment}.payment_transaction paytra
+        on paytra.id = p.external_id        
 WHERE
     p.id IS NOT NULL
     AND p.status  in (1,-3)
