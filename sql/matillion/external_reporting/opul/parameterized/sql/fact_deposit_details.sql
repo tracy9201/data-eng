@@ -248,6 +248,7 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
 chargeback_fee as
@@ -296,6 +297,7 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
 
@@ -305,7 +307,7 @@ main as
     SELECT * FROM all_transactions
     UNION ALL
     SELECT * FROM fee
-	UNION 
+	  UNION 
     SELECT * FROM device_fee
     UNION 
     SELECT * FROM chargeback
@@ -314,9 +316,10 @@ main as
 )
 
 SELECT 
-    *
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',transaction_date)) as epoch_transaction_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',funding_date)) as epoch_funding_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
-    ,current_timestamp::timestamp as dwh_created_at
-FROM main
+    a.*
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.transaction_date)) as epoch_transaction_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.funding_date)) as epoch_funding_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.settled_at_date))  as epoch_settled_at_date
+    ,current_timestamp::timestamp as dwh_created_at 
+FROM main a
+JOIN dwh_opul${environment}.dim_practice_odf_mapping b on a.merchant_id = b.card_processing_mid

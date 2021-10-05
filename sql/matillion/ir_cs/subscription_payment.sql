@@ -5,6 +5,7 @@
     	,plan_id
       ,subscription.type as subscription_type
       ,subscription.offering_id
+      ,subscription.ad_hoc_offering_id
       FROM internal_kronos_hint.subscription subscription
       WHERE subscription.status in (0,7)
   ),
@@ -22,6 +23,8 @@
       ,(subscription.subtotal+ invoice_item.discounts)/subscription.quantity*100.0 as price_unit
       ,(subscription.subtotal+ invoice_item.discounts) as total_price
       ,renewal_count as recurring_payment
+      ,to_date(invoice.pay_date, 'yyyy-mm-dd') as invoice_pay_date
+      ,o.ad_hoc_offering_id
       ,invoice_item.subtotal + invoice_item.discounts as invoice_amount
       ,invoice_item.amount + invoice_item.discounts as invoice_actual_amount
       ,invoice_item.coupons + invoice_item.credits + invoice_item.payments as invoice_credit
@@ -58,6 +61,8 @@
       ,unit_type
       ,round(cast(price_unit as numeric),2)/100 as price_unit
       ,subscription_cycle
+      ,invoice_pay_date
+      ,ad_hoc_offering_id
       ,round(cast((case when id like '%sub%' then total_price else (sum(total_price) over (partition by invoice)) end) as numeric)/100,2) as total_price
       ,case when id like '%sub%' then recurring_payment else (sum(recurring_payment) over (partition by invoice))/(count(recurring_payment) over (partition by invoice) ) end as recurring_cycle
       ,round(cast((case when id like '%sub%' then tax_charged else (sum(tax_charged) over (partition by invoice)) end) as numeric)/100,2) as tax_charged
@@ -89,6 +94,8 @@
       ,subscription_updated_at
       ,gx_customer_id
       ,gx_provider_id
+      ,invoice_pay_date
+      ,ad_hoc_offering_id
       ,sum(tax_charged) as total_paid_tax
       ,sum(item_discount) as total_discounted
       ,sum(grand_total) as total_paid
@@ -108,7 +115,9 @@
       11,
       12,
       13,
-      14
+      14,
+      15,
+      16
     )
     select * from main
     

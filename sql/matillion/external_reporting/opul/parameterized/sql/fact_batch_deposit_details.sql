@@ -205,7 +205,7 @@ device_fee AS
   INNER JOIN
        odf${environment}.funding_instruction fi on isd.funding_instruction_id = fi.id
   WHERE
-      fee.transaction_type = 'DEVICE_ORDER'
+      fee.transaction_type = 'DEVICE_ORDER' AND fi.status !='FAILED'
 
 ),
 
@@ -241,7 +241,7 @@ JOIN
     payment_transaction_with_history pt on ft.transaction_id = pt.transaction_id 
     and ft.transaction_type = pt.transaction_type
     and ft.amount = pt.amount
-WHERE (ft.status != 'FAILED' OR ft.status is null)
+WHERE (ft.status != 'FAILED' OR ft.status is null) AND fi.status !='FAILED'
 
 ),
 
@@ -391,6 +391,8 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null 
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
+AND fi.status !='FAILED'
 ),
 
 chargeback_fee as
@@ -439,6 +441,8 @@ left join
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
 AND  ntf.transaction_type = 'CHARGEBACK'
+AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
+AND fi.status !='FAILED'
 ),
 
 main as 
@@ -456,9 +460,10 @@ main as
 )
 
 SELECT 
-    *
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',transaction_date)) as epoch_transaction_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',batch_date)) as epoch_batch_date
-    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date
+    a.*
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.transaction_date)) as epoch_transaction_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.batch_date)) as epoch_batch_date
+    ,extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',a.settled_at_date)) as epoch_settled_at_date
     ,current_timestamp::timestamp as dwh_created_at
-FROM main
+FROM main a
+JOIN dwh_opul${environment}.dim_practice_odf_mapping b on a.merchant_id = b.card_processing_mid

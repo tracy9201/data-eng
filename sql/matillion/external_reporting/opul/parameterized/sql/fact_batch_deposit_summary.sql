@@ -35,7 +35,7 @@ FROM
 LEFT JOIN 
      fiserv_transaction ft  on  fi.id = ft.funding_instruction_id     
 WHERE 
-    (ft.status != 'FAILED' or ft.status is null)
+    (ft.status != 'FAILED' or ft.status is null) AND fi.status !='FAILED'
 ),
 
 payfac as
@@ -55,11 +55,12 @@ FROM funding_instruction
 
 main AS
 (
-SELECT *, 
-    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',batch_date)) as epoch_batch_date,
-    extract (epoch from CONVERT_TIMEZONE('America/Los_Angeles','UTC',settled_at_date))  as epoch_settled_at_date,
+SELECT a.*, 
+    extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.batch_date)) as epoch_batch_date,
+    extract (epoch from CONVERT_TIMEZONE('UTC',b.practice_time_zone,a.settled_at_date))  as epoch_settled_at_date,
     current_timestamp::timestamp as dwh_created_at
-FROM payfac
+FROM payfac a
+JOIN dwh_opul${environment}.dim_practice_odf_mapping b on a.merchant_id = b.card_processing_mid
 )
 
 SELECT * FROM main
