@@ -129,6 +129,9 @@ non_transactional_fee_with_history as
       , a.updated_at
       , a.deprecated_at
       , a.deduction_amount
+      , a.order_volume
+      , a.amount_per_unit
+      , a.settled_at
     FROM 
       odf${environment}.non_transactional_fee_aud a    
     JOIN
@@ -378,7 +381,7 @@ left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
-    payment_transaction_with_history ptt
+    payment${environment}.payment_transaction ptt
       on ptt.id = dt.transaction_id
 left join 
   gaia_opul${environment}.payment payment
@@ -428,7 +431,7 @@ left join
   chargeback${environment}.dispute_transactions dt
     on ntf.external_id = dt.id
 left JOIN 
-    payment_transaction_with_history ptt
+    payment${environment}.payment_transaction ptt
       on ptt.id = dt.transaction_id
 left join 
   gaia_opul${environment}.payment payment
