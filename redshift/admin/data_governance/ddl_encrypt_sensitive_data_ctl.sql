@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,inserted_by VARCHAR(100) NOT NULL  ENCODE lzo
 	,inserted_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT ('now'::character varying)::timestamp with time zone ENCODE az64
 	,inserted_comment VARCHAR(2000)   ENCODE lzo
-	,updated_by VARCHAR(100) NOT NULL  ENCODE lzo
+	,updated_by VARCHAR(100) NULL  ENCODE lzo
 	,updated_on TIMESTAMP WITH TIME ZONE NULL DEFAULT ('now'::character varying)::timestamp with time zone ENCODE az64
 	,updated_comment VARCHAR(2000)   ENCODE lzo	
 	,PRIMARY KEY (_host, _database, _schema, _table, _column)
