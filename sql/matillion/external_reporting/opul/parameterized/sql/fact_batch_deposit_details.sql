@@ -202,6 +202,8 @@ device_fee AS
     ,'N/A' subscriber
     ,'N/A' gx_customer_id
     ,'N/A' payment_id
+    ,'N/A' as firstname
+    ,'N/A' as lastname
   FROM non_transactional_fee_with_history fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
@@ -280,6 +282,8 @@ SELECT
     ,'Non-Member'::varchar as subscriber
     ,c.gx_customer_id
     ,c.payment_id
+    ,c.firstname
+    ,c.lastname
 FROM
     transaction_details a
 LEFT JOIN
@@ -306,6 +310,8 @@ SELECT  DISTINCT
     ,subscriber
     ,gx_customer_id
     ,payment_id
+    ,firstname
+    ,lastname
 FROM
     transaction_details_with_correct_fee
 ),
@@ -343,6 +349,8 @@ SELECT
     ,'N/A' AS subscriber
     ,'N/A' AS gx_customer_id
     ,'N/A' AS payment_id
+    ,'N/A' AS firstname
+    ,'N/A' as lastname
 FROM
     fee_at_cp_cnp_level
 WHERE transaction_amount <> 0 
@@ -370,6 +378,8 @@ SELECT
   'Non-Member' as subscriber,
   customer.encrypted_ref_id as gx_customer_id,
   payment.account_number as payment_id
+  ,'N/A' AS firstname
+    ,'N/A' as lastname
 FROM non_transactional_fee_with_history ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
@@ -420,6 +430,8 @@ SELECT
   'Non-Member' as subscriber,
   'N/A' AS gx_customer_id,
   payment.account_number as payment_id
+  ,'N/A' AS firstname
+    ,'N/A' as lastname
 FROM non_transactional_fee_with_history ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
