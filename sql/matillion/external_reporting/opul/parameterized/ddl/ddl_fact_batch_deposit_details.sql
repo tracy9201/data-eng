@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_batch_deposit_details
   ,subscriber  VARCHAR(255) ENCODE raw
   ,gx_customer_id  VARCHAR(255) ENCODE raw
   ,payment_id  VARCHAR(255) ENCODE raw
+  ,firstname VARCHAR(255)   ENCODE raw
+  ,lastname VARCHAR(255)   ENCODE raw
   ,epoch_transaction_date BIGINT ENCODE raw
   ,epoch_batch_date BIGINT ENCODE raw
   ,epoch_settled_at_date BIGINT ENCODE raw
