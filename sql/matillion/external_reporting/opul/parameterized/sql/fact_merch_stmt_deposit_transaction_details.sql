@@ -62,7 +62,7 @@ SELECT
     ft.percent_fee_calc/100.0 as percent_fee,
     ft.percent_fee as ft_percent_fee,
     ft.settled_at::date as funding_date,
-    to_date(settled_at,'YYYY-MM-01') as funding_month,
+    to_date(ft.settled_at,'YYYY-MM-01') as funding_month,
     'N/A' as last4
 FROM 
     calc_fee ft
@@ -131,7 +131,7 @@ SELECT
   5.5 as percent_fee,
   0.0 as ft_percent_fee,
   ft.settled_at::date as funding_date,
-  to_date(settled_at,'YYYY-MM-01') as funding_month,
+  to_date(ft.settled_at,'YYYY-MM-01') as funding_month,
   payment.account_number as last4
 FROM odf${environment}.non_transactional_fee ntf
 LEFT JOIN 
@@ -156,6 +156,7 @@ WHERE
   dt.mid_type = 'CARD_PRESENT'
   AND ntf.funding_instruction_id is not null
   AND fi.status = 'SETTLED'
+  And payment.type = 'credit_card'
 
 UNION ALL 
 
@@ -179,7 +180,7 @@ SELECT
   5.5 as percent_fee,
   0.0 as ft_percent_fee,
   ft.settled_at::date as funding_date,
-  to_date(settled_at,'YYYY-MM-01') as funding_month,
+  to_date(ft.settled_at,'YYYY-MM-01') as funding_month,
   payment.account_number as last4
 FROM odf${environment}.non_transactional_fee ntf
 LEFT JOIN 
@@ -203,6 +204,7 @@ INNER JOIN
 WHERE dt.mid_type = 'CARD_NOT_PRESENT'
   AND ntf.funding_instruction_id is not null
   AND fi.status = 'SETTLED'
+  And payment.type = 'credit_card'
 ),
 
 
