@@ -28,6 +28,12 @@ last_revised_record_non_transactional_fee_per_day as
 fiserv_transaction_with_history as 
 (
 
+    SELECT *
+    FROM 
+      odf${environment}.fiserv_transaction
+
+    UNION 
+
     SELECT 
       a.id
       , a.merchant_id
@@ -63,6 +69,12 @@ fiserv_transaction_with_history as
 payment_transaction_with_history as 
 (
 
+    SELECT *
+    FROM 
+      odf${environment}.payment_transaction
+
+    UNION 
+
     SELECT 
       a.id 
       , a.created_at
@@ -93,6 +105,12 @@ payment_transaction_with_history as
 
 non_transactional_fee_with_history as 
 (
+
+    SELECT *
+    FROM 
+      odf${environment}.non_transactional_fee
+
+    UNION 
 
     SELECT 
       a.id 
