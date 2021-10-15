@@ -98,7 +98,7 @@ payment_transaction_with_history as
     FROM 
       odf${environment}.payment_transaction_aud a    
     JOIN
-      last_revised_record_payment_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+      last_revised_record_payment_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id and a.funding_instruction_id = b.funding_instruction_id
 ),
 
 non_transactional_fee_with_history as 
@@ -132,7 +132,7 @@ non_transactional_fee_with_history as
     FROM 
       odf${environment}.non_transactional_fee_aud a    
     JOIN
-      last_revised_record_non_transactional_fee_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+      last_revised_record_non_transactional_fee_per_day b on a.id = b.id and a.rev = b.last_revised_record_id and a.funding_instruction_id = b.funding_instruction_id
 ),
 
 refunds as
