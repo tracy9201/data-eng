@@ -1,28 +1,28 @@
 WITH last_revised_record_fiserv_transaction_per_day as
 (
 
-    SELECT id, max(rev) as last_revised_record_id
+    SELECT id, funding_instruction_id, max(rev) as last_revised_record_id
     FROM 
       odf${environment}.fiserv_transaction_aud
-    GROUP BY id, created_at::date
+    GROUP BY id, funding_instruction_id, created_at::date
 ),
 
 last_revised_record_payment_transaction_per_day as
 (
 
-    SELECT id, max(rev) as last_revised_record_id
+    SELECT id, funding_instruction_id, max(rev) as last_revised_record_id
     FROM 
       odf${environment}.payment_transaction_aud
-    GROUP BY id, created_at::date
+    GROUP BY id, funding_instruction_id, created_at::date
 ),
 
 last_revised_record_non_transactional_fee_per_day as
 (
 
-    SELECT id, max(rev) as last_revised_record_id
+    SELECT id, funding_instruction_id, max(rev) as last_revised_record_id
     FROM 
       odf${environment}.non_transactional_fee_aud
-    GROUP BY id, created_at::date
+    GROUP BY id,funding_instruction_id, created_at::date
 ),
 
 fiserv_transaction_with_history as 
@@ -31,7 +31,6 @@ fiserv_transaction_with_history as
     SELECT *
     FROM 
       odf${environment}.fiserv_transaction
-
     UNION 
 
     SELECT 
@@ -63,7 +62,7 @@ fiserv_transaction_with_history as
     FROM 
       odf${environment}.fiserv_transaction_aud a    
     JOIN
-      last_revised_record_fiserv_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+      last_revised_record_fiserv_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id and a.funding_instruction_id = b.funding_instruction_id
 ),
 
 payment_transaction_with_history as 
@@ -72,7 +71,6 @@ payment_transaction_with_history as
     SELECT *
     FROM 
       odf${environment}.payment_transaction
-
     UNION 
 
     SELECT 
@@ -100,7 +98,7 @@ payment_transaction_with_history as
     FROM 
       odf${environment}.payment_transaction_aud a    
     JOIN
-      last_revised_record_payment_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+      last_revised_record_payment_transaction_per_day b on a.id = b.id and a.rev = b.last_revised_record_id and a.funding_instruction_id = b.funding_instruction_id
 ),
 
 non_transactional_fee_with_history as 
@@ -109,7 +107,6 @@ non_transactional_fee_with_history as
     SELECT *
     FROM 
       odf${environment}.non_transactional_fee
-
     UNION 
 
     SELECT 
@@ -135,7 +132,7 @@ non_transactional_fee_with_history as
     FROM 
       odf${environment}.non_transactional_fee_aud a    
     JOIN
-      last_revised_record_non_transactional_fee_per_day b on a.id = b.id and a.rev = b.last_revised_record_id
+      last_revised_record_non_transactional_fee_per_day b on a.id = b.id and a.rev = b.last_revised_record_id and a.funding_instruction_id = b.funding_instruction_id
 ),
 
 refunds as
