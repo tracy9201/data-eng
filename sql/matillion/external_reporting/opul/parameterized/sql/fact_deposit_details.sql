@@ -212,7 +212,9 @@ SELECT
     when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
     end as transaction_id,
   ntf.created_at as transaction_date,
-  'chargeback' as transaction_type,
+  case when ntf.transaction_type = 'CHARGEBACK' then 'chargeback'
+       when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then 'chargeback_reversal'
+  end as transaction_type,
   round(cast(ntf.deduction_amount as numeric)/100,2) as transaction_amount,
   case 
     when mid_type ='CARD_PRESENT' then 'CP' 
@@ -247,7 +249,7 @@ left join
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
 where ntf.funding_instruction_id is not null
-AND  ntf.transaction_type = 'CHARGEBACK'
+AND  (ntf.transaction_type = 'CHARGEBACK' or ntf.transaction_type = 'CHARGEBACK_REVERSAL')
 AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
