@@ -1,4 +1,4 @@
 {
     "envCardEndPoint" : "/key/parameter_name",
-    "envGaiaEndPoint" : "/borg/card/cbproxy_url"
+    "envGaiaEndPoint" : "/devtest/gaia/database_url"
 }
