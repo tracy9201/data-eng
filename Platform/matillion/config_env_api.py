@@ -2,12 +2,15 @@ import json
 import logging
 import os
 import time
-
+import boto3
+import base64
+from botocore.exceptions import ClientError
 import requests
 
 user_id = os.environ.get("matillion_user_id")
 pwd = os.environ.get("matillion_pwd")
 
+mapping_json = json.load(open('map_env_ssm.json'))
 config_json_obj = json.load(open('config.json'))
 
 def get_reponse(url, params, request="post"):
@@ -16,6 +19,50 @@ def get_reponse(url, params, request="post"):
     else:
         response = requests.post(url, auth=(user_id, pwd), params=params, verify=False)
     return response.text
+
+def get_value_by_key_from_ssm(key):
+
+    secret = None
+    region_name = "us-west-2"
+
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=key
+        )
+    except ClientError as e:
+        logging.warning('SSM key {} is not found in parameter store'.format(key))
+        raise e
+    else:
+        if 'SecretString' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+        elif 'String' in get_secret_value_response:
+            secret = get_secret_value_response['SecretString']
+        else:
+            secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+    return secret
+
+def get_value_from_ssm(var):
+    
+    key = get_ssm_key_from_mapping(var)   
+    return get_value_by_key_from_ssm(key) 
+
+def get_ssm_key_from_mapping(var):
+    
+    ssmKey = None
+    try:
+        ssmKey = mapping_json[var]
+    except KeyErrror as e:
+        logging.warning('Environment variable {} is not found in mapping file'.format(var))
+
+    return ssmKey
+        
+
 
 def fill_url_data(config_object, env_url):
     urls_values_arr = []
@@ -30,6 +77,8 @@ def fill_url_data(config_object, env_url):
 
             for globalParam, paramValue in envVarDict.iteritems():
                 for var, value, in paramsDict.iteritems():
+                    value_ssm = get_value_from_ssm(var)
+                    value = value if value_ssm is None else value_ssm 
                     urls_values_arr.append((envkey, var, env_url.format(hostname, group, projectName, envkey, var), value))
     except Exception as e:
         logging.error("ERROR:{}".format(e))
