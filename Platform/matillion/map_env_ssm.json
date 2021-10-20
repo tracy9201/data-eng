@@ -1,3 +1,4 @@
 {
-    "envCardEndPoint" : "/key/parameter_name"
+    "envCardEndPoint" : "/key/parameter_name",
+    "envGaiaEndPoint" : "/borg/card/cbproxy_url"
 }
