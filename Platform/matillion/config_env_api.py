@@ -102,9 +102,9 @@ def main():
         for envkey, var, env_url, value in urls_values:
 
             logging.info("Setting for enviornment {} the env variable {} to {}. Using url {}".format(envkey, var, value, env_url))
-            #params = {'projectName': projectName}
-            #env_data = get_reponse(env_url + value, params)
-            #logging.info(env_data)
+            params = {'projectName': projectName}
+            env_data = get_reponse(env_url + value, params)
+            logging.info(env_data)
 
     except Exception as e:
         logging.error("ERROR:{}".format(e))
