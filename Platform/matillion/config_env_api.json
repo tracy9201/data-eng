@@ -70,7 +70,8 @@
             "envWalletJdbcConnStr" : "jdbc:postgresql://hintdb-atlas.cluster-ro-cxfeateo6sft.us-east-1.rds.amazonaws.com/utah-wallet",
             "envWalletPswd" : "devOpul-Wallet",
             "envWalletS3StagingArea" : "com-hintmd-dev-opul-wallet-matillion",
-            "envWalletUser" : "jdbc:postgresql://hintdb-atlas.cluster-ro-cxfeateo6sft.us-east-1.rds.amazonaws.com/utah-wallet"
+            "envWalletUser" : "jdbc:postgresql://hintdb-atlas.cluster-ro-cxfeateo6sft.us-east-1.rds.amazonaws.com/utah-wallet",
+            "envTest" : "etetete"
         }
     },
     "opul-ps" : {

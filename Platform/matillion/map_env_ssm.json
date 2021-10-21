@@ -1,4 +1,3 @@
 {
-    "envCardEndPoint" : "/key/parameter_name",
-    "envGaiaEndPoint" : "/devtest/gaia/database_url"
+    "envTest" : "/devtest/gaia/testvalue"
 }
