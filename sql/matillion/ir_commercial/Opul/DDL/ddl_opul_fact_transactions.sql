@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS ir_commercial_opul.opul_fact_transactions
   ,payment_detail VARCHAR(max)   ENCODE raw
   ,gx_provider_id VARCHAR(max)   ENCODE raw
   ,clover_transaction_id VARCHAR(64)   ENCODE raw
+  ,cp_or_cnp VARCHAR(16)   ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(transaction_id)
 )
