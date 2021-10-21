@@ -30,4 +30,4 @@ data = args.data
 response = requests.post('http://{}/rest/v1/group/name/{}/project/name/{}/version/name/{}/job/name/{}/run?environmentName={}'
     .format(instance_address, group_name, project_name, version_name, orchestration_job_name, environment_name), headers=headers, data=data, auth=(api_user, api_user_password))
 
-print(response)
+print(response.context)
