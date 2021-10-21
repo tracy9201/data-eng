@@ -17,7 +17,8 @@ SELECT
     address.state,
     address.zip,
     provider.name AS business_name,
-    'ORGANIZATION_'||org.id as org_id
+    'ORGANIZATION_'||org.id as org_id,
+    least(org.updated_at,address.updated_at,provider.updated_at) as updated_at
 FROM internal_kronos_hint.organization_data org 
 LEFT JOIN 
     internal_kronos_hint.address address 
@@ -51,7 +52,9 @@ select
     zip,
     business_name,
     tip.gratuity,
-    org_id
+    org_id,
+    updated_at,
+    current_timestamp::timestamp as dwh_created_at
 from main
 left join 
   tip

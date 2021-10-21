@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS ir_commercial.patient
   ,state VARCHAR(64)    ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,deprecated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
+  ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(gx_customer_id)
 )
 ;

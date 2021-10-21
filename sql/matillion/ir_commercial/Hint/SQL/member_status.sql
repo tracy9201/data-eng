@@ -10,7 +10,8 @@ WITH subscription AS (
                     ELSE (cast(to_char(DATEADD(month, 1*(period), created_at) ,'MON-DD-YYYY') AS date)) end )
             ELSE (cast(to_char(deprecated_at,'MON-DD-YYYY') AS date)) 
             END AS deprecated_date,
-        CASE WHEN (type=2 OR type=1) THEN 1 ELSE 0 END AS isMember
+        CASE WHEN (type=2 OR type=1) THEN 1 ELSE 0 END AS isMember,
+        updated_at
     FROM internal_kronos_hint.subscription subscription
   )
   ,
@@ -29,7 +30,8 @@ customer AS (
               WHEN ismember =1 AND to_timestamp(deprecated_date,'MM-DD-YYYY') >= getdate() THEN 1
               when ismember = 1 and deprecated_date is null then 1
               END AS isMember2,
-            gx_customer_id
+            gx_customer_id,
+            least(customer.updated_at,plan.updated_at,subscription.updated_at) as updated_at
         FROM internal_kronos_hint.customer_data customer
         JOIN 
              internal_kronos_hint.plan plan 
@@ -50,7 +52,8 @@ final as (
     ismember2, 
     sum(ismember2) OVER (PARTITION by USER_id) AS ISmember3,
     gx_customer_id,
-    gx_provider_id
+    gx_provider_id,
+    least(customer.updated_at,users.updated_at,organization_data.updated_at) as updated_at
   FROM customer
   JOIN 
       internal_kronos_hint.users users
@@ -74,13 +77,15 @@ SELECT
         WHEN ISmember3> 0 THEN NULL
     END AS updated_date,
     CASE WHEN ISmember3>0 THEN 'active' ELSE 'inactive' END AS status,
-    gx_provider_id
+    gx_provider_id,
+    updated_at
 FROM final
 GROUP BY 
   gx_customer_id,
   user_id, 
   ismember3,
-  gx_provider_id
+  gx_provider_id,
+  updated_at
 ORDER BY
     created_date,
     user_id
@@ -91,4 +96,4 @@ SELECT
     *
 FROM finalstatus
 )
-SELECT * FROM main
+SELECT *,current_timestamp::timestamp as dwh_created_at FROM main

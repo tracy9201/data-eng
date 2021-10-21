@@ -167,4 +167,4 @@ select * from void1
 union all
 select * from void2
 )
-SELECT * FROM main 
+SELECT *,current_timestamp::timestamp as dwh_created_at FROM main 
