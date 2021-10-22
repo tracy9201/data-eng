@@ -87,7 +87,7 @@ LEFT JOIN
     payment${environment}.payment_transaction paytra
         on paytra.id = p.external_id 
 LEFT JOIN
-    p2pe_opul.p2pe_transaction p2petra
+    p2pe_opul${environment}.p2pe_transaction p2petra
         on p2petra.retref = p.transaction_id
 WHERE
     p.id IS NOT NULL
