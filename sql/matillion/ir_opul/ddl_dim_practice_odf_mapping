@@ -1,20 +1,22 @@
-DROP TABLE IF  EXISTS ir_opul.dim_practice_odf_mapping;
-
-CREATE TABLE IF NOT EXISTS ir_opul.dim_practice_odf_mapping
-(
-    k_practice_id BIGINT  ENCODE raw
-    ,payfac_merchant_id BIGINT  ENCODE raw
-    ,card_processing_mid VARCHAR(32)  ENCODE raw
-    ,org_data_merchant_id BIGINT  ENCODE raw
-    ,gx_provider_id VARCHAR(32) ENCODE raw
-    ,mid_type VARCHAR(32) ENCODE raw
-    ,store_number VARCHAR(32) ENCODE raw
-    ,merchant_category_code VARCHAR(32) ENCODE raw
-    ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-    ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-    ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
-    ,practice_time_zone VARCHAR(100)  ENCODE raw
-)
-DISTSTYLE ALL
-SORTKEY (gx_provider_id,k_practice_id)
-;
+WITH dim_practice_odf_mapping as 
+( 	
+SELECT distinct  	
+    od.id AS k_practice_id, 	
+    om.payfac_merchant_id as payfac_merchant_id, 	
+    cp.mid as card_processing_mid, 	
+    od.merchant_id as org_data_merchant_id, 	
+    od.gx_provider_id, 	
+    od.created_at, 	
+    od.updated_at, 	
+    cp.mid_type, 	
+    cp.store_number, 	
+    cp.merchant_category_code, 	
+    current_timestamp::timestamp as dwh_created_at, 	
+    timezone AS practice_time_zone 	
+FROM internal_merchant_opul.card_processing cp  	
+JOIN internal_kronos_opul.organization_merchant om 
+    on cp.merchant_id = om.payfac_merchant_id 	
+JOIN internal_kronos_opul.organization_data od 
+    on od.merchant_id = om.id  
+) 
+SELECT * FROM dim_practice_odf_mapping
