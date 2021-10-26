@@ -28,6 +28,7 @@ WITH main AS (
     ELSE NULL               
     END AS commssion_percentage ,
   org.gx_provider_id ,
+  least(users.updated_at,expert_data.updated_at,staff_data.updated_at,org.updated_at) as updated_at,
   current_timestamp::timestamp as dwh_created_at
   FROM internal_kronos_opul.users users   
   LEFT JOIN 

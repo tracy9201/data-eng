@@ -19,6 +19,7 @@
       ,subscription.canceled_at as subscription_canceled_at
       ,subscription.updated_at as subscription_updated_at
       ,subscription.offering_id
+      ,least(invoice.updated_at,invoice_item.updated_at,subscription.updated_at,plan.updated_at,customer.updated_at,provider.updated_at) as updated_at
       FROM internal_gaia_opul.invoice invoice
       LEFT JOIN internal_gaia_opul.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
       LEFT JOIN internal_gaia_opul.subscription subscription on invoice_item.subscription_id = subscription.id
@@ -43,6 +44,7 @@
       ,subscription_updated_at
       ,gx_customer_id
       ,gx_provider_id
+      ,updated_at
       ,current_timestamp::timestamp as dwh_created_at
     from subscription_payment
     group by 
@@ -59,6 +61,7 @@
     11,
     12,
     13,
-    14
+    14,
+    15
     )
     select * from main

@@ -40,7 +40,10 @@ payment as
     p.status AS sales_status,
     p.created_at AS sales_created_at,
     p.plan_id,
-    case when p.device_id is null and p.type ='credit_card' then paytra.order_id else p.external_id end AS transaction_id,
+    case 
+        when p.type ='credit_card' and p.device_id is null then paytra.order_id 
+        when p.type ='credit_card' and p.device_id is not null then p2petra.external_id 
+        else p.external_id end AS transaction_id,
     CASE
         WHEN p.type ='credit_card' THEN account_number
         ELSE p.name
@@ -82,7 +85,10 @@ LEFT JOIN
         ON cpg.card_id = card.id
 LEFT JOIN 
     payment${environment}.payment_transaction paytra
-        on paytra.id = p.external_id        
+        on paytra.id = p.external_id 
+LEFT JOIN
+    p2pe_opul${environment}.p2pe_transaction p2petra
+        on p2petra.retref = p.transaction_id
 WHERE
     p.id IS NOT NULL
     AND p.status  in (1,-3)
