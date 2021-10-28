@@ -113,7 +113,7 @@ SELECT
     ,0 as transactions
     ,0 as charges
     ,0 as refunds
-    ,fi.chargeback_amount/100.0 as chargebacks
+    ,coalesce(fi.chargeback_amount + chargeback_reversal_amount,0)/100.0 as chargebacks
     ,0 as adjustments
     ,fi.chargeback_fee/100.0  AS fees
 FROM
