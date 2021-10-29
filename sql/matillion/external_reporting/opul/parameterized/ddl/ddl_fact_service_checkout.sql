@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_service_checkout
   ,offering_id VARCHAR(32)   ENCODE raw
   ,gx_customer_id VARCHAR(32)   ENCODE raw
   ,gx_provider_id VARCHAR(32)   ENCODE raw
+  ,epoch_pay_date  BIGINT   ENCODE raw
   ,dwh_created_at  TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,primary key(invoice_item_id)
   ,UNIQUE(invoice_item_id, pay_date)
