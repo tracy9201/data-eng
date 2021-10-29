@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,_table VARCHAR(127) NOT NULL  ENCODE lzo
 	,_column VARCHAR(127) NOT NULL  ENCODE lzo
 	,_columnlength SMALLINT   ENCODE RAW
-        ,_columntype ENCODE RAW
+        ,_columntype VARCHAR(20) ENCODE RAW
 	,sensitive_data_type VARCHAR(1000) NOT NULL DEFAULT 'PII'::character varying ENCODE lzo
 	,is_ready_for_encryption BOOLEAN NOT NULL DEFAULT true ENCODE RAW
 	,is_encrypted BOOLEAN NOT NULL DEFAULT false ENCODE RAW
