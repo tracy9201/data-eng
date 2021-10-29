@@ -43,6 +43,7 @@ WITH
     offering_id,
     gx_customer_id,
     gx_provider_id,
+    extract (epoch from pay_date) as epoch_pay_date,
     current_timestamp::timestamp as dwh_created_at
   FROM main
  
