@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,updated_by VARCHAR(100) NULL  ENCODE lzo
 	,updated_on TIMESTAMP WITH TIME ZONE NULL DEFAULT ('now'::character varying)::timestamp with time zone ENCODE az64
 	,updated_comment VARCHAR(2000)   ENCODE lzo	
+	,_feedcolumn VARCHAR(127)   ENCODE lzo
 	,PRIMARY KEY (_host, _database, _schema, _table, _column)
 )
 DISTSTYLE AUTO
