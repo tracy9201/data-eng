@@ -116,7 +116,7 @@ SELECT
   ntf.funding_instruction_id,
   payment.transaction_id,
   'chargeback' as transaction_type,
-  ntf.created_at as transaction_date,
+  payment.created_at as transaction_date,
   1 as transactions,
   0.0 as charges,
   0.0 as refunds,
@@ -165,7 +165,7 @@ SELECT
   ntf.funding_instruction_id,
   payment.transaction_id,
   'chargeback' as transaction_type,
-  ntf.created_at as transaction_date,
+  payment.created_at as transaction_date,
   1 as transactions,
   0.0 as charges,
   0.0 as refunds,
@@ -207,6 +207,58 @@ WHERE dt.mid_type = 'CARD_NOT_PRESENT'
   And payment.type = 'credit_card'
 ),
 
+chargeback_reversal_id as
+(
+SELECT 
+  ntf.chained_mid,
+  ntf.funding_instruction_id,
+  ntf.deduction_amount,
+  ntf.amount,
+  cast(right(ntf.external_id, len(ntf.external_id)-position('@' in ntf.external_id) as integer) as external_id
+FROM odf${environment}.non_transactional_fee ntf
+WHERE ntf.transaction_type = 'CHARGEBACK_REVERSAL'
+),
+
+chargeback_reversal as
+(
+SELECT 
+  ntf.chained_mid as merchant_id,
+  ntf.funding_instruction_id,
+  payment.order_id as transaction_id,
+  'chargeback_reversal' as transaction_type,
+  payment.created_at as transaction_date,
+  1 as transactions,
+  0.0 as charges,
+  0.0 as refunds,
+  round(cast(ntf.deduction_amount as numeric)/100,2)) as chargebacks,
+  0 as adjustments,
+  round(cast(ntf.amount as numeric)/100,2) as fees,
+  payment.card_payment_type as cp_or_cnp,
+  card.brand as card_brand,
+  0.0 as percent_fee,
+  0.0 as ft_percent_fee,
+  ft.settled_at::date as funding_date,
+  to_date(ft.settled_at,'YYYY-MM-01') as funding_month,
+  card.last4 as last4
+FROM chargeback_reversal_id ntf
+LEFT JOIN 
+    odf${environment}.funding_instructiON fi 
+      ON ntf.funding_instruction_id = fi.id
+LEFT JOIN
+    odf${environment}.fiserv_transactiON ft
+      ON ntf.funding_instruction_id = ft.funding_instruction_id
+INNER JOIN 
+  payment${environment}.payment_transaction payment
+    ON ntf.external_id = payment.id
+INNER JOIN 
+  card${environment}.customer_card card
+    ON payment.card_id = card.id
+WHERE 
+  ntf.funding_instruction_id is not null
+  AND fi.status = 'SETTLED'
+  AND payment.tender_type = 'CREDIT_CARD'
+),
+
 
 main as 
 (
@@ -215,6 +267,8 @@ main as
     SELECT * FROM device_fee
     UNION ALL
     SELECT * FROM chargeback
+    UNION ALL
+    SELECT * FROM chargeback_reversal
 
 )
 
