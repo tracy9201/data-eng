@@ -83,6 +83,7 @@ device_fee_sum AS
   GROUP BY 1,2,3,4
 ),
 
+
 transaction_details_daily_summary as
 (
 SELECT
@@ -95,12 +96,22 @@ SELECT
     ,sum(a.refunds)/100.0 as refunds
     ,sum(a.chargebacks)/100.0 as chargebacks
     ,sum(a.adjustments)/100.0 as adjustments
-    ,sum(fi.transactional_fee)/100.0 AS fees
+    
 FROM
     transaction_details a
+    GROUP BY 1,2,3,4
+)
+
+,
+
+transaction_details_daily_summary2 as
+(
+  select a.*
+  ,fi.transactional_fee/100.0 AS fees
+from transaction_details_daily_summary a
 JOIN odf${environment}.funding_instruction fi on a.funding_instruction_id = fi.id
-GROUP BY 1,2,3,4
 ),
+
 
 
 chargebacks as
@@ -127,7 +138,7 @@ WHERE
 
 transaction_details_daily_summary_new as
 (
-    SELECT * from transaction_details_daily_summary
+    SELECT * from transaction_details_daily_summary2
     UNION
     SELECT * from device_fee_sum
     UNION
