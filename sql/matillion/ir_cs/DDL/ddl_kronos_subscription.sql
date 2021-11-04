@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_cs.ddl_kronos_subscription;
+DROP TABLE IF EXISTS internal_reporting_hint.ddl_kronos_subscription;
 
-CREATE TABLE IF NOT EXISTS ir_cs.ddl_kronos_subscription (
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.ddl_kronos_subscription (
     subscription_id int8,
     plan_id int8,
     created_at timestamp,
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS ir_cs.ddl_kronos_subscription (
     offering_id int4,
     subscription_name varchar(65535),
     g_status int4
+    ,dwh_created_at timestamp
     ,primary key(subscription_id)
      ,UNIQUE(subscription_id)
 )
