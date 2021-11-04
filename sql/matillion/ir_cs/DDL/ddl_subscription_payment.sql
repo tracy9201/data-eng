@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS internal_reporting_hint.subscription_payment
   ,total_paid_tax  NUMERIC(18,2)    ENCODE raw
   ,total_discounted NUMERIC(18,2)    ENCODE raw
   ,total_paid  NUMERIC(18,2)    ENCODE raw
+  ,dwh_created_at timestamp
   ,primary key(gx_subscription_id)
 
 );
