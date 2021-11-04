@@ -1,6 +1,6 @@
 DROP 
-  TABLE IF EXISTS ir_cs.transactions_funding;
-CREATE TABLE IF NOT EXISTS ir_cs.transactions_funding (
+  TABLE IF EXISTS internal_reporting_hint.transactions_funding;
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.transactions_funding (
   transaction_id VARCHAR(64) ENCODE raw, 
   status VARCHAR(64) ENCODE raw, 
   user_id BIGINT ENCODE raw, 
