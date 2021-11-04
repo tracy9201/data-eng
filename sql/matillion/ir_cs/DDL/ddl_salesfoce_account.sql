@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS internal_reporting_hint.salesforce_account (
   territory VARCHAR(64) ENCODE raw, 
   region VARCHAR(64) ENCODE raw,  
   opul_organization_id VARCHAR(max) ENCODE raw, 
+  dwh_created_at timestamp,
   primary key(name)
 );
