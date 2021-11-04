@@ -1,6 +1,6 @@
 DROP 
-  TABLE IF EXISTS ir_cs.kronos_plan;
-CREATE TABLE IF NOT EXISTS ir_cs.kronos_plan (
+  TABLE IF EXISTS internal_reporting_hint.kronos_plan;
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.kronos_plan (
   plan_id int4, 
   gx_plan_id varchar(64), 
   user_id int4, 
@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS ir_cs.kronos_plan (
   member_recoganize int4, 
   num_of_subscription int4, 
   on_boarding_date timestamp, 
+  dwh_created_at timestamp, 
   primary key(plan_id), 
   UNIQUE(plan_id)
 ) DISTKEY (plan_id) SORTKEY (plan_id);
