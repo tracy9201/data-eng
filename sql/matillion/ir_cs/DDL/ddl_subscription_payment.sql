@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_cs.subscription_payment;
+DROP TABLE IF EXISTS internal_reporting_hint.subscription_payment;
 
-CREATE TABLE IF NOT EXISTS ir_cs.subscription_payment
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.subscription_payment
 (
   gx_subscription_id VARCHAR(64) ENCODE raw
   ,units INTEGER ENCODE raw
