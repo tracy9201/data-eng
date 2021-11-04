@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS ir_cs.ddl_invoice_payment;
+DROP TABLE IF EXISTS internal_reporting_hint.ddl_invoice_payment;
 
-CREATE TABLE IF NOT EXISTS ir_cs.ddl_invoice_payment
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.ddl_invoice_payment
 (
   id VARCHAR(255) ENCODE raw
 ,pay_date TIMESTAMP WITHOUT TIME ZONE ENCODE raw
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS ir_cs.ddl_invoice_payment
 ,product_service VARCHAR(255) ENCODE raw
 ,count_distinct_sku BIGINT ENCODE raw
 ,sku VARCHAR(MAX) ENCODE raw
+,dwh_created_at TIMESTAMP ENCODE raw
   ,primary key(id)
   ,UNIQUE(id)
 
