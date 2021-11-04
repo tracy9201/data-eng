@@ -1,6 +1,6 @@
 DROP 
-  TABLE IF EXISTS ir_cs.salesforce_account;
-CREATE TABLE IF NOT EXISTS ir_cs.salesforce_account (
+  TABLE IF EXISTS internal_reporting_hint.salesforce_account;
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.salesforce_account (
   status VARCHAR(64) ENCODE raw, 
   accountsource VARCHAR(64) ENCODE raw, 
   customer_type VARCHAR(64) ENCODE raw, 
