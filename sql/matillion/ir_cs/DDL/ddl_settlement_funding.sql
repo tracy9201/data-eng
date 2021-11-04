@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS internal_reporting_hint.settlement_funding (
   service_charge NUMERIC(18, 2), 
   third_party NUMERIC(18, 2), 
   fund_date_added timestamp, 
+  dwh_created_at timestamp,
   primary key(settlement_id), 
   UNIQUE(settlement_id)
 ) DISTKEY (settlement_id) SORTKEY (settlement_date);
