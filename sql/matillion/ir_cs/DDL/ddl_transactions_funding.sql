@@ -16,5 +16,6 @@ CREATE TABLE IF NOT EXISTS internal_reporting_hint.transactions_funding (
   payment_detail VARCHAR(max) ENCODE raw, 
   gx_provider_id VARCHAR(max) ENCODE raw, 
   clover_transaction_id VARCHAR(64) ENCODE raw, 
+  dwh_created_at timestamp,
   primary key(transaction_id)
 );
