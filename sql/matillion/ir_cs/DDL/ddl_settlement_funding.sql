@@ -1,6 +1,6 @@
 DROP 
-  TABLE IF EXISTS ir_cs.settlement_funding;
-CREATE TABLE IF NOT EXISTS ir_cs.settlement_funding (
+  TABLE IF EXISTS internal_reporting_hint.settlement_funding;
+CREATE TABLE IF NOT EXISTS internal_reporting_hint.settlement_funding (
   settlement_id int8, 
   transaction_id varchar(64), 
   type varchar(64), 
