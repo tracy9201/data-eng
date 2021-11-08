@@ -4,19 +4,19 @@
 
 -- DROP TABLE public.encrypt_sensitive_data_ctl;
 
---DROP TABLE public.encrypt_sensitive_data_ctl;
 CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 (
 	id INTEGER  DEFAULT "identity"(9117610, 0, ('0,1'::character varying)::text) ENCODE az64
 	,_env_dw VARCHAR(64) NOT NULL DEFAULT 'qa'::character varying ENCODE lzo
+	,_env_type VARCHAR(64) ENCODE lzo
+	,_env_dbtype  VARCHAR(64) ENCODE lzo
 	,_host VARCHAR(1000) NOT NULL DEFAULT 'qa-reporting-cluster.cmmotnszowfl.us-east-1.redshift.amazonaws.com'::character varying ENCODE lzo
 	,_database VARCHAR(64) NOT NULL DEFAULT 'reportingdb'::character varying ENCODE lzo
 	,_schema VARCHAR(127) NOT NULL  ENCODE lzo
 	,_table VARCHAR(127) NOT NULL  ENCODE lzo
 	,_column VARCHAR(127) NOT NULL  ENCODE lzo
 	,_columnlength SMALLINT   ENCODE RAW
-        ,_columntype VARCHAR(20) ENCODE RAW
-	,sensitive_data_type VARCHAR(1000) NOT NULL DEFAULT 'PII'::character varying ENCODE lzo
+    ,sensitive_data_type VARCHAR(1000) NOT NULL DEFAULT 'PII'::character varying ENCODE lzo
 	,is_ready_for_encryption BOOLEAN NOT NULL DEFAULT true ENCODE RAW
 	,is_encrypted BOOLEAN NOT NULL DEFAULT false ENCODE RAW
 	,encryption_start TIMESTAMP WITH TIME ZONE   ENCODE az64
@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,updated_by VARCHAR(100) NULL  ENCODE lzo
 	,updated_on TIMESTAMP WITH TIME ZONE NULL DEFAULT ('now'::character varying)::timestamp with time zone ENCODE az64
 	,updated_comment VARCHAR(2000)   ENCODE lzo	
-	,_feedcolumn VARCHAR(127)   ENCODE lzo
+        ,_columntype VARCHAR(20) ENCODE RAW	
+	,_columnfeed VARCHAR(127)   ENCODE lzo
 	,PRIMARY KEY (_host, _database, _schema, _table, _column)
 )
 DISTSTYLE AUTO
