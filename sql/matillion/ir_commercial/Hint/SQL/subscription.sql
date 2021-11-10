@@ -5,6 +5,7 @@
     	,plan_id
       ,subscription.type as subscription_type
       ,subscription.offering_id
+      ,subscription.updated_at
       FROM internal_kronos_hint.subscription subscription
       WHERE subscription.status in (0,7)
   ),
@@ -30,6 +31,7 @@
       ,subscription.updated_at as subscription_updated_at
       ,o.offering_id
       ,o.subscription_type
+      ,least(invoice.updated_at,invoice_item.updated_at,subscription.updated_at,discount.updated_at,plan.updated_at,customer.updated_at,provider.updated_at,o.updated_at) as updated_at
       FROM internal_gaia_hint.invoice invoice
       LEFT JOIN internal_gaia_hint.invoice_item invoice_item on invoice_item.invoice_id = invoice.id
       LEFT JOIN internal_gaia_hint.subscription subscription on invoice_item.subscription_id = subscription.id
@@ -56,6 +58,8 @@
       ,subscription_updated_at
       ,gx_customer_id
       ,gx_provider_id
+      ,updated_at
+      ,current_timestamp::timestamp as dwh_created_at
     from subscription_payment
     group by 
     1,
@@ -71,6 +75,7 @@
     11,
     12,
     13,
-    14
+    14,
+    15
     )
     select * from main

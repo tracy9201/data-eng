@@ -19,8 +19,10 @@ CREATE TABLE IF NOT EXISTS ir_commercial.offering
   ,catalog_status integer  ENCODE raw
   ,catalog_wholesale_price  NUMERIC(18,2) ENCODE raw
   ,bd_status integer  ENCODE raw
-  ,brand_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw,
+  ,brand_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,service_type integer  ENCODE raw
+  ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(offering_id)
 )
 ;

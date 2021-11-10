@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS ir_commercial.fulfillment
   ,gx_customer_id varchar(64) ENCODE raw
   ,gx_provider_id varchar(64) ENCODE raw
   ,gx_subscription_id varchar(64) ENCODE raw
+  ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+  ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,primary key(fulfillment_id)
 )
 ;

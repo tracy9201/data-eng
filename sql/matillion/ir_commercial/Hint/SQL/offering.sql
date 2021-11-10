@@ -18,7 +18,9 @@ select
     round(cast(catalog_item.wholesale_price as numeric )/100,2) as catalog_wholesale_price, 
     catalog_item.bd_status, 
     brand.created_at as brand_created_at,
-    catalog_item.type as service_type
+    catalog_item.type as service_type,
+    least(offering.updated_at,catalog_item.updated_at,brand.updated_at,org.updated_at) as updated_at,
+    current_timestamp::timestamp as dwh_created_at
 from  internal_kronos_hint.offering offering
 left join 
     internal_kronos_hint.catalog_item catalog_item
