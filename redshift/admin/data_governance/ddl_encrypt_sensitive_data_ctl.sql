@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,encryption_start TIMESTAMP WITH TIME ZONE   ENCODE az64
 	,encryption_end TIMESTAMP WITH TIME ZONE   ENCODE az64
 	,encrypted_row_count INTEGER   ENCODE RAW
-	,code_message VARCHAR(2000)   ENCODE lzo
+	,code_message VARCHAR(5000)   ENCODE lzo
 	,is_encryption_confirmed BOOLEAN NOT NULL DEFAULT false ENCODE RAW
 	,encryption_audit_by VARCHAR(1000)   ENCODE lzo
 	,encryption_audit_on TIMESTAMP WITH TIME ZONE   ENCODE az64
