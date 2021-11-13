@@ -28,9 +28,34 @@ last_revised_record_non_transactional_fee_per_day as
 fiserv_transaction_with_history as 
 (
 
-    SELECT *
+    SELECT 
+        ft.id
+        , ft.merchant_id
+        , ft.transaction_id
+        , ft.transaction_type
+        , ft.transaction_status
+        , ft.amount
+        , ft.cp_or_cnp
+        , ft.api_response
+        , ft.transaction_date
+        , ft.transaction_time
+        , ft.card_brand
+        , ft.card_identifier
+        , ft.expiry
+        , ft.invoice_id
+        , ft.exchange_added_date
+        , ft.created_at
+        , ft.updated_at
+        , ft.percent_fee
+        , ft.fixed_fee
+        , ft.total_fee
+        , ft.funding_instruction_id
+        , ft.settled_at
+        , ft.status
+        , ft.fiserv_id
+        , ft.computed_fee
     FROM 
-      odf${environment}.fiserv_transaction
+      odf${environment}.fiserv_transaction ft
     UNION 
 
     SELECT 
@@ -68,9 +93,30 @@ fiserv_transaction_with_history as
 payment_transaction_with_history as 
 (
 
-    SELECT *
+    SELECT 
+        pt.id 
+      , pt.created_at
+      , pt.updated_at
+      , pt.deprecated_at
+      , pt.processed_at
+      , pt.transaction_id
+      , pt.transaction_type
+      , pt.cp_or_cnp
+      , pt.merchant_id
+      , pt.amount
+      , pt.currency
+      , pt.status
+      , pt.issuer
+      , pt.percent_fee
+      , pt.fixed_fee
+      , pt.total_fee
+      , pt.funding_instruction_id
+      , pt.settled_at
+      , pt.external_id
+      , pt.computed_fee
+      , pt.transaction_time
     FROM 
-      odf${environment}.payment_transaction
+      odf${environment}.payment_transaction pt
     UNION 
 
     SELECT 
@@ -104,9 +150,28 @@ payment_transaction_with_history as
 non_transactional_fee_with_history as 
 (
 
-    SELECT *
+    SELECT 
+        ntf.id 
+      , ntf.external_id
+      , ntf.funding_instruction_id
+      , ntf.settlement_id
+      , ntf.mid 
+      , ntf.chained_mid 
+      , ntf.currency
+      , ntf.amount
+      , ntf.funding_type
+      , ntf.transaction_type
+      , ntf.transaction_date
+      , ntf.scheduled_funding_date
+      , ntf.created_at
+      , ntf.updated_at
+      , ntf.deprecated_at
+      , ntf.deduction_amount
+      , ntf.order_volume
+      , ntf.amount_per_unit
+      , ntf.settled_at
     FROM 
-      odf${environment}.non_transactional_fee
+      odf${environment}.non_transactional_fee ntf
     UNION 
 
     SELECT 
