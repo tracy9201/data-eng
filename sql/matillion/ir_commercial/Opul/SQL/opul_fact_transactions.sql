@@ -1,19 +1,7 @@
-WITH sub_cus as
-(
-    select subscription_name, 
-    customer2.gx_customer_id as gx_cus_id, 
-    user_type,
-    count(subscription_created) over (partition by product_sales.k_customer_id order by subscription_created desc rows between unbounded preceding and unbounded following) as sub_created
-    from dwh_opul.fact_product_sales product_sales
-    join dwh_opul.dim_customer customer2 on product_sales.k_customer_id = customer2.gx_customer_id
-    where user_type=1
-),
-
-batch_report_details as
+WITH batch_report_details as
 (
   select 
-  subscription_name, 
-  user_type,
+  cd.type as user_type,
   is_voided,
   sales_id,
   case when sales_id like 'refund%' then 'Refund'
@@ -48,21 +36,12 @@ batch_report_details as
       end 
   as payment_detail,
   case 
-      when user_type=1 and (sales_id like 'payment%' or sales_id like 'credit%') and subscription_name is not null then subscription_name
-      when sales_type = 'check' then null
-      when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
-      when sales_type ='credit_card' and sales_id like 'tran%' then null
-      when sales_type = 'Recurring Pmt' and sales_type = 'credit_card' then null
-      else payment_id end
-  as description,
-  case 
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
        when transaction = 'Void' then CONCAT('**** ',cast(right(tokenization,4) as VARCHAR))
        else null end 
   as payment_id,
-  gx_customer_id,
+  payment_summary.gx_customer_id,
   gx_provider_id,
   transaction_id, 
   case when (sales_id like 'void1%' or sales_id like 'void2%')  then sales_created_at + INTERVAL '1 DAY' 
@@ -84,18 +63,17 @@ batch_report_details as
   card_holder_name,
   inv_id,
   inv_status,
-  created_at,
-  updated_at,
+  payment_summary.created_at,
+  payment_summary.updated_at,
   sales_status
-  from dwh_opul.fact_payment_summary payment_summary
-  left join (select * from sub_cus where sub_created = 1) as sc on payment_summary.gx_customer_id = sc.gx_cus_id
+  from ir_opul.fact_payment_summary payment_summary
+  left join kronos_opul.customer_data as cd on payment_summary.gx_customer_id = cd.gx_customer_id
   
 ),
 
 batch_report_details_formatting as
 (
     select
-    subscription_name, 
     user_type,
     is_voided,
     sales_id,
@@ -103,7 +81,6 @@ batch_report_details_formatting as
     payment_method,
     card_brand,
     case when trim(payment_detail) = '' then  NULL else payment_detail end as payment_detail ,
-    case when trim(description) = '' then  NULL else description end as description ,
     case when trim(payment_id) = '' then  NULL else payment_id end as payment_id ,
     gx_customer_id,
     gx_provider_id,
@@ -119,7 +96,7 @@ batch_report_details_formatting as
     inv_id,
     inv_status,
     created_at,
-  	updated_at,
+    updated_at,
     sales_status
     from batch_report_details
 ),
