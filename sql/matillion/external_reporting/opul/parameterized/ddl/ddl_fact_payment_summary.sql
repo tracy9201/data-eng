@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_payment_summary
   ,sales_created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,gx_customer_id VARCHAR(64)   ENCODE zstd
   ,gx_provider_id VARCHAR(64)   ENCODE zstd
+  ,chargeback_id VARCHAR(255) ENCODE raw
   ,transaction_id VARCHAR(255) ENCODE raw
   ,payment_id VARCHAR(255)   ENCODE raw
   ,tokenization VARCHAR(255)   ENCODE raw
