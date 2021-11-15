@@ -64,6 +64,7 @@ batch_report_details as
   as payment_id,
   gx_customer_id,
   gx_provider_id,
+  chargeback_id,
   transaction_id, 
   case when (sales_id like 'void1%' or sales_id like 'void2%')  then sales_created_at + INTERVAL '1 DAY' 
       else sales_created_at END  as sales_created_at,
@@ -106,6 +107,7 @@ batch_report_details_formatting as
     case when trim(payment_id) = '' then  NULL else payment_id end as payment_id ,
     gx_customer_id,
     gx_provider_id,
+    chargeback_id,
     transaction_id,
     sales_created_at,
     original_sales_created_at,
@@ -148,6 +150,7 @@ main as
        end,'N/A') AS payment_id,
   gx_customer_id,
   gx_provider_id,
+  chargeback_id,
   transaction_id,
   sales_created_at,
   original_sales_created_at,
