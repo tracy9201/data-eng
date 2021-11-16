@@ -202,6 +202,15 @@ FROM
 WHERE transaction_amount <> 0 
 ),
 
+non_transactional_fee_status as
+(
+SELECT 
+  non_transactional_fee_id, 
+  created_at
+FROM odf${environment}.non_transactional_fee_status ntfs
+WHERE ntfs.status = 'SETTLED'
+),
+
 chargeback as 
 (
 SELECT 
@@ -221,7 +230,9 @@ SELECT
     when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
     end as cp_or_cnp,
   fi.created_at::date as funding_date,
-  ft.settled_at::date as settled_at_date,
+  case when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then coalesce(ft.settled_at::date, cast(trunc(ntfs.created_at) as timestamp)) 
+    else ft.settled_at::date
+    end as settled_at_date,
   payment.card_brand,
   'Non-Member' as subscriber,
   customer.encrypted_ref_id as gx_customer_id,
@@ -248,6 +259,9 @@ left join
 left join 
   gaia_opul${environment}.customer customer
     on plan.customer_id = customer.id
+left join 
+  non_transactional_fee_status ntfs
+    on ntfs.non_transactional_fee_id = ntf.id
 where ntf.funding_instruction_id is not null
 AND  (ntf.transaction_type = 'CHARGEBACK' or ntf.transaction_type = 'CHARGEBACK_REVERSAL')
 AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
