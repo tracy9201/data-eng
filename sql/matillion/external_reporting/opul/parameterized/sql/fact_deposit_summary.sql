@@ -19,7 +19,7 @@ select
   merchant_id,
   coalesce(sum(adjustments),0) as adjustments,
   coalesce(sum(fees),0) as fees,
-  coalesce(sum(sales - coalesce(refunds,0)),0) as net_sales,
+  coalesce(sum(sales),0) - coalesce(sum(refunds),0) as net_sales,
   coalesce(sum(chargebacks),0) as chargebacks
 from fact_deposit_details
 group by 1,2,3,4
