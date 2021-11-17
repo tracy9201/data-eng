@@ -214,7 +214,7 @@ SELECT
   ntf.funding_instruction_id,
   ntf.deduction_amount,
   ntf.amount,
-  cast(right(ntf.external_id, len(ntf.external_id)-position('@' in ntf.external_id) as integer) as external_id
+  cast(right(ntf.external_id, len(ntf.external_id)-position('@' in ntf.external_id)) as integer) as external_id
 FROM odf${environment}.non_transactional_fee ntf
 WHERE ntf.transaction_type = 'CHARGEBACK_REVERSAL'
 ),
@@ -230,7 +230,7 @@ SELECT
   1 as transactions,
   0.0 as charges,
   0.0 as refunds,
-  round(cast(ntf.deduction_amount as numeric)/100,2)) as chargebacks,
+  round(cast(ntf.deduction_amount as numeric)/100,2) as chargebacks,
   0 as adjustments,
   round(cast(ntf.amount as numeric)/100,2) as fees,
   payment.card_payment_type as cp_or_cnp,
