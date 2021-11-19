@@ -5,7 +5,7 @@ WITH batch_report_summary as
   sales_id,
   sales_type,
   case when sales_id like 'refund%' then 'Refund'
-      when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and sales_name = 'BD Payment' then 'Offer Redemption'
+      when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' then 'Offer Redemption'
       when sales_id like 'credit%'  and  sales_type = 'provider credit' then 'Deposit From Patient'
       when sales_id like 'void%' then 'Void'
       else 'Sale'
@@ -14,7 +14,7 @@ WITH batch_report_summary as
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
       when sales_type in ('wallet', 'provider credit') and (sales_id like 'payment%' or sales_id like 'credit%' or sales_id like 'refund%') then 'Practice Credit'
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
+      when sales_type in ('reward', 'credit') and  LEFT(sales_name, 4) = 'Allē' and (sales_id like 'credit%' or sales_id like 'refund%') then 'Allē'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
       when sales_id like 'void%' or tokenization is not null then 'Credit Card'
@@ -31,7 +31,7 @@ WITH batch_report_summary as
       when sales_type in ('provider credit', 'wallet') then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
+      when sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' and (sales_id like 'credit%' or sales_id like 'refund%') then 'Allē'
       end 
   as payment_detail,
   tokenization,
