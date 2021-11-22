@@ -39,6 +39,7 @@ WITH
     item_discount,
     discount_reason,
     discounted_price,
+    tax,
     grand_total,
     offering_id,
     gx_customer_id,
