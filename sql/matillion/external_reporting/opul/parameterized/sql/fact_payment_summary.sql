@@ -7,6 +7,7 @@ WITH credit_data as
     c.status AS sales_status,
     c.created_at AS sales_created_at,
     c.plan_id,
+    NULL::text AS chargeback_id,
     CASE
         WHEN c.id IS NOT NULL THEN ''
     END AS transaction_id,
@@ -40,6 +41,7 @@ payment as
     p.status AS sales_status,
     p.created_at AS sales_created_at,
     p.plan_id,
+    p.external_id AS chargeback_id,
     case 
         when p.type ='credit_card' and p.device_id is null then paytra.order_id 
         when p.type ='credit_card' and p.device_id is not null then p2petra.external_id 
@@ -115,6 +117,7 @@ payment_data as (
     sales_status,
     sales_created_at,
     plan_id,
+    chargeback_id,
     transaction_id,
     payment.payment_id,
     tokenization,
@@ -143,6 +146,7 @@ refund1 as
     refund.status AS sales_status,
     refund.created_at AS sales_created_at,
     sub.plan_id,
+    NULL::text AS chargeback_id,
     CASE
         WHEN refund.id IS NOT NULL THEN gt.transaction_id
         else ''
@@ -193,6 +197,7 @@ refund3 as
     refund.status AS sales_status,
     refund.created_at AS sales_created_at,
     payment.plan_id,
+    NULL::text AS chargeback_id,
     gt.transaction_id,
     CASE
         WHEN refund.type = 'credit_card' THEN last4
@@ -246,6 +251,7 @@ tran as
     gt.status AS sales_status,
     gt.created_at AS sales_created_at,
     invoice.plan_id,
+    NULL::text AS chargeback_id,
     transaction_id,
     last4 AS payment_id ,
     cpg.tokenization,
@@ -306,6 +312,7 @@ void1 as
     settlement.status AS sales_status,
     settlement.authd_date AS sales_created_at,
     invoice.plan_id,
+    NULL::text AS chargeback_id,
     gt.transaction_id,
     settlement.last_four AS payment_id,
     token AS tokenization,
@@ -359,6 +366,7 @@ void2 as
     settlement.status AS sales_status,
     settlement.authd_date AS sales_created_at,
     payment.plan_id,
+    NULL::text AS chargeback_id,
     gt.transaction_id,
     settlement.last_four AS payment_id,
     token AS tokenization,
@@ -408,6 +416,7 @@ void3 as
     refund.status AS sales_status,
     refund.created_at AS sales_created_at,
     sub.plan_id,
+    NULL::text AS chargeback_id,
     CASE
         WHEN refund.id IS NOT NULL THEN gt.transaction_id
         else ''
@@ -459,6 +468,7 @@ void4 as
     refund.status AS sales_status,
     refund.created_at AS sales_created_at,
     payment.plan_id,
+    NULL::text AS chargeback_id,
     CASE
         WHEN refund.id IS NOT NULL THEN gt.transaction_id
         else ''
@@ -558,6 +568,7 @@ main as
     a.sales_created_at,
     customer.encrypted_ref_id AS gx_customer_id,
     provider.encrypted_ref_id AS gx_provider_id,
+    chargeback_id,
     case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id,
     a.payment_id,
     a.tokenization,
@@ -607,6 +618,7 @@ main as
     a.sales_created_at,
     customer.encrypted_ref_id AS gx_customer_id,
     provider.encrypted_ref_id AS gx_provider_id,
+    chargeback_id,
     case when trim(transaction_id) = '' or transaction_id is null then 'N/A' else transaction_id end as transaction_id,
     a.payment_id,
     a.tokenization,

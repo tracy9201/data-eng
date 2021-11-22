@@ -113,7 +113,6 @@ JOIN odf${environment}.funding_instruction fi on a.funding_instruction_id = fi.i
 ),
 
 
-
 chargebacks as
 (
 SELECT
@@ -136,6 +135,29 @@ WHERE
 )
 ,
 
+chargeback_reversal as
+(
+SELECT
+    ntf.chained_mid
+    ,ntf.funding_instruction_id as funding_instruction_id
+    ,trunc(ntfs.created_at) AS settled_at
+    ,to_date(ntfs.created_at,'YYYY-MM-01') as settled_month
+    ,0 as transactions
+    ,0 as charges
+    ,0 as refunds
+    ,coalesce(round(cast(ntf.deduction_amount as numeric)/100,2),0) as chargebacks
+    ,0 as adjustments
+    ,0  AS fees
+FROM
+     odf${environment}.non_transactional_fee ntf
+LEFT JOIN 
+     odf${environment}.non_transactional_fee_status ntfs  on ntfs.non_transactional_fee_id = ntf.id    
+WHERE 
+    ntfs.status = 'SETTLED'
+)
+,
+
+
 transaction_details_daily_summary_new as
 (
     SELECT * from transaction_details_daily_summary2
@@ -143,6 +165,8 @@ transaction_details_daily_summary_new as
     SELECT * from device_fee_sum
     UNION
     SELECT * from chargebacks
+    UNION
+    SELECT * from chargeback_reversal
 ),
 
 
@@ -168,6 +192,7 @@ FROM
 JOIN 
     odf${environment}.funding_instruction b 
     on a.funding_instruction_id = b.id
+WHERE a.settled_at is not null
 )
 
 SELECT * FROM main
