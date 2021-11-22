@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_service_checkout
   ,item_discount NUMERIC(18,2)   ENCODE raw
   ,discount_reason VARCHAR(max) ENCODE raw
   ,discounted_price NUMERIC(18,2)   ENCODE raw
+  ,tax NUMERIC(18,2)   ENCODE raw
   ,grand_total NUMERIC(18,2)   ENCODE raw
   ,offering_id VARCHAR(32)   ENCODE raw
   ,gx_customer_id VARCHAR(32)   ENCODE raw
