@@ -61,6 +61,8 @@ device_fee AS
     ,'N/A' subscriber
     ,'N/A' gx_customer_id
     ,'N/A' payment_id
+    ,'N/A' ft_percent_fee
+    ,'N/A' ft_fees
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
@@ -135,6 +137,7 @@ SELECT
     ,'Non-Member'::varchar as subscriber
     ,c.gx_customer_id
     ,c.payment_id
+    ,a.ft_fees
 FROM
     transaction_details a
 LEFT JOIN
@@ -161,6 +164,8 @@ SELECT  DISTINCT
     ,subscriber
     ,gx_customer_id
     ,payment_id
+    ,round(cast(ft_percent_fee as numeric)/100,2) :: VARCHAR(255) as ft_percent_fee 
+    ,ft_fees :: VARCHAR(255) as ft_fees
 FROM
     transaction_details_with_correct_fee
 ),
@@ -236,7 +241,13 @@ SELECT
   payment.card_brand,
   'Non-Member' as subscriber,
   customer.encrypted_ref_id as gx_customer_id,
-  payment.account_number as payment_id
+  payment.account_number as payment_id,
+  case when ntf.transaction_type = 'CHARGEBACK' then round(cast(ntf.amount as numeric)/100,2)
+       when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then 0
+  end :: VARCHAR(255) as ft_percent_fee,
+  case when ntf.transaction_type = 'CHARGEBACK' then ntf.amount
+       when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then 0
+  end :: VARCHAR(255) as ft_fees
 FROM odf${environment}.non_transactional_fee ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
@@ -267,68 +278,15 @@ AND  (ntf.transaction_type = 'CHARGEBACK' or ntf.transaction_type = 'CHARGEBACK_
 AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
 ),
 
-chargeback_fee as
-(
-SELECT 
-  ntf.chained_mid as merchant_id,
-  ntf.funding_instruction_id,
-  case 
-    when mid_type ='CARD_PRESENT' then payment.transaction_id
-    when mid_type = 'CARD_NOT_PRESENT' then ptt.order_id 
-    end as transaction_id,
-  ntf.created_at as transaction_date,
-  'chargeback_fee' as transaction_type,
-  round(cast(ntf.amount as numeric)/100,2) as transaction_amount,
-  case 
-    when mid_type ='CARD_PRESENT' then 'CP' 
-    when mid_type = 'CARD_NOT_PRESENT' then 'CNP' 
-    end as cp_or_cnp,
-  fi.created_at::date as funding_date,
-  ft.settled_at::date as settled_at_date,
-  payment.card_brand,
-  'Non-Member' as subscriber,
-  'N/A' AS gx_customer_id,
-  payment.account_number as payment_id
-FROM odf${environment}.non_transactional_fee ntf
-left JOIN 
-    odf${environment}.funding_instruction fi 
-      on ntf.funding_instruction_id = fi.id
-left join
-    odf${environment}.fiserv_transaction ft
-      on ntf.funding_instruction_id = ft.funding_instruction_id
-left join
-  chargeback${environment}.dispute_transactions dt
-    on ntf.external_id = dt.id
-left JOIN 
-    payment${environment}.payment_transaction ptt
-      on ptt.id = dt.transaction_id
-left join 
-  gaia_opul${environment}.payment payment
-    on dt.transaction_id = payment.external_id
-left join 
-  gaia_opul${environment}.plan plan
-    on payment.plan_id = plan.id
-left join 
-  gaia_opul${environment}.customer customer
-    on plan.customer_id = customer.id
-where ntf.funding_instruction_id is not null
-AND  ntf.transaction_type = 'CHARGEBACK'
-AND  ( payment.type = 'credit_card' OR ptt.tender_type = 'CREDIT_CARD' )
-),
-
 
 main as 
 (
 
     SELECT * FROM all_transactions
-    UNION ALL
-    SELECT * FROM fee
 	  UNION 
     SELECT * FROM device_fee
     UNION 
     SELECT * FROM chargeback
-    UNION 
-    SELECT * FROM chargeback_fee
 )
 
 SELECT 
