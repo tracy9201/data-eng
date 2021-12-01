@@ -87,7 +87,7 @@ offering as (
     and sub.status = 0
     and sub.offering_id is not null
 ),
-main as (
+all_fulfillments as (
   select 
     'ful_'||ful_sale.ful_id::varchar||'_refund' AS ful_id,
     ful_sale.ful_name,
@@ -138,5 +138,33 @@ main as (
   left join offering
     on ful_sale.subscription_id = offering.subscription_id
   
+),
+
+main as (
+select 
+  all_fulfillments.ful_id,
+  all_fulfillments.ful_name,
+  all_fulfillments.type,
+  all_fulfillments.service_date,
+  all_fulfillments.ful_quantity,
+  all_fulfillments.unit_name,
+  all_fulfillments.quantity,
+  all_fulfillments.total,
+  all_fulfillments.offering_id,
+  all_fulfillments.ful_status,
+  all_fulfillments.ful_type,
+  all_fulfillments.fulfilled_by,
+  round(all_fulfillments.total * staff.commission / 10000.0,2) as commission,
+  all_fulfillments.subscription_id,
+  all_fulfillments.gx_customer_id,
+  all_fulfillments.gx_provider_id,
+  all_fulfillments.epoch_created_at,
+  all_fulfillments.created_at,
+  all_fulfillments.updated_at,
+  all_fulfillments.dwh_created_at
+from all_fulfillments
+left join dwh_opul${environment}.dim_staff staff
+    on all_fulfillments.fulfilled_by = staff.user_id
 )
+
 select * from main
