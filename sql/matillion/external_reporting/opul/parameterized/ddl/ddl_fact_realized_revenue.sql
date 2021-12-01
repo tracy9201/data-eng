@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_realized_revenue
   ,ful_status SMALLINT ENCODE raw
   ,ful_type VARCHAR(64) ENCODE raw
   ,fulfilled_by BIGINT ENCODE raw
+  ,commission NUMERIC(18,2) ENCODE raw
   ,subscription_id  BIGINT ENCODE raw
   ,gx_customer_id VARCHAR(64) ENCODE raw
   ,gx_provider_id VARCHAR(64) ENCODE raw
