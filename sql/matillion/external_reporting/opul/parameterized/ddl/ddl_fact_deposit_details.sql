@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.fact_deposit_details
   ,epoch_funding_date BIGINT ENCODE raw
   ,epoch_settled_at_date BIGINT ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
+  ,ft_percent_fee NUMERIC(18,2)   ENCODE raw
+  ,ft_fees NUMERIC(18,2)   ENCODE raw
   ,primary key(transaction_id)
   ,UNIQUE(merchant_id,transaction_id,funding_instruction_id)  
 )
