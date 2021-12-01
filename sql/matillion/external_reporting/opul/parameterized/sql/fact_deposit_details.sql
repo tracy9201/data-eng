@@ -61,8 +61,8 @@ device_fee AS
     ,'N/A' subscriber
     ,'N/A' gx_customer_id
     ,'N/A' payment_id
-    ,'N/A' ft_percent_fee
-    ,'N/A' ft_fees
+    ,0 ft_percent_fee
+    ,0 ft_fees
   FROM odf${environment}.non_transactional_fee fee
   INNER JOIN
       instruction_settled_date isd ON isd.funding_instruction_id = fee.funding_instruction_id
@@ -164,8 +164,8 @@ SELECT  DISTINCT
     ,subscriber
     ,gx_customer_id
     ,payment_id
-    ,round(cast(ft_percent_fee as numeric)/100,2) :: VARCHAR(255) as ft_percent_fee 
-    ,ft_fees :: VARCHAR(255) as ft_fees
+    ,round(cast(ft_percent_fee as numeric)/100,2) as ft_percent_fee 
+    ,ft_fees
 FROM
     transaction_details_with_correct_fee
 ),
@@ -244,10 +244,10 @@ SELECT
   payment.account_number as payment_id,
   case when ntf.transaction_type = 'CHARGEBACK' then round(cast(ntf.amount as numeric)/100,2)
        when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then 0
-  end :: VARCHAR(255) as ft_percent_fee,
+  end as ft_percent_fee,
   case when ntf.transaction_type = 'CHARGEBACK' then ntf.amount
        when ntf.transaction_type = 'CHARGEBACK_REVERSAL' then 0
-  end :: VARCHAR(255) as ft_fees
+  end as ft_fees
 FROM odf${environment}.non_transactional_fee ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
