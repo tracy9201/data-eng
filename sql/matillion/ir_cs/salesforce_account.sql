@@ -10,7 +10,7 @@ SELECT
   upper(zendesk_support_organization_id_temp__c) as organization_id, 
   revance_territory__c as revance_territory__c,
   revance_region__c as revance_region
-FROM salesforcenew.account 
+FROM rvsalesforce.account 
 order by _sdc_batched_at desc
 )
 select * from Main
