@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_customer
   ,customer_type VARCHAR(MAX) ENCODE raw
   ,firstname VARCHAR(MAX)   ENCODE raw
   ,lastname  VARCHAR(MAX)  ENCODE raw
-  ,full_name  VARCHAR(MAX)  ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE   ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
