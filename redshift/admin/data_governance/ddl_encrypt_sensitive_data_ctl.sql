@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS public.encrypt_sensitive_data_ctl
 	,updated_comment VARCHAR(2000)   ENCODE lzo
 	,_columntype VARCHAR(80)   ENCODE RAW
 	,_columnfeed VARCHAR(127)   ENCODE lzo
+	,set_column_to_null BOOLEAN NOT NULL DEFAULT false ENCODE RAW
 	,PRIMARY KEY (_host, _database, _schema, _table, _column)
 )
 DISTSTYLE AUTO
