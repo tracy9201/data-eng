@@ -1,0 +1,107 @@
+WITH Payment
+AS (
+	SELECT settled_at
+		,funding_instruction_id
+		,(cast(coalesce(sum(amount), 0) * 0.01 AS FLOAT)) Paymentamount
+		,'Payment'
+	FROM PUBLIC.fiserv_transaction
+	WHERE Transaction_type = 'PAYMENT'
+		AND merchant_id IN (
+			'FVCBT63PVNG38'
+			,'76526160335885'
+			)
+	--and	settled_at = '2021-02-22'
+	GROUP BY settled_at
+		,funding_instruction_id
+	)
+	,Refund
+AS (
+	SELECT settled_at
+		,funding_instruction_id
+		,(cast(coalesce(sum(amount), 0) * 0.01 AS FLOAT)) Refundamount
+		,'Refund'
+	FROM PUBLIC.fiserv_transaction
+	WHERE Transaction_type = 'REFUND'
+		AND merchant_id IN (
+			'FVCBT63PVNG38'
+			,'76526160335885'
+			)
+	--and	settled_at = '2021-02-22'
+	GROUP BY settled_at
+		,funding_instruction_id
+	ORDER BY settled_at DESC
+	)
+	,totalamount
+AS (
+	SELECT coalesce(a.funding_instruction_id, b.funding_instruction_id) funding_instruction_id
+		,coalesce(a.settled_at, b.settled_at) settled_at
+		,(coalesce(Paymentamount, 0) - coalesce(Refundamount, 0)) amount
+	FROM Payment a
+	FULL JOIN Refund b ON a.settled_at = b.settled_at
+		AND a.funding_instruction_id = b.funding_instruction_id
+	)
+	,fees
+AS (
+	SELECT SUM(fee) fee
+		,settled_at
+	FROM (
+		SELECT MAX(transaction_id)
+			,(fee * 0.01) fee
+			,settled_at
+			,funding_instruction_id
+		FROM fiserv_transaction a
+		INNER JOIN funding_instruction b ON a.funding_instruction_id = b.id
+		WHERE merchant_id IN (
+				'FVCBT63PVNG38'
+				,'76526160335885'
+				)
+			AND settled_at IS NOT NULL
+		GROUP BY fee
+			,settled_at
+			,funding_instruction_id
+		) a
+	GROUP BY settled_at
+	)
+	,chargebacks
+AS (
+	SELECT DISTINCT a.id
+		,f.funding_instruction_id
+		,(chargeback_fee * 0.01) AS chargeback_fee
+		,(chargeback_amount * 0.01) AS chargeback_amount
+		,a.STATUS
+		,(chargeback_reversal_fee * 0.01) AS chargeback_reversal_fee
+		,(chargeback_reversal_amount * 0.01) AS chargeback_reversal_amount
+		,DATE (fs.created_at::TIMESTAMP - interval '7 hours') Settled_at
+	FROM funding_instruction a
+	LEFT JOIN non_transactional_fee f ON a.id = f.funding_instruction_id
+	LEFT JOIN non_transactional_fee_status fs ON f.id = fs.non_transactional_fee_id
+		AND fs.deprecated_at IS NULL
+	LEFT JOIN fiserv_transaction b ON a.id = b.funding_instruction_id
+	WHERE a.MID = '700100000000470'
+		AND a.STATUS = 'SETTLED'
+		AND f.funding_instruction_id IS NOT NULL
+	)
+	,finalresult
+AS (
+	SELECT --c.funding_instruction_id 
+		DISTINCT coalesce(a.settled_at, c.Settled_at) AS DepositDate
+		,coalesce(fi.STATUS, c.STATUS) STATUS
+		,coalesce(a.amount, 0) NetSales
+		,coalesce(((c.chargeback_amount + c.chargeback_reversal_amount) * - 1), 0) chargebacks
+		,coalesce(b.fee, 0) Fees
+		,(coalesce(a.amount, 0) - coalesce((b.fee), 0) - coalesce((c.chargeback_amount + c.chargeback_reversal_amount), 0)) TotalDeposited
+	FROM funding_instruction fi
+	FULL JOIN totalamount a ON a.funding_instruction_id = fi.id
+	FULL JOIN fees b ON a.settled_at = b.settled_at
+	FULL JOIN chargebacks c ON a.funding_instruction_id = c.funding_instruction_id
+	--WHERE fi.status = 'SETTLED'
+	ORDER BY 1 DESC
+	)
+SELECT DepositDate
+	,STATUS
+	,cast(NetSales as numeric)
+	,chargebacks
+	,Fees * - 1 as Fees
+	,cast(TotalDeposited as numeric)
+FROM finalresult
+WHERE DepositDate IS NOT NULL
