@@ -1,0 +1,26 @@
+SELECT
+    (DATE("deposit_summary"."settled_at_date")) AS "depositdate",
+    CASE
+WHEN deposit_summary.settled_at_date is not null and deposit_summary.reference_id is not null  THEN 'SETTLED'
+WHEN deposit_summary.settled_at_date is  null and deposit_summary.reference_id is not null  THEN 'Funded'
+ELSE 'Processed'
+END AS "status",
+    COALESCE(SUM(deposit_summary.net_sales ), 0) AS "netsales",
+    COALESCE(SUM(- deposit_summary.chargebacks ), 0) AS "chargebacks",
+    COALESCE(SUM(- deposit_summary.fees ), 0) AS "fees",
+   COALESCE(SUM(case when ( deposit_summary.net_sales - deposit_summary.chargebacks + deposit_summary.adjustments - deposit_summary.fees ) < 0 then 0 else ( deposit_summary.net_sales - deposit_summary.chargebacks + deposit_summary.adjustments - deposit_summary.fees ) end), 0) AS "totaldeposited"
+FROM
+    "dwh_opul_qe"."fact_deposit_summary" AS "deposit_summary"
+    LEFT JOIN "dwh_opul_qe"."dim_practice_odf_mapping" AS "dim_practice_odf_mapping" ON "deposit_summary"."merchant_id" = "dim_practice_odf_mapping"."card_processing_mid"
+WHERE "dim_practice_odf_mapping"."k_practice_id" = 13 AND (CASE
+               -- WHEN deposit_summary.epoch_funding_date  BETWEEN  1635058800.0 AND   1637108700.0
+                WHEN deposit_summary.epoch_settled_at_date  BETWEEN  1635058800.0 AND   1637108700.0
+                THEN 'First Period'
+                END ) IS NOT NULL
+GROUP BY
+    1,
+    2
+ORDER BY
+    1 DESC
+LIMIT 500
+
