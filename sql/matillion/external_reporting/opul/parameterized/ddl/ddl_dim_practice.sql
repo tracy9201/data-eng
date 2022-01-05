@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS dwh_opul${environment}.dim_practice
   ,practice_state VARCHAR(20) ENCODE raw
   ,practice_zip VARCHAR(MAX) ENCODE raw
   ,merchant_id BIGINT  ENCODE raw
+  ,type_of_practice VARCHAR(50) ENCODE raw
+  ,email VARCHAR(MAX) ENCODE raw
   ,created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,updated_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
   ,dwh_created_at TIMESTAMP WITHOUT TIME ZONE ENCODE raw
