@@ -1,6 +1,6 @@
 WITH batch_report_details as
 (
-  select 
+  select
   cd.type as user_type,
   is_voided,
   sales_id,
@@ -33,29 +33,29 @@ WITH batch_report_details as
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
       when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
-      end 
+      end
   as payment_detail,
-  case 
+  case
        when sales_type = 'check' then payment_id
        when sales_type ='credit_card' and ( sales_id like 'tran%' or sales_id like 'payment%' or sales_id like 'refund%' )then CONCAT('**** ',cast(payment_id as VARCHAR))
        when transaction = 'Void' then CONCAT('**** ',cast(right(tokenization,4) as VARCHAR))
-       else null end 
+       else null end
   as payment_id,
   payment_summary.gx_customer_id,
   gx_provider_id,
-  transaction_id, 
-  case when (sales_id like 'void1%' or sales_id like 'void2%')  then sales_created_at + INTERVAL '1 DAY' 
+  transaction_id,
+  case when (sales_id like 'void1%' or sales_id like 'void2%')  then sales_created_at + INTERVAL '1 DAY'
       else sales_created_at END  as sales_created_at,
   sales_created_at as original_sales_created_at,
   staff_user_id,
   device_id,
   tokenization,
-  case 
+  case
       when sales_id like 'refund%' then coalesce((-1*sales_amount)/100,0)
       when sales_id like 'void%' then coalesce((-1*sales_amount)/100,0)
       else coalesce(sales_amount/100,0) end
   as sales_amount,
-  case 
+  case
       when sales_id like 'refund%' then coalesce((-1*gratuity_amount)/100,0)
       when sales_id like 'void%' then coalesce((-1*gratuity_amount)/100,0)
       else coalesce(gratuity_amount/100,0) end
@@ -68,7 +68,7 @@ WITH batch_report_details as
   sales_status
   from ir_opul.fact_payment_summary payment_summary
   left join kronos_opul.customer_data as cd on payment_summary.gx_customer_id = cd.gx_customer_id
-  
+
 ),
 
 batch_report_details_formatting as
@@ -103,7 +103,7 @@ batch_report_details_formatting as
 
 main as
 (
-  select 
+  select
   sales_id as transaction_id,
   sales_status as status,
   gx_customer_id,
@@ -122,9 +122,9 @@ main as
        else payment_detail  end as payment_detail,
   gx_provider_id,
   transaction_id as clover_transaction_id,
-  case 
-      when payment_method = 'Credit Card' and device_id is null then 'CP'
-      when payment_method =  'Credit Card' and device_id is not null then 'CNP'
+  case
+      when payment_method = 'Credit Card' and device_id is not null then 'CP'
+      when payment_method =  'Credit Card' and device_id is null then 'CNP'
       else 'N/A'
     end as cp_or_cnp,
   current_timestamp::timestamp as dwh_created_at
