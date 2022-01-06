@@ -17,7 +17,7 @@ batch_report_details as
   is_voided,
   sales_id,
   case when sales_id like 'refund%' then 'Refund'
-      when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and sales_name = 'BD Payment' then 'Offer Redemption'
+      when sales_id like 'credit%'  and  sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' then 'Offer Redemption'
       when sales_id like 'credit%'  and  sales_type = 'provider credit' then 'Deposit From Patient'
       when sales_id like 'credit%' then 'Redemption'
       when sales_id like 'void%' then 'Void'
@@ -27,7 +27,7 @@ batch_report_details as
       when sales_type = 'check' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Check'
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then 'Credit Card'
       when sales_type in ('wallet', 'provider credit') and (sales_id like 'credit%' or sales_id like 'refund%' or sales_id like 'payment%') then 'Practice Credit'
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
+      when sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' and (sales_id like 'credit%' or sales_id like 'refund%') then 'Allē'
       when sales_type in ('credit', 'reward') and (sales_id like 'credit%' or sales_id like 'refund%') then 'Other'
       when sales_type ='credit_card' and sales_id like 'tran%' then 'Recurring Pmt'
       when sales_id like 'void%' or tokenization is not null then 'Credit Card'
@@ -44,14 +44,14 @@ batch_report_details as
       when sales_type in ('wallet', 'provider credit') then 'Practice Credit'
       when sales_type = 'adjustment' then 'Adjustment'
       when sales_type = 'credit' then 'Coupon'
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then 'BD'
+      when sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' and (sales_id like 'credit%' or sales_id like 'refund%') then 'Allē'
       end 
   as payment_detail,
   case 
       when user_type=1 and (sales_id like 'payment%' or sales_id like 'credit%') and subscription_name is not null then subscription_name
       when sales_type = 'check' then null
       when sales_type = 'credit_card' and (sales_id like 'payment%' or sales_id like 'refund%') then null
-      when sales_type in ('reward', 'credit') and sales_name = 'BD Payment' and (sales_id like 'credit%' or sales_id like 'refund%') then null
+      when sales_type in ('reward', 'credit') and LEFT(sales_name, 4) = 'Allē' and (sales_id like 'credit%' or sales_id like 'refund%') then null
       when sales_type ='credit_card' and sales_id like 'tran%' then null
       when sales_type = 'Recurring Pmt' and sales_type = 'credit_card' then null
       else payment_id end
