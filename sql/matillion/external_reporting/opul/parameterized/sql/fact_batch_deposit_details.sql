@@ -324,6 +324,60 @@ GROUP BY
 ),
 
 
+cc_transaction as (
+ SELECT distinct
+    'payment_'||p.id::varchar  AS sales_id,
+    p.amount AS sales_amount,
+    p.type AS sales_type,
+    p.status AS sales_status,
+    p.created_at AS sales_created_at,
+    p.plan_id,
+    p.external_id AS chargeback_id,
+    case 
+        when p.type ='credit_card' and p.device_id is null then paytra.order_id 
+        when p.type ='credit_card' and p.device_id is not null then p2petra.external_id 
+        else p.external_id end AS transaction_id,
+    CASE
+        WHEN p.type ='credit_card' THEN account_number
+        ELSE p.name
+    END AS payment_id,
+    card_holder_name,
+    customer.encrypted_ref_id as gx_customer_id
+FROM
+    gaia_opul${environment}.payment p
+LEFT JOIN
+ (SELECT distinct 
+  gt.payment_id, 
+  card_payment_gateway_id
+FROM  gaia_opul${environment}.gateway_transaction gt
+WHERE 
+  card_payment_gateway_id IS NOT NULL and card_payment_gateway_id != 0
+  and gt.payment_id is not null) gt
+        ON gt.payment_id = p.id
+LEFT JOIN
+    gaia_opul${environment}.card_payment_gateway cpg
+        ON cpg.id = gt.card_payment_gateway_id
+LEFT JOIN
+    gaia_opul${environment}.card card
+        ON cpg.card_id = card.id
+LEFT JOIN 
+    payment${environment}.payment_transaction paytra
+        on paytra.id = p.external_id 
+LEFT JOIN
+    p2pe_opul${environment}.p2pe_transaction p2petra
+        on p2petra.retref = p.transaction_id
+LEFT JOIN
+    gaia_opul${environment}.plan plan
+        ON p.plan_id = plan.id
+LEFT JOIN
+    gaia_opul${environment}.customer customer
+        ON customer.id = plan.customer_id
+WHERE
+    p.id IS NOT NULL
+    AND p.status  in (1,-3)
+    AND p.type ='credit_card'
+),
+
 transaction_details_with_correct_fee as 
 (
 SELECT
@@ -343,16 +397,16 @@ SELECT
     ,CASE WHEN b.last_transaction_id IS NOT NULL then 'Y' END as is_fee_record
     ,'Non-Member'::varchar as subscriber
     ,c.gx_customer_id
-    ,c.payment_id
-    ,c.firstname
-    ,c.lastname
+    ,CONCAT('**** ',cast(c.payment_id as VARCHAR)) as payment_id
+    ,substring(c.card_holder_name, 1, OCTETINDEX(' ', card_holder_name)) as firstname
+    ,substring(c.card_holder_name, OCTETINDEX(' ', card_holder_name)+1, len(card_holder_name)) as lastname
 FROM
     transaction_details a
 LEFT JOIN
     last_trans_for_each_funding_id  b on a.transaction_id = b.last_transaction_id 
     and a.funding_instruction_id=b.funding_instruction_id 
 LEFT JOIN
-    dwh_opul${environment}.fact_batch_report_details c on a.transaction_id = c.transaction_id 
+    cc_transaction c on a.transaction_id = c.transaction_id 
 ),
 
 
@@ -442,8 +496,8 @@ SELECT
   'Non-Member' as subscriber,
   customer.encrypted_ref_id as gx_customer_id,
   payment.account_number as payment_id
-  ,'N/A' AS firstname
-    ,'N/A' as lastname
+  ,substring(card.card_holder_name, 1, OCTETINDEX(' ', card.card_holder_name)) as firstname
+  ,substring(card.card_holder_name, OCTETINDEX(' ', card.card_holder_name)+1, len(card.card_holder_name)) as lastname
 FROM non_transactional_fee_with_history ntf
 left JOIN 
     odf${environment}.funding_instruction fi 
@@ -457,6 +511,9 @@ left join
 left JOIN 
     payment${environment}.payment_transaction ptt
       on ptt.id = dt.transaction_id
+left JOIN
+  gaia_opul${environment}.card card
+    ON ptt.card_id = card.id
 left join 
   gaia_opul${environment}.payment payment
     on dt.transaction_id = payment.external_id
