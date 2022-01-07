@@ -123,10 +123,12 @@ main as
   gx_provider_id,
   transaction_id as clover_transaction_id,
   case
+      when payment_method = 'Credit Card' and transaction = 'Void' then 'CNP'
+      when payment_method = 'Credit Card' and transaction = 'Refund' then 'CNP'
       when payment_method = 'Credit Card' and device_id is not null then 'CP'
-      when payment_method =  'Credit Card' and device_id is null then 'CNP'
-      else 'N/A'
-    end as cp_or_cnp,
+      when payment_method = 'Credit Card' and device_id is null then 'CNP'
+  else 'N/A'
+  end as cp_or_cnp,
   current_timestamp::timestamp as dwh_created_at
   from batch_report_details_formatting
 )
